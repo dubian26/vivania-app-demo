@@ -1,4 +1,4 @@
-import { CustomError } from '@/shared/errors/custom-error';
+import { CustomError } from '@/shared/errors/custom-error'
 
 export class PermissionError {
   static NotExists() {
@@ -6,7 +6,7 @@ export class PermissionError {
       'El permiso no existe.',
       'validation',
       'Permission.NotExists',
-    );
+    )
   }
 
   static HasChildren() {
@@ -14,6 +14,6 @@ export class PermissionError {
       'No se puede realizar esta acción porque el permiso tiene hijos asociados.',
       'validation',
       'Permission.HasChildren',
-    );
+    )
   }
 }

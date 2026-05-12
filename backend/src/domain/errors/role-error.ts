@@ -1,4 +1,4 @@
-import { CustomError } from '@/shared/errors/custom-error';
+import { CustomError } from '@/shared/errors/custom-error'
 
 export class RoleError {
   static AlreadyExists() {
@@ -6,7 +6,7 @@ export class RoleError {
       'El rol ya existe en la base de datos.',
       'validation',
       'Role.AlreadyExists',
-    );
+    )
   }
 
   static NotExists() {
@@ -14,7 +14,7 @@ export class RoleError {
       'El rol no existe en la base de datos.',
       'validation',
       'Role.NotExists',
-    );
+    )
   }
 
   static InUse() {
@@ -22,6 +22,6 @@ export class RoleError {
       'No se puede eliminar el rol, es posible que esté en uso.',
       'validation',
       'Role.InUse',
-    );
+    )
   }
 }

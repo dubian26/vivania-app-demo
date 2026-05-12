@@ -1,9 +1,9 @@
-import { ErrorDetail, ErrorType } from './error-model';
+import { ErrorDetail, ErrorType } from './error-model'
 
 export class CustomError extends Error {
-  readonly type: ErrorType;
-  readonly code: string;
-  readonly details: ErrorDetail[];
+  readonly type: ErrorType
+  readonly code: string
+  readonly details: ErrorDetail[]
 
   constructor(
     message: string,
@@ -11,10 +11,10 @@ export class CustomError extends Error {
     code: string = 'GenericError',
     details: ErrorDetail[] = [],
   ) {
-    super(message);
-    this.type = type;
-    this.code = code;
-    this.details = details;
-    Error.captureStackTrace(this, this.constructor);
+    super(message)
+    this.type = type
+    this.code = code
+    this.details = details
+    Error.captureStackTrace(this, this.constructor)
   }
 }

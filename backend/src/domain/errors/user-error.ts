@@ -1,4 +1,4 @@
-import { CustomError } from '@/shared/errors/custom-error';
+import { CustomError } from '@/shared/errors/custom-error'
 
 export class UserError {
   static AlreadyExists() {
@@ -6,7 +6,7 @@ export class UserError {
       'El usuario ya existe en la base de datos.',
       'validation',
       'User.AlreadyExists',
-    );
+    )
   }
 
   static NotExists() {
@@ -14,6 +14,6 @@ export class UserError {
       'El usuario no existe en la base de datos.',
       'validation',
       'User.NotExists',
-    );
+    )
   }
 }

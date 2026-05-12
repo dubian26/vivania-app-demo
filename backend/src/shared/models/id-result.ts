@@ -1,4 +1,4 @@
 export interface IdResult {
-  id: string;
-  message: string;
+  id: string
+  message: string
 }
