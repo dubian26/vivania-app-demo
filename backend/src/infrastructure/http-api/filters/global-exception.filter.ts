@@ -9,7 +9,6 @@ import {
 
 import { Request, Response } from 'express'
 import { v7 as uuidv7 } from 'uuid'
-import { ZodError } from 'zod'
 import { CustomError } from '@/shared/errors/custom-error'
 import { ErrorModel } from '@/shared/errors/error-model'
 
@@ -35,23 +34,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       response
         .status(this.getStatusCodeFromCustomError(exception))
         .json(errorResponse)
-
-      return
-    }
-
-    if (exception instanceof ZodError) {
-      const errorResponse: ErrorModel = {
-        type: 'validation',
-        code: 'Schema.ValidationError',
-        message: 'Errores de validacion en los datos enviados.',
-        traceId,
-        details: exception.issues.map((issue) => ({
-          property: issue.path.join('.'),
-          message: issue.message,
-        })),
-      }
-
-      response.status(HttpStatus.UNPROCESSABLE_ENTITY).json(errorResponse)
 
       return
     }
