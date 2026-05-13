@@ -6,9 +6,8 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common'
-
-import { Request, Response } from 'express'
-import { v7 as uuidv7 } from 'uuid'
+import { randomUUID } from 'node:crypto'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { CustomError } from '@/shared/errors/custom-error'
 import { ErrorModel } from '@/shared/errors/error-model'
 
@@ -18,9 +17,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp()
-    const response = ctx.getResponse<Response>()
-    const request = ctx.getRequest<Request>()
-    const traceId = uuidv7().replace(/-/g, '')
+    const response = ctx.getResponse<FastifyReply>()
+    const request = ctx.getRequest<FastifyRequest>()
+    const traceId = randomUUID().replace(/-/g, '')
 
     if (exception instanceof CustomError) {
       const errorResponse: ErrorModel = {
@@ -33,7 +32,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
       response
         .status(this.getStatusCodeFromCustomError(exception))
-        .json(errorResponse)
+        .send(errorResponse)
 
       return
     }
@@ -51,7 +50,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         details: [],
       }
 
-      response.status(statusCode).json(errorResponse)
+      response.status(statusCode).send(errorResponse)
 
       return
     }
@@ -69,7 +68,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       details: [],
     }
 
-    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(errorResponse)
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).send(errorResponse)
   }
 
   private getStatusCodeFromCustomError(error: CustomError): number {

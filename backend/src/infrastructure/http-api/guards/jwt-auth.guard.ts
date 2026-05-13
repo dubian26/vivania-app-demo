@@ -1,13 +1,14 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import { FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
-import { Request } from 'express'
 
 import { IS_PUBLIC_KEY } from '@/infrastructure/http-api/decorators/public.decorator'
 import { BaseError } from '@/shared/errors/base-error'
 import { UserInfo } from '@/shared/models/user-info'
 
-export interface AuthenticatedRequest extends Request {
+type AuthenticatedRequest = FastifyRequest & {
+  cookies?: { accessToken?: string }
   user?: UserInfo
 }
 
@@ -45,11 +46,13 @@ export class JwtAuthGuard implements CanActivate {
   private getAccessToken(request: AuthenticatedRequest): string | undefined {
     const authorizationHeader = request.headers.authorization
 
-    if (authorizationHeader?.startsWith('Bearer ')) {
+    if (
+      typeof authorizationHeader === 'string' &&
+      authorizationHeader.startsWith('Bearer ')
+    ) {
       return authorizationHeader.slice('Bearer '.length).trim()
     }
 
-    const cookies = request.cookies as { accessToken?: string } | undefined
-    return cookies?.accessToken
+    return request.cookies?.accessToken
   }
 }

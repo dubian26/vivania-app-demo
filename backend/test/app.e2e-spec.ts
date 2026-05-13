@@ -1,29 +1,70 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { INestApplication } from '@nestjs/common'
+import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify'
 import request from 'supertest'
-import { App } from 'supertest/types'
-import { AppModule } from '@/infrastructure/http-api/app.module'
+import { AppModule } from '../src/infrastructure/http-api/app.module'
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication<App>
+describe('AuthController (e2e)', () => {
+  let app: NestFastifyApplication
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile()
 
-    app = moduleFixture.createNestApplication()
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    )
     await app.init()
+    await app.getHttpAdapter().getInstance().ready()
   })
 
-  it('/ (GET)', () => {
+  it('/auth/login (POST)', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!')
+      .post('/auth/login')
+      .send({
+        email: 'john.doe@example.com',
+        password: 'secret',
+      })
+      .expect(201)
+      .expect({
+        id: '123',
+        email: 'john.doe@example.com',
+        firstName: 'John',
+        lastName: 'Doe',
+        roleId: '1',
+        roleName: 'Admin',
+      })
   })
 
-  afterEach(async () => {
+  it('/auth/login (POST) validation error', () => {
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'invalid-email',
+        password: '',
+      })
+      .expect(422)
+      .expect(({ body }) => {
+        expect(body.type).toBe('validation')
+        expect(body.code).toBe('Schema.ValidationError')
+        expect(body.message).toBe('Errores de validación en los datos enviados.')
+        expect(body.traceId).toEqual(expect.any(String))
+        expect(body.details).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              property: 'email',
+              message: 'El email no es válido.',
+            }),
+            expect.objectContaining({
+              property: 'password',
+              message: 'La contraseña es requerida.',
+            }),
+          ]),
+        )
+      })
+  })
+
+  afterAll(async () => {
     await app.close()
   })
 })
