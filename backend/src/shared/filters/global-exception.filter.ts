@@ -1,3 +1,8 @@
+import { randomUUID } from 'node:crypto'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { CustomError } from '@/shared/errors/custom-error'
+import { ErrorModel } from '@/shared/errors/error-model'
+
 import {
   ArgumentsHost,
   Catch,
@@ -6,10 +11,6 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common'
-import { randomUUID } from 'node:crypto'
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { CustomError } from '@/shared/errors/custom-error'
-import { ErrorModel } from '@/shared/errors/error-model'
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {

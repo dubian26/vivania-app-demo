@@ -16,4 +16,20 @@ export class UserError {
       'User.NotExists',
     )
   }
+
+  static InvalidCredentials() {
+    return new CustomError(
+      'Credenciales inválidas.',
+      'validation',
+      'User.InvalidCredentials',
+    )
+  }
+
+  static EmailNotVerified() {
+    return new CustomError(
+      'El correo electrónico no ha sido verificado.',
+      'validation',
+      'User.EmailNotVerified',
+    )
+  }
 }

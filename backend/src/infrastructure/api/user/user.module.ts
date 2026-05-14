@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common'
-import { APP_FILTER, APP_GUARD } from '@nestjs/core'
-import { AuthController } from './controllers/auth.controller'
+import { AuthController } from './auth.controller'
 import { LoginUserQuery } from '@/application/user/login-user.query'
 import { LoginUserValidator } from '@/application/user/login-user.validator'
-import { GlobalExceptionFilter } from './filters/global-exception.filter'
-import { JwtAuthGuard } from './guards/jwt-auth.guard'
 import { ZodLoginUserValidator } from '@/infrastructure/validators/user/zod-login-user.validator'
+import { UserRepository } from '@/domain/user/user-repository'
+import { PrismaUserRepository } from '@/infrastructure/repositories/prisma-user-repository'
 
 @Module({
   controllers: [AuthController],
@@ -16,13 +15,9 @@ import { ZodLoginUserValidator } from '@/infrastructure/validators/user/zod-logi
       useClass: ZodLoginUserValidator,
     },
     {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: GlobalExceptionFilter,
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
     },
   ],
 })
-export class AppModule {}
+export class UserModule {}

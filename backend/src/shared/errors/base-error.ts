@@ -2,7 +2,6 @@ import { CustomError } from './custom-error'
 import type { ErrorDetail } from './error-model'
 
 export class BaseError {
-  // Auth Errors
   static TokenInexistente() {
     return new CustomError(
       'No autorizado. Token inexistente.',
@@ -10,6 +9,7 @@ export class BaseError {
       'Auth.TokenInexistente',
     )
   }
+
   static TokenInvalido() {
     return new CustomError(
       'Token inválido o expirado.',
@@ -17,6 +17,7 @@ export class BaseError {
       'Auth.TokenInvalido',
     )
   }
+
   static RefreshTokenInexistente() {
     return new CustomError(
       'Token de refresco no encontrado.',
@@ -84,7 +85,6 @@ export class BaseError {
     )
   }
 
-  // Schema / Validation
   static ValidationError(details: ErrorDetail[]): CustomError {
     return new CustomError(
       'Errores de validación en los datos enviados.',

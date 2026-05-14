@@ -1,11 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { CanActivate, ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 
-import { IS_PUBLIC_KEY } from '@/infrastructure/http-api/decorators/public.decorator'
+import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator'
 import { BaseError } from '@/shared/errors/base-error'
 import { UserInfo } from '@/shared/models/user-info'
+import { Injectable } from '@/shared/util/injectable'
 
 type AuthenticatedRequest = FastifyRequest & {
   cookies?: { accessToken?: string }

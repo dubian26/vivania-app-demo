@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify'
 import request from 'supertest'
-import { AppModule } from '../src/infrastructure/http-api/app.module'
+import { AppModule } from '@/infrastructure/api/app.module'
+import { ErrorModel } from '@/shared/errors/error-model'
+
+import {
+  NestFastifyApplication,
+  FastifyAdapter,
+} from '@nestjs/platform-fastify'
 
 describe('AuthController (e2e)', () => {
   let app: NestFastifyApplication
@@ -44,10 +49,12 @@ describe('AuthController (e2e)', () => {
         password: '',
       })
       .expect(422)
-      .expect(({ body }) => {
+      .expect((body: ErrorModel) => {
         expect(body.type).toBe('validation')
         expect(body.code).toBe('Schema.ValidationError')
-        expect(body.message).toBe('Errores de validación en los datos enviados.')
+        expect(body.message).toBe(
+          'Errores de validación en los datos enviados.',
+        )
         expect(body.traceId).toEqual(expect.any(String))
         expect(body.details).toEqual(
           expect.arrayContaining([

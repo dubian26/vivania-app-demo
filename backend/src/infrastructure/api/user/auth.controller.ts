@@ -1,6 +1,6 @@
 import { type LoginUserDTO } from '@/application/user/login-user.dto'
 import { LoginUserQuery } from '@/application/user/login-user.query'
-import { Public } from '@/infrastructure/http-api/decorators/public.decorator'
+import { Public } from '@/shared/decorators/public.decorator'
 import { type UserInfo } from '@/shared/models/user-info'
 import { Body, Controller, Post } from '@nestjs/common'
 
