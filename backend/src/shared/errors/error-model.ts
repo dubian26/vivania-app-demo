@@ -3,7 +3,10 @@ export interface ErrorDetail {
   message: string
 }
 
-export type ErrorType = 'token_expired' | 'validation' | 'uncontrolled'
+export type ErrorType =
+  'token_expired' |
+  'validation' |
+  'uncontrolled'
 
 export interface ErrorModel {
   type: ErrorType
