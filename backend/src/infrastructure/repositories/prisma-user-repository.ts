@@ -1,11 +1,15 @@
 import { User } from '@/domain/user/user'
 import { UserRepository } from '@/domain/user/user-repository'
-import { dbClient } from '@/infrastructure/repositories/db-client'
+import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
 import { SearchModel } from '@/shared/models/search-model'
+import { Injectable } from '@/shared/util/injectable'
 
+@Injectable()
 export class PrismaUserRepository implements UserRepository {
+  constructor(private readonly dbContext: PrismaDbContext) {}
+
   async getById(id: string): Promise<User | null> {
-    const record = await dbClient.users.findUnique({
+    const record = await this.dbContext.client().users.findUnique({
       where: { id },
       include: { role: { select: { name: true } } },
     })
@@ -19,7 +23,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    const record = await dbClient.users.findUnique({
+    const record = await this.dbContext.client().users.findUnique({
       where: { email },
       include: { role: { select: { name: true } } },
     })
@@ -33,7 +37,7 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async listAll(): Promise<User[]> {
-    const records = await dbClient.users.findMany({
+    const records = await this.dbContext.client().users.findMany({
       include: { role: { select: { name: true } } },
     })
 
@@ -45,7 +49,7 @@ export class PrismaUserRepository implements UserRepository {
 
   async search(params: SearchModel): Promise<User[]> {
     const { skip, take, search } = params
-    const records = await dbClient.users.findMany({
+    const records = await this.dbContext.client().users.findMany({
       skip,
       take,
       where: search
@@ -73,19 +77,19 @@ export class PrismaUserRepository implements UserRepository {
 
   async insert(user: User): Promise<void> {
     const { ...data } = user.toDB()
-    await dbClient.users.create({ data })
+    await this.dbContext.client().users.create({ data })
   }
 
   async update(user: User): Promise<void> {
     const { id, ...data } = user.toDB()
-    await dbClient.users.update({
+    await this.dbContext.client().users.update({
       where: { id },
       data: data,
     })
   }
 
   async delete(id: string): Promise<void> {
-    await dbClient.users.delete({
+    await this.dbContext.client().users.delete({
       where: { id },
     })
   }

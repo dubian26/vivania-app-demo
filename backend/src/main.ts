@@ -10,6 +10,7 @@ async function bootstrap() {
     new FastifyAdapter(),
   )
 
+  app.enableShutdownHooks()
   await app.register(cookie)
   await app.listen(process.env.PORT ?? 3000)
 }
