@@ -1,7 +1,7 @@
-import { randomUUID } from 'node:crypto'
-import { FastifyReply, FastifyRequest } from 'fastify'
 import { CustomError } from '@/shared/errors/custom-error'
 import { ErrorModel } from '@/shared/errors/error-model'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { randomUUID } from 'node:crypto'
 
 import {
   ArgumentsHost,
@@ -20,7 +20,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<FastifyReply>()
     const request = ctx.getRequest<FastifyRequest>()
-    const traceId = randomUUID().replace(/-/g, '')
+    const traceId = randomUUID()
 
     if (exception instanceof CustomError) {
       const errorResponse: ErrorModel = {

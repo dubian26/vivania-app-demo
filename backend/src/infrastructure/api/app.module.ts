@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common'
-import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { GlobalExceptionFilter } from '@/shared/filters/global-exception.filter'
 import { JwtAuthGuard } from '@/shared/guards/jwt-auth.guard'
+import { Module } from '@nestjs/common'
+import { APP_FILTER, APP_GUARD } from '@nestjs/core'
+import { RoleModule } from './role/role.module'
 import { UserModule } from './user/user.module'
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, RoleModule],
   providers: [
     {
       provide: APP_GUARD,
@@ -17,4 +18,4 @@ import { UserModule } from './user/user.module'
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

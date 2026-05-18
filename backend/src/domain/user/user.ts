@@ -1,5 +1,14 @@
 import { UserInfo } from '@/shared/models/user-info'
 
+export interface UserCreate {
+  id: string
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  roleId: string
+}
+
 export interface UserDB {
   id: string
   email: string
@@ -28,38 +37,45 @@ export interface UserResult {
 }
 
 export class User {
-  constructor(
-    public id: string,
-    public email: string,
-    public password: string,
-    public firstName: string,
-    public lastName: string,
-    public roleId: string,
-    public active: boolean,
-    public emailVerified: boolean,
-    public createdAt: Date,
-    public updatedAt: Date,
-    public roleName?: string,
-  ) {}
+  private constructor() {}
 
-  private touch() {
-    this.updatedAt = new Date()
+  public id: string = ''
+  public email: string = ''
+  public password: string = ''
+  public firstName: string = ''
+  public lastName: string = ''
+  public roleId: string = ''
+  public active: boolean = false
+  public emailVerified: boolean = false
+  public createdAt: Date = new Date()
+  public updatedAt: Date = new Date()
+  public roleName?: string
+
+  static create(data: UserCreate): User {
+    const newUser = new User()
+    newUser.id = data.id
+    newUser.email = data.email
+    newUser.password = data.password
+    newUser.firstName = data.firstName
+    newUser.lastName = data.lastName
+    newUser.roleId = data.roleId
+    return newUser
   }
 
   static fromDB(data: UserDB) {
-    return new User(
-      data.id,
-      data.email,
-      data.password,
-      data.firstName,
-      data.lastName,
-      data.roleId,
-      data.active,
-      data.emailVerified,
-      data.createdAt,
-      data.updatedAt,
-      data.roleName,
-    )
+    const newUser = new User()
+    newUser.id = data.id
+    newUser.email = data.email
+    newUser.password = data.password
+    newUser.firstName = data.firstName
+    newUser.lastName = data.lastName
+    newUser.roleId = data.roleId
+    newUser.active = data.active
+    newUser.emailVerified = data.emailVerified
+    newUser.createdAt = data.createdAt
+    newUser.updatedAt = data.updatedAt
+    newUser.roleName = data.roleName
+    return newUser
   }
 
   toDB(): UserDB {
@@ -106,6 +122,10 @@ export class User {
 
   get fullName() {
     return `${this.firstName} ${this.lastName}`
+  }
+
+  private touch() {
+    this.updatedAt = new Date()
   }
 
   rename(firstName: string, lastName: string) {

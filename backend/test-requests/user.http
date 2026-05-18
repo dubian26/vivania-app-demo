@@ -1,7 +1,5 @@
 ### Variables
 @baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWNmODNhNzg4MjcyOGVhZmViZDBiOWU4MzlhNjc1IiwiZW1haWwiOiJkdWJpYW4yNkBnbWFpbC5jb20iLCJub21icmVzIjoiRHViaWFuIiwiYXBlbGxpZG9zIjoiU2VwdWx2ZWRhIiwicm9sSWQiOiIwMTljZTg0YTY3YmQ3NzM5YjM1NTdkNTk2YTU0NTA2NSIsImlhdCI6MTc3MzcwNzg0MCwiZXhwIjoxNzc0NjA3ODQwLCJpc3MiOiJUaWVuZGFPbmxpbmVSZWFjdC0yMDI2MDEwMS1EZXZlbG9wIn0.rBW-134ZFoQ8pWO4ilk4SpxJFqQzLl6Gx6wGLxDEXiw
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWNmODNhNzg4MjcyOGVhZmViZDBiOWU4MzlhNjc1IiwiZW1haWwiOiJkdWJpYW4yNkBnbWFpbC5jb20iLCJub21icmVzIjoiRHViaWFuIiwiYXBlbGxpZG9zIjoiU2VwdWx2ZWRhIiwicm9sSWQiOiIwMTljZTg0YTY3YmQ3NzM5YjM1NTdkNTk2YTU0NTA2NSIsImlhdCI6MTc3MzcwNzg0MCwiZXhwIjoxOTQ2NTA3ODQwLCJpc3MiOiJUaWVuZGFPbmxpbmVSZWFjdC0yMDI2MDEwMS1EZXZlbG9wIn0.P4iC4tqC7XJ1xmvLhxM0av17yZM7Vj1bASKENysyS2E
 
 ### Login
 POST {{baseUrl}}/auth/login
@@ -15,39 +13,30 @@ Content-Type: application/json
 ### Refrescar Token
 POST {{baseUrl}}/auth/refrescar-token
 Content-Type: application/json
-Cookie: refreshToken={{refreshToken}}
 
 ### Crear Cuenta Usuario
-POST {{baseUrl}}/auth/crear-cuenta
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-   "email": "test@example.com",
-   "password": "password123",
-   "nombres": "Juan",
-   "apellidos": "Perez"
+   "email": "dubian26@gmail.com",
+   "password": "Pruebas*1",
+   "firstName": "Dubian",
+   "lastName": "Sepulveda"
 }
 
 ### Listar Usuarios
 GET {{baseUrl}}/usuarios
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 ### Buscar Usuario por Id
 GET {{baseUrl}}/usuarios/019cef77ac8677efb5f02cbe529f3374
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 ### Buscar Usuario por Email
 GET {{baseUrl}}/usuarios/email/dubian26@gmail.com
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 ### Actualizar Usuario
 PUT {{baseUrl}}/usuarios/019cef77ac8677efb5f02cbe529f3374
 Content-Type: application/json
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 {
    "nombres": "Juan Actualizado",
@@ -56,10 +45,6 @@ Cookie: refreshToken={{refreshToken}}
 
 ### Inactivar Usuario
 PUT {{baseUrl}}/usuarios/019cef77ac8677efb5f02cbe529f3374/inactivar
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 ### Eliminar Usuario
 DELETE {{baseUrl}}/usuarios/019cf83a7882728eafebd0b9e839a675
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}

@@ -1,57 +1,44 @@
 ### Variables
-@baseUrl = http://localhost:3000/v1/roles
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWNmODNhNzg4MjcyOGVhZmViZDBiOWU4MzlhNjc1IiwiZW1haWwiOiJkdWJpYW4yNkBnbWFpbC5jb20iLCJub21icmVzIjoiRHViaWFuIiwiYXBlbGxpZG9zIjoiU2VwdWx2ZWRhIiwicm9sSWQiOiIwMTljZTg0YTY3YmQ3NzM5YjM1NTdkNTk2YTU0NTA2NSIsImlhdCI6MTc3MzcwNzg0MCwiZXhwIjoxNzc0NjA3ODQwLCJpc3MiOiJUaWVuZGFPbmxpbmVSZWFjdC0yMDI2MDEwMS1EZXZlbG9wIn0.rBW-134ZFoQ8pWO4ilk4SpxJFqQzLl6Gx6wGLxDEXiw
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAxOWNmODNhNzg4MjcyOGVhZmViZDBiOWU4MzlhNjc1IiwiZW1haWwiOiJkdWJpYW4yNkBnbWFpbC5jb20iLCJub21icmVzIjoiRHViaWFuIiwiYXBlbGxpZG9zIjoiU2VwdWx2ZWRhIiwicm9sSWQiOiIwMTljZTg0YTY3YmQ3NzM5YjM1NTdkNTk2YTU0NTA2NSIsImlhdCI6MTc3MzcwNzg0MCwiZXhwIjoxOTQ2NTA3ODQwLCJpc3MiOiJUaWVuZGFPbmxpbmVSZWFjdC0yMDI2MDEwMS1EZXZlbG9wIn0.P4iC4tqC7XJ1xmvLhxM0av17yZM7Vj1bASKENysyS2E
+@baseUrl = http://localhost:3000/roles
 
 ### Crear Rol (Administrador)
 # @name crearRol
 POST {{baseUrl}}
 Content-Type: application/json
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 {
-   "nombre": "Administrador",
-   "descripcion": "Rol con todos los accesos",
-   "activo": true
+   "name": "Administrador",
+   "description": "Rol con todos los accesos",
+   "active": true
 }
 
 ### Crear Rol (Cliente)
 POST {{baseUrl}}
 Content-Type: application/json
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 {
-   "nombre": "Cliente",
-   "descripcion": "Rol basico"
+   "name": "Manager 2",
+   "description": "Rol secundario",
+   "active": true
 }
 
 ### Listar todos los roles
 GET {{baseUrl}}
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 ### Obtener Rol por ID
 # Reemplaza el ID por uno generado
 @rolId = {{crearRol.response.body.id}}
 GET {{baseUrl}}/{{rolId}}
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 ### Actualizar Rol
 PUT {{baseUrl}}/{{rolId}}
 Content-Type: application/json
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
 
 {
-   "nombre": "Super Administrador",
-   "descripcion": "Rol con control total",
-   "activo": true
+   "name": "Super Administrador",
+   "description": "Rol con control total",
+   "active": true
 }
 
 ### Eliminar Rol
 DELETE {{baseUrl}}/{{rolId}}
-Cookie: accessToken={{accessToken}}
-Cookie: refreshToken={{refreshToken}}
