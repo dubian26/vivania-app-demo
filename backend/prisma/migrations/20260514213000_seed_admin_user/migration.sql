@@ -35,7 +35,7 @@ INSERT INTO "Users" (
 VALUES (
   gen_random_uuid()::text,
   'root@admin.com',
-  'Admin*123',
+  '$2b$10$iKVYW7.KvqA0hyC5nSa48.3WOBQn7BrkNYC3DgsiNknuymFaKAAY2',
   'Root',
   'Admin',
   true,

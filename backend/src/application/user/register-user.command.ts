@@ -4,9 +4,10 @@ import { RoleRepository } from '@/domain/role/role-repository'
 import { User } from '@/domain/user/user'
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
+import { PasswordHasher } from '@/shared/contracts/password-hasher'
 import { IdResult } from '@/shared/models/id-result'
 import { Injectable } from '@/shared/util/injectable'
-import { v7 as uuidv7 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import { RegisterUserDTO } from './register-user.dto'
 import { RegisterUserValidator } from './register-user.validator'
 
@@ -16,6 +17,7 @@ export class RegisterUserCommand {
     private readonly validator: RegisterUserValidator,
     private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository,
+    private readonly passwordHasher: PasswordHasher,
   ) { }
 
   async execute(input: RegisterUserDTO): Promise<IdResult> {
@@ -27,10 +29,12 @@ export class RegisterUserCommand {
     const rol = await this.roleRepository.getByName(Role.CLIENTE)
     if (!rol) throw RoleError.NotExists()
 
+    const hashedPassword = await this.passwordHasher.hash(input.password)
+
     const newUser = User.create({
-      id: uuidv7(),
+      id: randomUUID(),
       email: input.email,
-      password: input.password,
+      password: hashedPassword,
       firstName: input.firstName,
       lastName: input.lastName,
       roleId: rol.id,

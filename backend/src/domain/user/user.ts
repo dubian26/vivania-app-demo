@@ -9,7 +9,7 @@ export interface UserCreate {
   roleId: string
 }
 
-export interface UserDB {
+export interface UserProps {
   id: string
   email: string
   password: string
@@ -37,110 +37,87 @@ export interface UserResult {
 }
 
 export class User {
-  private constructor() {}
+  private constructor(private props: UserProps) { }
 
-  public id: string = ''
-  public email: string = ''
-  public password: string = ''
-  public firstName: string = ''
-  public lastName: string = ''
-  public roleId: string = ''
-  public active: boolean = false
-  public emailVerified: boolean = false
-  public createdAt: Date = new Date()
-  public updatedAt: Date = new Date()
-  public roleName?: string
+  get id() { return this.props.id }
+  get email() { return this.props.email }
+  get password() { return this.props.password }
+  get firstName() { return this.props.firstName }
+  get lastName() { return this.props.lastName }
+  get fullName() { return `${this.firstName} ${this.lastName}` }
+  get roleId() { return this.props.roleId }
+  get active() { return this.props.active }
+  get emailVerified() { return this.props.emailVerified }
+  get createdAt() { return this.props.createdAt }
+  get updatedAt() { return this.props.updatedAt }
+  get roleName() { return this.props.roleName }
 
   static create(data: UserCreate): User {
-    const newUser = new User()
-    newUser.id = data.id
-    newUser.email = data.email
-    newUser.password = data.password
-    newUser.firstName = data.firstName
-    newUser.lastName = data.lastName
-    newUser.roleId = data.roleId
-    return newUser
+    return new User({
+      id: data.id,
+      email: data.email,
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      roleId: data.roleId,
+      active: false,
+      emailVerified: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
   }
 
-  static fromDB(data: UserDB) {
-    const newUser = new User()
-    newUser.id = data.id
-    newUser.email = data.email
-    newUser.password = data.password
-    newUser.firstName = data.firstName
-    newUser.lastName = data.lastName
-    newUser.roleId = data.roleId
-    newUser.active = data.active
-    newUser.emailVerified = data.emailVerified
-    newUser.createdAt = data.createdAt
-    newUser.updatedAt = data.updatedAt
-    newUser.roleName = data.roleName
-    return newUser
+  static fromDB(data: UserProps) {
+    return new User(data)
   }
 
-  toDB(): UserDB {
-    return {
-      id: this.id,
-      email: this.email,
-      password: this.password,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      roleId: this.roleId,
-      active: this.active,
-      emailVerified: this.emailVerified,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      roleName: this.roleName,
-    }
+  toDB(): UserProps {
+    return this.props
   }
 
   toResult(): UserResult {
     return {
-      id: this.id,
-      email: this.email,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      roleId: this.roleId,
-      active: this.active,
-      emailVerified: this.emailVerified,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      roleName: this.roleName,
+      id: this.props.id,
+      email: this.props.email,
+      firstName: this.props.firstName,
+      lastName: this.props.lastName,
+      roleId: this.props.roleId,
+      active: this.props.active,
+      emailVerified: this.props.emailVerified,
+      createdAt: this.props.createdAt,
+      updatedAt: this.props.updatedAt,
+      roleName: this.props.roleName,
     }
   }
 
   toUserInfo(): UserInfo {
     return {
-      id: this.id,
-      email: this.email,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      roleId: this.roleId,
-      roleName: this.roleName,
+      id: this.props.id,
+      email: this.props.email,
+      firstName: this.props.firstName,
+      lastName: this.props.lastName,
+      roleId: this.props.roleId,
+      roleName: this.props.roleName,
     }
   }
 
-  get fullName() {
-    return `${this.firstName} ${this.lastName}`
-  }
-
   private touch() {
-    this.updatedAt = new Date()
+    this.props.updatedAt = new Date()
   }
 
   rename(firstName: string, lastName: string) {
-    this.firstName = firstName
-    this.lastName = lastName
+    this.props.firstName = firstName
+    this.props.lastName = lastName
     this.touch()
   }
 
   activate() {
-    this.active = true
+    this.props.active = true
     this.touch()
   }
 
   verifyEmail() {
-    this.emailVerified = true
+    this.props.emailVerified = true
     this.touch()
   }
 }

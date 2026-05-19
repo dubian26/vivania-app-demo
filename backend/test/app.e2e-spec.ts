@@ -1,26 +1,39 @@
+import { AppModule } from '@/infrastructure/api/app.module'
+import { PasswordHasher } from '@/shared/contracts/password-hasher'
+import { ErrorModel } from '@/shared/errors/error-model'
 import { Test, TestingModule } from '@nestjs/testing'
 import request from 'supertest'
-import { AppModule } from '@/infrastructure/api/app.module'
-import { ErrorModel } from '@/shared/errors/error-model'
 
 import {
-  NestFastifyApplication,
   FastifyAdapter,
+  NestFastifyApplication,
 } from '@nestjs/platform-fastify'
 
 describe('AuthController (e2e)', () => {
   let app: NestFastifyApplication
+  const passwordHasher = {
+    compare: jest.fn(),
+    hash: jest.fn(),
+  }
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile()
+    })
+      .overrideProvider(PasswordHasher)
+      .useValue(passwordHasher)
+      .compile()
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter(),
     )
     await app.init()
     await app.getHttpAdapter().getInstance().ready()
+  })
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    passwordHasher.compare.mockResolvedValue(true)
   })
 
   it('/auth/login (POST)', () => {

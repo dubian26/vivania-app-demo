@@ -6,7 +6,7 @@ import { Injectable } from '@/shared/util/injectable'
 
 @Injectable()
 export class PrismaRoleRepository implements RoleRepository {
-  constructor(private readonly dbContext: PrismaDbContext) {}
+  constructor(private readonly dbContext: PrismaDbContext) { }
 
   async getById(id: string): Promise<Role | null> {
     const record = await this.dbContext.client().roles.findUnique({
@@ -35,7 +35,7 @@ export class PrismaRoleRepository implements RoleRepository {
 
     return records.map((record) => {
       return Role.fromDB(record)
-    })    
+    })
   }
 
   async search(params: SearchModel): Promise<Role[]> {
@@ -45,14 +45,14 @@ export class PrismaRoleRepository implements RoleRepository {
       take,
       where: search
         ? {
-            OR: [
-              { name: { contains: search, mode: 'insensitive' } },
-              { description: { contains: search, mode: 'insensitive' } },
-            ],
-          }
-        
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { description: { contains: search, mode: 'insensitive' } },
+          ],
+        }
+
         : undefined,
-      
+
       orderBy: { createdAt: 'desc' },
     })
 
