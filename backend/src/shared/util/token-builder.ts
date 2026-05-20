@@ -28,14 +28,14 @@ const getExpByTokenType = (
 export const tokenBuilder = ({ tokenType, userInfo }: Props) => {
   const jwtSecret = process.env.JWT_SECRET || ''
   const jwtEmisor = process.env.JWT_EMISOR || ''
-  const expAccessToken = process.env.EXP_ACCESS_TOKEN || '15m'
-  const expRefreshToken = process.env.EXP_REFRESH_TOKEN || '2d'
+  const expAccessToken = process.env.EXPIRE_ACCESS_TOKEN || '15m'
+  const expRefreshToken = process.env.EXPIRE_REFRESH_TOKEN || '2d'
 
   const expToken = getExpByTokenType(tokenType, expAccessToken, expRefreshToken)
   const expTokenMs = parseDurationMs(expToken)
 
   if (expTokenMs === null) {
-    throw new Error('EXP_ACCESS_TOKEN o EXP_REFRESH_TOKEN tiene una duración inválida')
+    throw new Error('EXPIRE_ACCESS_TOKEN o EXPIRE_REFRESH_TOKEN tiene una duración inválida')
   }
 
   const expTokenSeconds = Math.floor(expTokenMs / 1000)
