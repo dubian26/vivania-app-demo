@@ -13,26 +13,39 @@ datasource db {
 }
 
 model Users {
-  id            String    @id @default(uuid())
-  email         String    @unique @db.VarChar(100)
-  password      String    @db.VarChar(255)
-  firstName     String    @db.VarChar(50)
-  lastName      String    @db.VarChar(50)
-  active        Boolean   @default(true)
-  emailVerified Boolean   @default(false) @map("email_verified")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id            String   @id @default(uuid())
+  email         String   @unique @db.VarChar(100)
+  password      String   @db.VarChar(255)
+  firstName     String   @db.VarChar(50)
+  lastName      String   @db.VarChar(50)
+  active        Boolean  @default(true)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
   roleId        String
 
-  role          Roles     @relation(fields: [roleId], references: [id])
+  role        Roles         @relation(fields: [roleId], references: [id])
+  verifyCodes VerifyCodes[]
 }
 
 model Roles {
-  id          String    @id @default(uuid())
-  name        String    @unique @db.VarChar(50)
-  description String?   @db.VarChar(255)
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  users       Users[]
+  users Users[]
+}
+
+model VerifyCodes {
+  id         String   @id @default(uuid())
+  userId     String
+  code       String   @db.VarChar(6)
+  purpose    String   @db.VarChar(50)
+  expiration DateTime
+  used       Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

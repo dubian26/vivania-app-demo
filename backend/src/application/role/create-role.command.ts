@@ -18,7 +18,7 @@ export class CreateRoleCommand {
     //this.authorizedTo('/roles/nuevo')
     this.validator.validate(input)
 
-    const rol = await this.roleRepository.getByName(input.name)
+    const rol = await this.roleRepository.findByName(input.name)
     if (rol) throw RoleError.AlreadyExists()
 
     const newRole = Role.create({

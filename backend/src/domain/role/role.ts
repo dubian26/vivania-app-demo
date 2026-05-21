@@ -13,14 +13,6 @@ export interface RoleProps {
   updatedAt: Date
 }
 
-export interface RoleResult {
-  id: string
-  name: string
-  description: string | null
-  createdAt: Date
-  updatedAt: Date
-}
-
 export class Role {
   private constructor(private props: RoleProps) { }
 
@@ -52,7 +44,7 @@ export class Role {
     return this.props
   }
 
-  toResult(): RoleResult {
+  toResult() {
     return {
       id: this.props.id,
       name: this.props.name,

@@ -32,4 +32,12 @@ export class UserError {
       'User.EmailNotVerified',
     )
   }
+
+  static EmailAlreadyVerified() {
+    return new CustomError(
+      'El correo electrónico ya ha sido verificado.',
+      'validation',
+      'User.EmailAlreadyVerified',
+    )
+  }
 }

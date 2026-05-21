@@ -15,7 +15,7 @@ type AuthenticatedRequest = FastifyRequest & {
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) { }
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -31,7 +31,7 @@ export class JwtAuthGuard implements CanActivate {
     const accessToken = this.getAccessToken(request)
 
     if (!accessToken) {
-      throw BaseError.TokenInexistente()
+      throw BaseError.TokenNotFound()
     }
 
     try {
@@ -40,7 +40,7 @@ export class JwtAuthGuard implements CanActivate {
 
       return true
     } catch {
-      throw BaseError.TokenInvalido()
+      throw BaseError.InvalidToken()
     }
   }
 

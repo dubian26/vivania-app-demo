@@ -6,9 +6,9 @@ import { Injectable } from '@/shared/util/injectable'
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
-  constructor(private readonly dbContext: PrismaDbContext) {}
+  constructor(private readonly dbContext: PrismaDbContext) { }
 
-  async getById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<User | null> {
     const record = await this.dbContext.client().users.findUnique({
       where: { id },
       include: { role: { select: { name: true } } },
@@ -22,7 +22,7 @@ export class PrismaUserRepository implements UserRepository {
     return result
   }
 
-  async getByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<User | null> {
     const record = await this.dbContext.client().users.findUnique({
       where: { email },
       include: { role: { select: { name: true } } },
@@ -54,12 +54,12 @@ export class PrismaUserRepository implements UserRepository {
       take,
       where: search
         ? {
-            OR: [
-              { firstName: { contains: search, mode: 'insensitive' } },
-              { lastName: { contains: search, mode: 'insensitive' } },
-              { email: { contains: search, mode: 'insensitive' } },
-            ],
-          }
+          OR: [
+            { firstName: { contains: search, mode: 'insensitive' } },
+            { lastName: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+          ],
+        }
         : undefined,
       include: {
         role: {

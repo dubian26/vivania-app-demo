@@ -2,8 +2,8 @@ import { SearchModel } from '@/shared/models/search-model'
 import { Role } from './role'
 
 export abstract class RoleRepository {
-  abstract getById(id: string): Promise<Role | null>
-  abstract getByName(name: string): Promise<Role | null>
+  abstract findById(id: string): Promise<Role | null>
+  abstract findByName(name: string): Promise<Role | null>
   abstract listAll(): Promise<Role[]>
   abstract search(params: SearchModel): Promise<Role[]>
   abstract insert(role: Role): Promise<void>

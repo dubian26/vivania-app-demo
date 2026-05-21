@@ -71,8 +71,10 @@ export class User {
     return new User(data)
   }
 
-  toDB(): UserProps {
-    return this.props
+  toDB() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { roleName, ...rest } = this.props
+    return rest
   }
 
   toResult(): UserResult {

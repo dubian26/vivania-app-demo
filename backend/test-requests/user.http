@@ -1,30 +1,6 @@
 ### Variables
 @baseUrl = http://localhost:3000
 
-### Login
-POST {{baseUrl}}/auth/login
-Content-Type: application/json
-
-{
-   "email": "root@admin.com",
-   "password": "Admin*123"
-}
-
-### Refrescar Token
-POST {{baseUrl}}/auth/refrescar-token
-Content-Type: application/json
-
-### Crear Cuenta Usuario
-POST {{baseUrl}}/auth/register
-Content-Type: application/json
-
-{
-   "email": "dubian26@gmail.com",
-   "password": "Pruebas*1",
-   "firstName": "Dubian",
-   "lastName": "Sepulveda"
-}
-
 ### Listar Usuarios
 GET {{baseUrl}}/usuarios
 

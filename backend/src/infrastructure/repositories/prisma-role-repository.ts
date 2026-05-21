@@ -8,7 +8,7 @@ import { Injectable } from '@/shared/util/injectable'
 export class PrismaRoleRepository implements RoleRepository {
   constructor(private readonly dbContext: PrismaDbContext) { }
 
-  async getById(id: string): Promise<Role | null> {
+  async findById(id: string): Promise<Role | null> {
     const record = await this.dbContext.client().roles.findUnique({
       where: { id }
     })
@@ -19,7 +19,7 @@ export class PrismaRoleRepository implements RoleRepository {
     return result
   }
 
-  async getByName(name: string): Promise<Role | null> {
+  async findByName(name: string): Promise<Role | null> {
     const record = await this.dbContext.client().roles.findUnique({
       where: { name }
     })

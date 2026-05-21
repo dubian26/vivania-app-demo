@@ -1,0 +1,45 @@
+### Variables
+@baseUrl = http://localhost:3000
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+   "email": "root@admin.com",
+   "password": "Admin*123"
+}
+
+### Refrescar Token
+GET {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+### Registrar Usuario
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+   "email": "dubian26@gmail.com",
+   "password": "Pruebas*1",
+   "firstName": "Dubian",
+   "lastName": "Sepulveda"
+}
+
+### Verificar Email
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{
+   "email": "dubian26@gmail.com",
+   "code": "317894",
+   "purpose": "REGISTRO"
+}
+
+### Reenviar OTP
+POST {{baseUrl}}/auth/resend-otp
+Content-Type: application/json
+
+{
+   "email": "dubian26@gmail.com",
+   "purpose": "REGISTRO"
+}

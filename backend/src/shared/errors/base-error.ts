@@ -2,34 +2,34 @@ import { CustomError } from './custom-error'
 import type { ErrorDetail } from './error-model'
 
 export class BaseError {
-  static TokenInexistente() {
+  static TokenNotFound() {
     return new CustomError(
       'No autorizado. Token inexistente.',
       'token_expired',
-      'Auth.TokenInexistente',
+      'Auth.TokenNotFound',
     )
   }
 
-  static TokenInvalido() {
+  static InvalidToken() {
     return new CustomError(
       'Token inválido o expirado.',
       'token_expired',
-      'Auth.TokenInvalido',
+      'Auth.InvalidToken',
     )
   }
 
-  static RefreshTokenInexistente() {
+  static MissingRefreshToken() {
     return new CustomError(
       'Token de refresco no encontrado.',
       'token_expired',
-      'Auth.RefreshTokenInexistente',
+      'Auth.MissingRefreshToken',
     )
   }
-  static SesionExpirada() {
+  static SessionExpired() {
     return new CustomError(
       'Sesión expirada. Por favor, inicie sesión nuevamente.',
       'token_expired',
-      'Auth.SesionExpirada',
+      'Auth.SessionExpired',
     )
   }
   static ErrorRefrescarToken() {
@@ -70,13 +70,7 @@ export class BaseError {
       'Auth.CodigoExpirado',
     )
   }
-  static ReintentoMuyPronto(segundos: number) {
-    return new CustomError(
-      `Debes esperar ${segundos} segundos antes de solicitar otro código.`,
-      'validation',
-      'Auth.ReintentoMuyPronto',
-    )
-  }
+
   static NoAutorizado() {
     return new CustomError(
       'No cuenta con el permiso para realizar esta acción.',

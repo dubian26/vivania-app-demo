@@ -4,9 +4,13 @@ import { RoleRepository } from '@/domain/role/role-repository'
 import { User } from '@/domain/user/user'
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
+import { VerifyCode } from '@/domain/verify-code/verify-code'
+import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repository'
+import { EmailService } from '@/shared/contracts/email-service'
 import { PasswordHasher } from '@/shared/contracts/password-hasher'
 import { IdResult } from '@/shared/models/id-result'
 import { Injectable } from '@/shared/util/injectable'
+import { TxManager } from '@/shared/util/tx-manager'
 import { randomUUID } from 'node:crypto'
 import { RegisterUserDTO } from './register-user.dto'
 import { RegisterUserValidator } from './register-user.validator'
@@ -15,35 +19,60 @@ import { RegisterUserValidator } from './register-user.validator'
 export class RegisterUserCommand {
   constructor(
     private readonly validator: RegisterUserValidator,
-    private readonly userRepository: UserRepository,
-    private readonly roleRepository: RoleRepository,
+    private readonly userRepo: UserRepository,
+    private readonly roleRepo: RoleRepository,
+    private readonly verifyCodeRepo: VerifyCodeRepository,
     private readonly passwordHasher: PasswordHasher,
+    private readonly txManager: TxManager,
+    private readonly emailService: EmailService,
   ) { }
 
   async execute(input: RegisterUserDTO): Promise<IdResult> {
     this.validator.validate(input)
 
-    const existe = await this.userRepository.getByEmail(input.email)
+    const existe = await this.userRepo.findByEmail(input.email)
     if (existe) throw UserError.AlreadyExists()
 
-    const rol = await this.roleRepository.getByName(Role.CLIENTE)
+    const rol = await this.roleRepo.findByName(Role.CLIENTE)
     if (!rol) throw RoleError.NotExists()
 
-    const hashedPassword = await this.passwordHasher.hash(input.password)
+    const newUserId = randomUUID()
 
-    const newUser = User.create({
-      id: randomUUID(),
-      email: input.email,
-      password: hashedPassword,
-      firstName: input.firstName,
-      lastName: input.lastName,
-      roleId: rol.id,
+    await this.txManager.run(async () => {
+      const hashedPassword = await this.passwordHasher.hash(input.password)
+
+      const newUser = User.create({
+        id: newUserId,
+        email: input.email,
+        password: hashedPassword,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        roleId: rol.id,
+      })
+
+      await this.userRepo.insert(newUser)
+
+      const otp = Math.floor(100000 + Math.random() * 900000).toString()
+      const verifyCode = VerifyCode.create({
+        id: randomUUID(),
+        userId: newUserId,
+        code: otp,
+        purpose: 'REGISTRO',
+        expiration: new Date(Date.now() + 15 * 60 * 1000), // 15 mins
+      })
+
+      await this.verifyCodeRepo.insert(verifyCode)
+
+      const subject = 'Verifica tu correo electrónico'
+      const emailHtml = `<h1>¡Bienvenido a la Tienda Online!</h1>
+      <p>Tu código de verificación es: <b>${otp}</b></p>
+      <p>Este código espirará en 15 minutos.</p>`
+
+      await this.emailService.send(newUser.email, subject, emailHtml)
     })
 
-    await this.userRepository.insert(newUser)
-
     return {
-      id: newUser.id,
+      id: newUserId,
       message: 'Usuario creado. Por favor verifica tu email con el código OTP enviado.'
     }
   }

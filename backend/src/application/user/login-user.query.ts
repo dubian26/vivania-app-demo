@@ -16,7 +16,7 @@ export class LoginUserQuery {
 
   async execute(input: LoginUserDTO): Promise<UserInfo> {
     this.validator.validate(input)
-    const user = await this.userRepository.getByEmail(input.email)
+    const user = await this.userRepository.findByEmail(input.email)
 
     const isValidPassword = user
       ? await this.passwordHasher.compare(input.password, user.password)
