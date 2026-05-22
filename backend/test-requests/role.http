@@ -8,8 +8,7 @@ Content-Type: application/json
 
 {
    "name": "Administrador",
-   "description": "Rol con todos los accesos",
-   "active": true
+   "description": "Rol con todos los accesos"
 }
 
 ### Crear Rol (Cliente)
@@ -17,28 +16,28 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-   "name": "Manager 2",
-   "description": "Rol secundario",
-   "active": true
+   "name": "Nuevo Rol",
+   "description": "Rol secundario"
 }
 
 ### Listar todos los roles
 GET {{baseUrl}}
 
-### Obtener Rol por ID
-# Reemplaza el ID por uno generado
-@rolId = {{crearRol.response.body.id}}
-GET {{baseUrl}}/{{rolId}}
+@roleIdAdm = def3ab03-6e1f-4483-b76c-e4b02a429bc9
+@roleIdNew = af0f7c43-baf3-47e0-8f5f-12c7d0288ec3
+
+### Obtener Rol por ID (Administrador)
+GET {{baseUrl}}/{{roleIdAdm}}
 
 ### Actualizar Rol
-PUT {{baseUrl}}/{{rolId}}
+PUT {{baseUrl}}
 Content-Type: application/json
 
 {
-   "name": "Super Administrador",
-   "description": "Rol con control total",
-   "active": true
+   "id": "{{roleIdNew}}",
+   "name": "Nuevo Rol Editado",
+   "description": "Nuevo Rol Editado"
 }
 
 ### Eliminar Rol
-DELETE {{baseUrl}}/{{rolId}}
+DELETE {{baseUrl}}/{{roleIdNew}}

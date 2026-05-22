@@ -62,4 +62,9 @@ export class Role {
     this.props.name = name
     this.touch()
   }
+
+  updateDescription(description: string | null) {
+    this.props.description = description
+    this.touch()
+  }
 }

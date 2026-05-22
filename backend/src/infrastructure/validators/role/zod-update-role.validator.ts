@@ -1,18 +1,18 @@
-import { CreateRoleDTO } from '@/application/role/create-role.dto'
-import { CreateRoleValidator } from '@/application/role/create-role.validator'
-import { Injectable } from '@base/core'
+import { UpdateRoleDTO } from '@/application/role/update-role.dto'
+import { UpdateRoleValidator } from '@/application/role/update-role.validator'
 import { BaseError, ErrorDetail } from '@base/core/errors'
+import { Injectable } from '@base/core/util'
 import { z } from 'zod'
 
 const schema = z.object({
-  name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+  id: z.uuid(),
+  name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres').optional(),
   description: z.string().optional(),
-  active: z.boolean().optional()
 })
 
 @Injectable()
-export class ZodCreateRoleValidator extends CreateRoleValidator {
-  validate(input: CreateRoleDTO): void {
+export class ZodUpdateRoleValidator extends UpdateRoleValidator {
+  validate(input: UpdateRoleDTO): void {
     const result = schema.safeParse(input)
     if (result.success) return
 
