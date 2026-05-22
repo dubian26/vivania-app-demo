@@ -1,4 +1,4 @@
-import { CustomError } from '@/shared/errors/custom-error'
+import { CustomError } from '@base/core/errors'
 
 export class VerifyCodeError {
   static InvalidCode() {

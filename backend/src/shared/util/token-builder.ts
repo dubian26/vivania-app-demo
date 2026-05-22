@@ -1,4 +1,4 @@
-import { type UserInfo } from '@/shared/models/user-info'
+import { type UserInfo } from '@base/core/models'
 import jwt from 'jsonwebtoken'
 import ms from 'ms'
 
@@ -22,8 +22,8 @@ const getExpByTokenType = (
   expAccessToken: string,
   expRefreshToken: string,
 ) => tokenType === 'access'
-  ? expAccessToken
-  : expRefreshToken
+    ? expAccessToken
+    : expRefreshToken
 
 export const tokenBuilder = ({ tokenType, userInfo }: Props) => {
   const jwtSecret = process.env.JWT_SECRET || ''

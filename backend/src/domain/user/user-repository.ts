@@ -1,5 +1,5 @@
 import { User } from '@/domain/user/user'
-import { SearchModel } from '@/shared/models/search-model'
+import { SearchModel } from '@base/core/models'
 
 export abstract class UserRepository {
   abstract findById(id: string): Promise<User | null>

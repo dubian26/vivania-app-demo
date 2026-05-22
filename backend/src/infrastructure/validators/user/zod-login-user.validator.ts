@@ -1,8 +1,7 @@
 import { LoginUserDTO } from '@/application/user/login-user.dto'
 import { LoginUserValidator } from '@/application/user/login-user.validator'
-import { BaseError } from '@/shared/errors/base-error'
-import { ErrorDetail } from '@/shared/errors/error-model'
-import { Injectable } from '@/shared/util/injectable'
+import { BaseError, ErrorDetail } from '@base/core/errors'
+import { Injectable } from '@base/core/util'
 import { z } from 'zod'
 
 export const schema = z.object({

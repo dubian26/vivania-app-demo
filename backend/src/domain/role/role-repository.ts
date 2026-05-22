@@ -1,4 +1,4 @@
-import { SearchModel } from '@/shared/models/search-model'
+import { SearchModel } from '@base/core/models'
 import { Role } from './role'
 
 export abstract class RoleRepository {

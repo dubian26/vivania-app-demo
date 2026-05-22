@@ -4,9 +4,9 @@ import { FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 
 import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator'
-import { BaseError } from '@/shared/errors/base-error'
-import { UserInfo } from '@/shared/models/user-info'
-import { Injectable } from '@/shared/util/injectable'
+import { BaseError } from '@base/core/errors'
+import { UserInfo } from '@base/core/models'
+import { Injectable } from '@base/core/util'
 
 type AuthenticatedRequest = FastifyRequest & {
   cookies?: { accessToken?: string }

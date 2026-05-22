@@ -1,4 +1,4 @@
-import { UserInfo } from '@/shared/models/user-info'
+import { UserInfo } from '@base/core/models'
 
 export interface VerifyUserDTO {
   email: string

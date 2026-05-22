@@ -1,5 +1,5 @@
-import { type UserInfo } from '@/shared/models/user-info'
 import { tokenBuilder } from '@/shared/util/token-builder'
+import { type UserInfo } from '@base/core/models'
 import { type FastifyReply } from 'fastify'
 
 type CookieOptions = {

@@ -1,8 +1,7 @@
 import { VerifyUserDTO } from '@/application/user/verify-user.dto'
 import { VerifyUserValidator } from '@/application/user/verify-user.validator'
-import { BaseError } from '@/shared/errors/base-error'
-import { ErrorDetail } from '@/shared/errors/error-model'
-import { Injectable } from '@/shared/util/injectable'
+import { BaseError, ErrorDetail } from '@base/core/errors'
+import { Injectable } from '@base/core/util'
 import { z } from 'zod'
 
 const schema = z.object({

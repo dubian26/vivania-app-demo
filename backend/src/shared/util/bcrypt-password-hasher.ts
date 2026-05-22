@@ -1,5 +1,5 @@
-import { PasswordHasher } from '@/shared/contracts/password-hasher'
-import { Injectable } from '@/shared/util/injectable'
+import { PasswordHasher } from '@base/core/contracts'
+import { Injectable } from '@base/core/util'
 import { compare, hash } from 'bcryptjs'
 
 @Injectable()

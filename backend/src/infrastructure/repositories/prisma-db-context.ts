@@ -1,5 +1,5 @@
 import { PrismaDbClient } from '@/infrastructure/repositories/prisma-db-types'
-import { Injectable } from '@/shared/util/injectable'
+import { Injectable } from '@base/core/util'
 import { OnModuleDestroy } from '@nestjs/common'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Prisma, PrismaClient } from '@prisma/client'

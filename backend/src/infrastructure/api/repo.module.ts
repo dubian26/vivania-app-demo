@@ -6,7 +6,7 @@ import { PrismaRoleRepository } from '@/infrastructure/repositories/prisma-role-
 import { PrismaTxManager } from '@/infrastructure/repositories/prisma-tx-manager'
 import { PrismaUserRepository } from '@/infrastructure/repositories/prisma-user-repository'
 import { PrismaVerifyCodeRepository } from '@/infrastructure/repositories/prisma-verify-code-repository'
-import { TxManager } from '@/shared/util/tx-manager'
+import { TxManager } from '@base/core/contracts'
 import { Global, Module } from '@nestjs/common'
 
 @Global()

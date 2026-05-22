@@ -1,5 +1,5 @@
-import { EmailService } from '@/shared/contracts/email-service'
-import { Injectable } from './injectable'
+import { EmailService } from '@base/core/contracts'
+import { Injectable } from '@base/core/util'
 
 @Injectable()
 export class BrevoEmailService implements EmailService {

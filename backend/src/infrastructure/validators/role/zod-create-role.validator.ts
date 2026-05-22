@@ -1,7 +1,6 @@
 import { CreateRoleDTO } from '@/application/role/create-role.dto'
 import { CreateRoleValidator } from '@/application/role/create-role.validator'
-import { BaseError } from '@/shared/errors/base-error'
-import { ErrorDetail } from '@/shared/errors/error-model'
+import { BaseError, ErrorDetail } from '@base/core/errors'
 import { Injectable } from '@nestjs/common'
 import { z } from 'zod'
 

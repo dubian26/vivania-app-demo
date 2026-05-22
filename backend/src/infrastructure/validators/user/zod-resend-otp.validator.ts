@@ -1,8 +1,7 @@
 import { ResendOtpDTO } from '@/application/user/resend-otp.dto'
 import { ResendOtpValidator } from '@/application/user/resend-otp.validator'
-import { BaseError } from '@/shared/errors/base-error'
-import { ErrorDetail } from '@/shared/errors/error-model'
-import { Injectable } from '@/shared/util/injectable'
+import { BaseError, ErrorDetail } from '@base/core/errors'
+import { Injectable } from '@base/core/util'
 import { z } from 'zod'
 
 const schema = z.object({
