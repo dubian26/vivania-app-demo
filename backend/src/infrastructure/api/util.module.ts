@@ -1,6 +1,7 @@
 import { BcryptPasswordHasher } from '@/shared/util/bcrypt-password-hasher'
 import { BrevoEmailService } from '@/shared/util/brevo-email-service'
-import { EmailService, PasswordHasher } from '@base/core/contracts'
+import { ZodUuidValidator } from '@/shared/util/zod-uuid.validator'
+import { EmailService, PasswordHasher, UuidValidator } from '@base/core/contracts'
 import { Global, Module } from '@nestjs/common'
 
 @Global()
@@ -13,8 +14,16 @@ import { Global, Module } from '@nestjs/common'
     {
       provide: EmailService,
       useClass: BrevoEmailService,
+    },
+    {
+      provide: UuidValidator,
+      useClass: ZodUuidValidator,
     }
   ],
-  exports: [PasswordHasher, EmailService],
+  exports: [
+    PasswordHasher,
+    EmailService,
+    UuidValidator,
+  ],
 })
 export class UtilModule { }

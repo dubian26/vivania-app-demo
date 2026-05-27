@@ -1,6 +1,6 @@
 import { RegisterUserDTO } from '@/application/user/register-user.dto'
 import { RegisterUserValidator } from '@/application/user/register-user.validator'
-import { BaseError, ErrorDetail } from '@base/core/errors'
+import { ZodValidator } from '@/shared/util/zod-validator'
 import { Injectable } from '@base/core/util'
 import { z } from 'zod'
 
@@ -20,14 +20,6 @@ const schema = z.object({
 @Injectable()
 export class ZodRegisterUserValidator extends RegisterUserValidator {
   validate(input: RegisterUserDTO): void {
-    const result = schema.safeParse(input)
-    if (result.success) return
-
-    const details: ErrorDetail[] = result.error.issues.map((issue) => ({
-      property: issue.path.join('.'),
-      message: issue.message,
-    }))
-
-    throw BaseError.ValidationError(details)
+    ZodValidator.parse(schema, input)
   }
 }

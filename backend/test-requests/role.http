@@ -2,7 +2,6 @@
 @baseUrl = http://localhost:3000/roles
 
 ### Crear Rol (Administrador)
-# @name crearRol
 POST {{baseUrl}}
 Content-Type: application/json
 
@@ -24,10 +23,13 @@ Content-Type: application/json
 GET {{baseUrl}}
 
 @roleIdAdm = def3ab03-6e1f-4483-b76c-e4b02a429bc9
-@roleIdNew = af0f7c43-baf3-47e0-8f5f-12c7d0288ec3
+@roleIdNew = 7bd4de1a-8ced-4e04-a067-59ece53af49d
 
 ### Obtener Rol por ID (Administrador)
 GET {{baseUrl}}/{{roleIdAdm}}
+
+### Busqueda con filtros
+GET {{baseUrl}}/search?skip=q&take=3&search=Admin
 
 ### Actualizar Rol
 PUT {{baseUrl}}
