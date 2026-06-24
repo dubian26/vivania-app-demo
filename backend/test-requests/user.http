@@ -1,26 +1,5 @@
 ### Variables
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3000/users
 
-### Listar Usuarios
-GET {{baseUrl}}/usuarios
-
-### Buscar Usuario por Id
-GET {{baseUrl}}/usuarios/019cef77ac8677efb5f02cbe529f3374
-
-### Buscar Usuario por Email
-GET {{baseUrl}}/usuarios/email/dubian26@gmail.com
-
-### Actualizar Usuario
-PUT {{baseUrl}}/usuarios/019cef77ac8677efb5f02cbe529f3374
-Content-Type: application/json
-
-{
-   "nombres": "Juan Actualizado",
-   "apellidos": "Perez Actualizado"
-}
-
-### Inactivar Usuario
-PUT {{baseUrl}}/usuarios/019cef77ac8677efb5f02cbe529f3374/inactivar
-
-### Eliminar Usuario
-DELETE {{baseUrl}}/usuarios/019cf83a7882728eafebd0b9e839a675
+### Listar todos o con filtros
+GET {{baseUrl}}?skip=0&take=5&search=
