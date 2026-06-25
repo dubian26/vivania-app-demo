@@ -3,3 +3,12 @@
 
 ### Listar todos o con filtros
 GET {{baseUrl}}?skip=0&take=5&search=
+
+@userId = b4e2a2d9-7ea4-41c3-bc19-bce2ff550e8e
+@userEmail = dubian26@gmail.com
+
+### Buscar por Id
+GET {{baseUrl}}/{{userId}}
+
+### Buscar por Id
+GET {{baseUrl}}/by-email?email={{userEmail}}

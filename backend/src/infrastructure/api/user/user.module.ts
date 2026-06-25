@@ -1,3 +1,6 @@
+import { GetUserByEmailQuery } from '@/application/user/get-user-by-email.query'
+import { GetUserByEmailValidator } from '@/application/user/get-user-by-email.validator'
+import { GetUserQuery } from '@/application/user/get-user.query'
 import { LoginUserQuery } from '@/application/user/login-user.query'
 import { LoginUserValidator } from '@/application/user/login-user.validator'
 import { RegisterUserCommand } from '@/application/user/register-user.command'
@@ -8,6 +11,7 @@ import { SearchUsersQuery } from '@/application/user/search-users.query'
 import { SearchUsersValidator } from '@/application/user/search-users.validator'
 import { VerifyUserCommand } from '@/application/user/verify-user.command'
 import { VerifyUserValidator } from '@/application/user/verify-user.validator'
+import { ZodGetUserByEmailValidator } from '@/infrastructure/validators/user/zod-get-user-by-email.validator'
 import { ZodLoginUserValidator } from '@/infrastructure/validators/user/zod-login-user.validator'
 import { ZodRegisterUserValidator } from '@/infrastructure/validators/user/zod-register-user.validator'
 import { ZodResendOtpValidator } from '@/infrastructure/validators/user/zod-resend-otp.validator'
@@ -25,6 +29,8 @@ import { UserController } from './user.controller'
     ResendOtpCommand,
     VerifyUserCommand,
     SearchUsersQuery,
+    GetUserQuery,
+    GetUserByEmailQuery,
     {
       provide: LoginUserValidator,
       useClass: ZodLoginUserValidator,
@@ -44,6 +50,10 @@ import { UserController } from './user.controller'
     {
       provide: SearchUsersValidator,
       useClass: ZodSearchUsersValidator,
+    },
+    {
+      provide: GetUserByEmailValidator,
+      useClass: ZodGetUserByEmailValidator,
     },
   ],
 })
