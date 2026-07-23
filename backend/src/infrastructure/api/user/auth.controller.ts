@@ -4,19 +4,23 @@ import { RegisterUserCommand } from '@/application/user/register-user.command'
 import { type RegisterUserDTO } from '@/application/user/register-user.dto'
 import { ResendOtpCommand } from '@/application/user/resend-otp.command'
 import { type ResendOtpDTO } from '@/application/user/resend-otp.dto'
+import { UpdateProfileCommand } from '@/application/user/update-profile.command'
+import { type UpdateProfileDTO } from '@/application/user/update-profile.dto'
 import { VerifyUserCommand } from '@/application/user/verify-user.command'
 import { type VerifyUserDTO, type VerifyUserResult } from '@/application/user/verify-user.dto'
 import { Public } from '@/shared/decorators/public.decorator'
 import { setAccessTokenCookie, setAuthCookies } from '@/shared/util/cookie-helper'
 import { BaseError } from '@base/core/errors'
 import { type IdResult, UserInfo } from '@base/core/models'
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
+import { Body, Controller, Get, Patch, Post, Req, Res } from '@nestjs/common'
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 
 type RefreshTokenRequest = FastifyRequest & {
   cookies?: { refreshToken?: string }
 }
+
+type AuthenticatedRequest = FastifyRequest & { user?: UserInfo }
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +29,7 @@ export class AuthController {
     private readonly registerUserCommand: RegisterUserCommand,
     private readonly verifyUserQuery: VerifyUserCommand,
     private readonly resendOtpCommand: ResendOtpCommand,
+    private readonly updateProfileCommand: UpdateProfileCommand,
   ) { }
 
   @Public()
@@ -103,5 +108,14 @@ export class AuthController {
   async resendOtp(@Body() req: ResendOtpDTO): Promise<{ message: string }> {
     const result = await this.resendOtpCommand.execute(req)
     return result
+  }
+
+  @Patch('profile')
+  async updateProfile(
+    @Body() req: UpdateProfileDTO,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<IdResult> {
+    const userId = request.user!.id
+    return this.updateProfileCommand.execute(userId, req)
   }
 }

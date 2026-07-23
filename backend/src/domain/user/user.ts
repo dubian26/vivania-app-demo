@@ -122,4 +122,19 @@ export class User {
     this.props.emailVerified = true
     this.touch()
   }
+
+  changePassword(hashedPassword: string) {
+    this.props.password = hashedPassword
+    this.touch()
+  }
+
+  setActive(active: boolean) {
+    this.props.active = active
+    this.touch()
+  }
+
+  setRole(roleId: string) {
+    this.props.roleId = roleId
+    this.touch()
+  }
 }

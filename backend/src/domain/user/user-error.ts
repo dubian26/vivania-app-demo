@@ -40,4 +40,12 @@ export class UserError {
       'User.EmailAlreadyVerified',
     )
   }
+
+  static NotAuthorized() {
+    return new CustomError(
+      'No autorizado. Se requieren permisos de administrador.',
+      'validation',
+      'User.NotAuthorized',
+    )
+  }
 }

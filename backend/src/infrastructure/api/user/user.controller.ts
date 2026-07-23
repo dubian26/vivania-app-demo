@@ -1,9 +1,15 @@
+import { type UpdateUserDTO } from '@/application/user/update-user.dto'
+import { UpdateUserCommand } from '@/application/user/update-user.command'
 import { type GetUserByEmailDTO } from '@/application/user/get-user-by-email.dto'
 import { GetUserByEmailQuery } from '@/application/user/get-user-by-email.query'
 import { GetUserQuery } from '@/application/user/get-user.query'
 import { type SearchUsersDTO } from '@/application/user/search-users.dto'
 import { SearchUsersQuery } from '@/application/user/search-users.query'
-import { Controller, Get, Param, Query } from '@nestjs/common'
+import { Body, Controller, Get, Param, Patch, Query, Req } from '@nestjs/common'
+import { type FastifyRequest } from 'fastify'
+import { UserInfo } from '@base/core/models'
+
+type AuthenticatedRequest = FastifyRequest & { user?: UserInfo }
 
 @Controller('users')
 export class UserController {
@@ -11,6 +17,7 @@ export class UserController {
     private readonly searchUsersQuery: SearchUsersQuery,
     private readonly getUserQuery: GetUserQuery,
     private readonly getUserByEmailQuery: GetUserByEmailQuery,
+    private readonly updateUserCommand: UpdateUserCommand,
   ) { }
 
   @Get('by-email')
@@ -26,5 +33,14 @@ export class UserController {
   @Get()
   search(@Query() filtros: SearchUsersDTO) {
     return this.searchUsersQuery.execute(filtros)
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() req: UpdateUserDTO,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.updateUserCommand.execute(id, req, request.user!.roleName!)
   }
 }
