@@ -1,7 +1,7 @@
 import { CreateRoleDTO } from '@/application/role/create-role.dto'
 import { CreateRoleValidator } from '@/application/role/create-role.validator'
 import { ZodValidator } from '@/shared/util/zod-validator'
-import { Injectable } from '@base/core'
+import { Injectable } from '@js-core/domain'
 import { z } from 'zod'
 
 const schema = z.object({

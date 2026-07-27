@@ -1,7 +1,7 @@
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
-import { IdResult } from '@base/core/models'
-import { Injectable } from '@base/core/util'
+import { IdResult } from '@js-core/domain/models'
+import { Injectable } from '@js-core/domain/util'
 import { UpdateRoleDTO } from './update-role.dto'
 import { UpdateRoleValidator } from './update-role.validator'
 

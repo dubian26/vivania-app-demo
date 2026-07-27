@@ -1,4 +1,4 @@
-import { CustomError } from '@base/core/errors'
+import { CustomError } from '@js-core/domain/errors'
 
 export class VerifyCodeError {
   static InvalidCode() {

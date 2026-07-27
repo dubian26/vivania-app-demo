@@ -1,7 +1,7 @@
 import { SearchUsersDTO } from '@/application/user/search-users.dto'
 import { SearchUsersValidator } from '@/application/user/search-users.validator'
 import { ZodValidator } from '@/shared/util/zod-validator'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 import { z } from 'zod'
 
 const schema = z.object({

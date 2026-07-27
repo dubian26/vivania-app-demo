@@ -1,6 +1,6 @@
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 import { GetUserByEmailDTO } from './get-user-by-email.dto'
 import { GetUserByEmailValidator } from './get-user-by-email.validator'
 

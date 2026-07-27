@@ -1,5 +1,5 @@
 import { RoleRepository } from '@/domain/role/role-repository'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 import { SearchRolesDTO } from './search-roles.dto'
 import { SearchRolesValidator } from './search-roles.validator'
 

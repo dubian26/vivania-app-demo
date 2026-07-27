@@ -1,6 +1,6 @@
 import { ZodValidator } from '@/shared/util/zod-validator'
-import { UuidValidator } from '@base/core/contracts'
-import { Injectable } from '@base/core/util'
+import { UuidValidator } from '@js-core/domain/contracts'
+import { Injectable } from '@js-core/domain/util'
 import { z } from 'zod'
 
 const schema = z.uuid({ message: 'El ID proporcionado no es un UUID válido' })

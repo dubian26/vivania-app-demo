@@ -1,4 +1,4 @@
-import { UserInfo } from '@base/core/models'
+import { UserInfo } from '@js-core/domain/models'
 
 export interface VerifyUserDTO {
   email: string

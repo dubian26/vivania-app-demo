@@ -1,7 +1,7 @@
 import { BcryptPasswordHasher } from '@/shared/util/bcrypt-password-hasher'
 import { BrevoEmailService } from '@/shared/util/brevo-email-service'
 import { ZodUuidValidator } from '@/shared/util/zod-uuid.validator'
-import { EmailService, PasswordHasher, UuidValidator } from '@base/core/contracts'
+import { EmailService, PasswordHasher, UuidValidator } from '@js-core/domain/contracts'
 import { Global, Module } from '@nestjs/common'
 
 @Global()

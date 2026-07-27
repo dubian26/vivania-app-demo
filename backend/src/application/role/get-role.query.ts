@@ -1,7 +1,7 @@
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
-import { UuidValidator } from '@base/core/contracts'
-import { Injectable } from '@base/core/util'
+import { UuidValidator } from '@js-core/domain/contracts'
+import { Injectable } from '@js-core/domain/util'
 
 @Injectable()
 export class GetRoleQuery {

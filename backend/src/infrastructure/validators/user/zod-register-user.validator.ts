@@ -1,7 +1,7 @@
 import { RegisterUserDTO } from '@/application/user/register-user.dto'
 import { RegisterUserValidator } from '@/application/user/register-user.validator'
 import { ZodValidator } from '@/shared/util/zod-validator'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 import { z } from 'zod'
 
 const schema = z.object({

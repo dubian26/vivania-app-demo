@@ -1,5 +1,5 @@
 import { RoleRepository } from '@/domain/role/role-repository'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 
 @Injectable()
 export class ListRolesQuery {

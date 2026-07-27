@@ -7,7 +7,7 @@ import { type SearchRolesDTO } from '@/application/role/search-roles.dto'
 import { SearchRolesQuery } from '@/application/role/search-roles.query'
 import { UpdateRoleCommand } from '@/application/role/update-role.command'
 import { type UpdateRoleDTO } from '@/application/role/update-role.dto'
-import { type IdResult } from '@base/core/models'
+import { type IdResult } from '@js-core/domain/models'
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 
 @Controller('roles')

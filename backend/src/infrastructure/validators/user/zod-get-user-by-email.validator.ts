@@ -1,7 +1,7 @@
 import { GetUserByEmailDTO } from '@/application/user/get-user-by-email.dto'
 import { GetUserByEmailValidator } from '@/application/user/get-user-by-email.validator'
 import { ZodValidator } from '@/shared/util/zod-validator'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 import { z } from 'zod'
 
 const schema = z.object({

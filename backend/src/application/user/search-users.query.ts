@@ -1,5 +1,5 @@
 import { UserRepository } from '@/domain/user/user-repository'
-import { Injectable } from '@base/core/util'
+import { Injectable } from '@js-core/domain/util'
 import { SearchUsersDTO } from './search-users.dto'
 import { SearchUsersValidator } from './search-users.validator'
 

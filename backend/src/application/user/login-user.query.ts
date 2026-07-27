@@ -1,8 +1,8 @@
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { PasswordHasher } from '@base/core/contracts'
-import { type UserInfo } from '@base/core/models'
-import { Injectable } from '@base/core/util'
+import { PasswordHasher } from '@js-core/domain/contracts'
+import { type UserInfo } from '@js-core/domain/models'
+import { Injectable } from '@js-core/domain/util'
 import { LoginUserDTO } from './login-user.dto'
 import { LoginUserValidator } from './login-user.validator'
 

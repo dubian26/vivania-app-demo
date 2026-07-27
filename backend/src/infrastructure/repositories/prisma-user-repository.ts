@@ -1,8 +1,8 @@
 import { User } from '@/domain/user/user'
 import { UserRepository } from '@/domain/user/user-repository'
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
-import { SearchModel } from '@base/core/models'
-import { Injectable } from '@base/core/util'
+import { SearchModel } from '@js-core/domain/models'
+import { Injectable } from '@js-core/domain/util'
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {

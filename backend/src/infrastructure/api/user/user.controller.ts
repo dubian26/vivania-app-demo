@@ -7,7 +7,7 @@ import { type SearchUsersDTO } from '@/application/user/search-users.dto'
 import { SearchUsersQuery } from '@/application/user/search-users.query'
 import { Body, Controller, Get, Param, Patch, Query, Req } from '@nestjs/common'
 import { type FastifyRequest } from 'fastify'
-import { UserInfo } from '@base/core/models'
+import { UserInfo } from '@js-core/domain/models'
 
 type AuthenticatedRequest = FastifyRequest & { user?: UserInfo }
 

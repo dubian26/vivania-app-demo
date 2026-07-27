@@ -1,8 +1,8 @@
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { PasswordHasher } from '@base/core/contracts'
-import { IdResult } from '@base/core/models'
-import { Injectable } from '@base/core/util'
+import { PasswordHasher } from '@js-core/domain/contracts'
+import { IdResult } from '@js-core/domain/models'
+import { Injectable } from '@js-core/domain/util'
 import { UpdateProfileDTO } from './update-profile.dto'
 import { UpdateProfileValidator } from './update-profile.validator'
 

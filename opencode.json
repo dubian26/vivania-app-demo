@@ -1,8 +1,5 @@
 {
    "$schema": "https://opencode.ai/config.json",
-   "plugin": [
-      "opencode-gemini-auth@latest"
-   ],
    "mcp": {
       "context7": {
          "type": "local",
@@ -37,21 +34,5 @@
          "package-lock.json",
          "**/.*"
       ]
-   },
-   "small_model": "github-copilot/gpt-5-mini",
-   "default_agent": "plan",
-   "agent": {
-      "plan": {
-         "model": "github-copilot/gpt-5.4",
-         "variant": "high"
-      },
-      "build": {
-         "model": "github-copilot/gpt-5.4",
-         "variant": "medium",
-         "permissions": {
-            "bash": "ask",
-            "file_edits": "ask"
-         }
-      }
    }
 }
