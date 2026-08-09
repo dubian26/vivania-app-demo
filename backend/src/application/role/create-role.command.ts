@@ -1,6 +1,7 @@
 import { Role } from '@/domain/role/role'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
+import { AuthService } from '@/shared/util/auth-service'
 import { IdResult } from '@js-core/domain/models'
 import { Injectable } from '@js-core/domain/util'
 import { randomUUID } from 'node:crypto'
@@ -12,10 +13,11 @@ export class CreateRoleCommand {
   constructor(
     private readonly validator: CreateRoleValidator,
     private readonly roleRepository: RoleRepository,
+    private readonly authService: AuthService,
   ) { }
 
   async execute(input: CreateRoleDTO): Promise<IdResult> {
-    //this.authorizedTo('/roles/nuevo')
+    this.authService.authorizedTo('/roles/nuevo')
     this.validator.validate(input)
 
     const rol = await this.roleRepository.findByName(input.name)

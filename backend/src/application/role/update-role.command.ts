@@ -1,5 +1,6 @@
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
+import { AuthService } from '@/shared/util/auth-service'
 import { IdResult } from '@js-core/domain/models'
 import { Injectable } from '@js-core/domain/util'
 import { UpdateRoleDTO } from './update-role.dto'
@@ -10,9 +11,11 @@ export class UpdateRoleCommand {
   constructor(
     private readonly validator: UpdateRoleValidator,
     private readonly roleRepository: RoleRepository,
+    private readonly authService: AuthService,
   ) { }
 
   async execute(input: UpdateRoleDTO): Promise<IdResult> {
+    this.authService.authorizedTo('/roles/editar')
     this.validator.validate(input)
 
     const role = await this.roleRepository.findById(input.id)

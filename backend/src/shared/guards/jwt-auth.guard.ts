@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core'
 import { FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 
+import { ContextStorageService } from '@/shared/context/context-storage.service'
 import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator'
 import { BaseError } from '@js-core/domain/errors'
 import { UserInfo } from '@js-core/domain/models'
@@ -15,7 +16,10 @@ type AuthenticatedRequest = FastifyRequest & {
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) { }
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly contextStorage: ContextStorageService,
+  ) { }
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -37,6 +41,24 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const jwtSecret = process.env.JWT_SECRET || ''
       request.user = jwt.verify(accessToken, jwtSecret) as UserInfo
+
+      this.contextStorage.setContext({
+        userInfo: request.user,
+        permissions: [
+          {
+            id: 'perm-1',
+            path: '/roles/editar',
+            title: 'Acceso a editar roles',
+            type: 'ACTION',
+            icon: null,
+            order: 1,
+            active: true,
+            parentId: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }
+        ]
+      })
 
       return true
     } catch {

@@ -22,14 +22,14 @@ Content-Type: application/json
 ### Listar todos los roles
 GET {{baseUrl}}
 
-@roleIdAdm = def3ab03-6e1f-4483-b76c-e4b02a429bc9
-@roleIdNew = 7bd4de1a-8ced-4e04-a067-59ece53af49d
+@roleIdAdm = 2597f9c2-f1c5-41d8-84fb-a2566e3f3952
+@roleIdNew = de49e74c-82a0-4a90-8339-e577269e3509
 
 ### Obtener Rol por ID (Administrador)
 GET {{baseUrl}}/{{roleIdAdm}}
 
 ### Busqueda con filtros
-GET {{baseUrl}}/search?skip=q&take=3&search=Admin
+GET {{baseUrl}}/search?skip=0&take=3&search=Admin
 
 ### Actualizar Rol
 PUT {{baseUrl}}
