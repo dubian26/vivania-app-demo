@@ -1,0 +1,71 @@
+### Variables
+@baseUrl = http://localhost:3000/permissions
+@roleIdAdm = 2597f9c2-f1c5-41d8-84fb-a2566e3f3952
+
+### Listar todos los permisos
+GET {{baseUrl}}
+
+### Listar permisos de un rol
+GET {{baseUrl}}/role/{{roleIdAdm}}
+
+### Guardar permisos de un rol (activa/crea los indicados y desactiva el resto)
+POST {{baseUrl}}/role/{{roleIdAdm}}
+Content-Type: application/json
+
+{
+   "permissionIds": [
+      "b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0002",
+      "b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0201"
+   ]
+}
+
+### Crear permiso (menú raíz)
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+   "path": "/reportes",
+   "title": "Reportes",
+   "type": "MENU",
+   "icon": "FileText",
+   "order": 40,
+   "active": true,
+   "parentId": null
+}
+
+@permisoMenuId = <ID_MENU_DEVUELTO>
+
+### Crear permiso (acción hija del menú /reportes)
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+   "path": "/reportes/acceso",
+   "title": "Acceso",
+   "type": "ACTION",
+   "icon": "LogIn",
+   "order": 1,
+   "active": true,
+   "parentId": "{{permisoMenuId}}"
+}
+
+@permisoAccionId = <ID de la ACCION creada>
+
+### Actualizar permiso (no se puede cambiar el path si tiene hijos)
+PUT {{baseUrl}}/{{permisoAccionId}}
+Content-Type: application/json
+
+{
+   "path": "/reportes/ver",
+   "title": "Ver Reportes",
+   "type": "ACTION",
+   "icon": "Eye",
+   "order": 2,
+   "active": true
+}
+
+### Eliminar permiso hijo primero (no puede tener hijos asociados)
+DELETE {{baseUrl}}/{{permisoAccionId}}
+
+### Eliminar permiso menú (ahora sí, ya sin hijos)
+DELETE {{baseUrl}}/{{permisoMenuId}}

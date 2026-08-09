@@ -12,6 +12,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum PermissionType {
+  MENU
+  ACTION
+}
+
 model Users {
   id            String   @id @default(uuid())
   email         String   @unique @db.VarChar(100)
@@ -36,6 +41,41 @@ model Roles {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   users Users[]
+  rolePermissions RolePermissions[]
+}
+
+model Permissions {
+  id        String         @id @default(uuid())
+  path      String         @db.VarChar(100)
+  title     String         @db.VarChar(100)
+  type      PermissionType
+  icon      String?        @db.VarChar(50)
+  order     Int            @default(0)
+  active    Boolean        @default(true)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  parentId String?
+  parent   Permissions?  @relation("PermissionsTree", fields: [parentId], references: [id])
+  children Permissions[] @relation("PermissionsTree")
+
+  rolePermissions RolePermissions[]
+
+  @@index([parentId])
+}
+
+model RolePermissions {
+  id           String      @id @default(uuid())
+  roleId       String
+  permissionId String
+  active       Boolean     @default(true)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  role       Roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
 }
 
 model VerifyCodes {
