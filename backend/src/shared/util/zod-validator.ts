@@ -1,4 +1,5 @@
-import { BaseError, ErrorDetail } from '@js-core/domain/errors'
+import { BaseError } from '@/base/errors/base-error'
+import { ErrorDetail } from '@/base/errors/error-model'
 import { z } from 'zod'
 
 export class ZodValidator {

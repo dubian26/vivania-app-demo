@@ -1,7 +1,7 @@
 import { VerifyCode } from '@/domain/verify-code/verify-code'
 import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repository'
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
-import { Injectable } from '@js-core/domain/util'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class PrismaVerifyCodeRepository implements VerifyCodeRepository {

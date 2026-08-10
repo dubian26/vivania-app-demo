@@ -1,8 +1,8 @@
 import { Role } from '@/domain/role/role'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
-import { SearchModel } from '@js-core/domain/models'
-import { Injectable } from '@js-core/domain/util'
+import { SearchModel } from '@/base/models/search-model'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class PrismaRoleRepository implements RoleRepository {

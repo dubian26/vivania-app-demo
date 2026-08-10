@@ -1,4 +1,4 @@
-import { PermissionType } from '@js-core/domain/models'
+import { PermissionType } from '@/base/models/permission-model'
 
 export interface PermissionCreate {
   id: string

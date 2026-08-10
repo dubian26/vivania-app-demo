@@ -3,8 +3,8 @@ import { RoleRepository } from '@/domain/role/role-repository'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
 import { AuthService } from '@/shared/util/auth-service'
 import { ZodValidator } from '@/shared/util/zod-validator'
-import { IdResult } from '@js-core/domain/models'
-import { Injectable } from '@js-core/domain/util'
+import { IdResult } from '@/base/models/id-result'
+import { Injectable } from '@/base/util/injectable'
 import { z } from 'zod'
 
 export interface SaveRolePermissionsDTO {

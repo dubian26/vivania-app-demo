@@ -1,5 +1,5 @@
-import { EmailService } from '@js-core/domain/contracts'
-import { Injectable } from '@js-core/domain/util'
+import { EmailService } from '@/base/contracts/email-service'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class BrevoEmailService implements EmailService {

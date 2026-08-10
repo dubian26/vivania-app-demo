@@ -1,5 +1,5 @@
 import { tokenBuilder } from '@/shared/util/token-builder'
-import { type UserInfo } from '@js-core/domain/models'
+import { type UserInfo } from '@/base/models/user-info'
 import { type FastifyReply } from 'fastify'
 
 type CookieOptions = {

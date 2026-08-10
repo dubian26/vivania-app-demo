@@ -1,6 +1,6 @@
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
-import { TxManager } from '@js-core/domain/contracts'
-import { Injectable } from '@js-core/domain/util'
+import { TxManager } from '@/base/contracts/tx-manager'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class PrismaTxManager implements TxManager {

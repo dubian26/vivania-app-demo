@@ -1,7 +1,7 @@
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { UuidValidator } from '@js-core/domain/contracts'
-import { Injectable } from '@js-core/domain/util'
+import { UuidValidator } from '@/base/contracts/uuid.validator'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class GetUserQuery {

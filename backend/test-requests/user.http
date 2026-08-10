@@ -4,7 +4,7 @@
 ### Listar todos o con filtros
 GET {{baseUrl}}?skip=0&take=5&search=
 
-@userId = b4e2a2d9-7ea4-41c3-bc19-bce2ff550e8e
+@userId = 74c5955c-2edb-4ec6-b0e3-b3ebd8c26d72
 @userEmail = dubian26@gmail.com
 
 ### Buscar por Id

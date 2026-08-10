@@ -1,4 +1,5 @@
-import { CustomError, ErrorModel } from '@js-core/domain/errors'
+import { CustomError } from '@/base/errors/custom-error'
+import { ErrorModel } from '@/base/errors/error-model'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { randomUUID } from 'node:crypto'
 

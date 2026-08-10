@@ -1,5 +1,5 @@
-import { BaseError } from '@js-core/domain'
-import { Injectable } from '@js-core/domain/util'
+import { BaseError } from '@/base/errors/base-error'
+import { Injectable } from '@/base/util/injectable'
 import { ContextStorageService } from '../context/context-storage.service'
 
 @Injectable()

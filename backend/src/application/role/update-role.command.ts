@@ -1,8 +1,8 @@
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { AuthService } from '@/shared/util/auth-service'
-import { IdResult } from '@js-core/domain/models'
-import { Injectable } from '@js-core/domain/util'
+import { IdResult } from '@/base/models/id-result'
+import { Injectable } from '@/base/util/injectable'
 import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 

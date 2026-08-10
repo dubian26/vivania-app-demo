@@ -1,9 +1,9 @@
 import { PermissionError } from '@/domain/permission/permission-error'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
 import { AuthService } from '@/shared/util/auth-service'
-import { IdResult } from '@js-core/domain/models'
-import { UuidValidator } from '@js-core/domain/contracts'
-import { Injectable } from '@js-core/domain/util'
+import { IdResult } from '@/base/models/id-result'
+import { UuidValidator } from '@/base/contracts/uuid.validator'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class DeletePermissionCommand {

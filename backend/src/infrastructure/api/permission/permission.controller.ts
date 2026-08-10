@@ -4,7 +4,7 @@ import { GetPermissionsByRoleQuery } from '@/application/permission/get-permissi
 import { ListPermissionsQuery } from '@/application/permission/list-permissions.query'
 import { SaveRolePermissionsCommand } from '@/application/permission/save-role-permissions.command'
 import { UpdatePermissionCommand, type UpdatePermissionDTO } from '@/application/permission/update-permission.command'
-import { type IdResult } from '@js-core/domain/models'
+import { type IdResult } from '@/base/models/id-result'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 
 @Controller('permissions')

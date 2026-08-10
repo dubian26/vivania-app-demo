@@ -1,5 +1,5 @@
 import { UserRepository } from '@/domain/user/user-repository'
-import { Injectable } from '@js-core/domain/util'
+import { Injectable } from '@/base/util/injectable'
 import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 

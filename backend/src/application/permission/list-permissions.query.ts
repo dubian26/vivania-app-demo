@@ -1,5 +1,5 @@
 import { PermissionRepository } from '@/domain/permission/permission-repository'
-import { Injectable } from '@js-core/domain/util'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class ListPermissionsQuery {

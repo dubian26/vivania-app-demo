@@ -1,8 +1,8 @@
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { PasswordHasher } from '@js-core/domain/contracts'
-import { type UserInfo } from '@js-core/domain/models'
-import { Injectable } from '@js-core/domain/util'
+import { PasswordHasher } from '@/base/contracts/password-hasher'
+import { type UserInfo } from '@/base/models/user-info'
+import { Injectable } from '@/base/util/injectable'
 import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 

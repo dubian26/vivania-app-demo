@@ -1,4 +1,4 @@
-import { type UserInfo } from '@js-core/domain/models'
+import { type UserInfo } from '@/base/models/user-info'
 import jwt from 'jsonwebtoken'
 import ms from 'ms'
 

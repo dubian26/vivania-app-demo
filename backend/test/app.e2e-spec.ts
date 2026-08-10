@@ -1,6 +1,6 @@
 import { AppModule } from '@/infrastructure/api/app.module'
-import { PasswordHasher } from '@/shared/contracts/password-hasher'
-import { ErrorModel } from '@/shared/errors/error-model'
+import { PasswordHasher } from '@/base/contracts/password-hasher'
+import { ErrorModel } from '@/base/errors/error-model'
 import { Test, TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 

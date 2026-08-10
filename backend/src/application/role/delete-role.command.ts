@@ -1,8 +1,8 @@
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
-import { UuidValidator } from '@js-core/domain/contracts'
-import { IdResult } from '@js-core/domain/models'
-import { Injectable } from '@js-core/domain/util'
+import { UuidValidator } from '@/base/contracts/uuid.validator'
+import { IdResult } from '@/base/models/id-result'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class DeleteRoleCommand {

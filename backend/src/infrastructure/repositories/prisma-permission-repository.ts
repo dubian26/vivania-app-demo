@@ -1,7 +1,7 @@
 import { Permission } from '@/domain/permission/permission'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
-import { Injectable } from '@js-core/domain/util'
+import { Injectable } from '@/base/util/injectable'
 
 @Injectable()
 export class PrismaPermissionRepository implements PermissionRepository {

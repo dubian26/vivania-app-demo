@@ -1,4 +1,4 @@
-import { UserInfo } from '@js-core/domain/models'
+import { UserInfo } from '@/base/models/user-info'
 
 export interface UserCreate {
   id: string

@@ -6,9 +6,10 @@ import jwt from 'jsonwebtoken'
 import { ContextStorageService } from '@/shared/context/context-storage.service'
 import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
-import { BaseError } from '@js-core/domain/errors'
-import { UserInfo, PermissionModel } from '@js-core/domain/models'
-import { Injectable } from '@js-core/domain/util'
+import { BaseError } from '@/base/errors/base-error'
+import { PermissionModel } from '@/base/models/permission-model'
+import { UserInfo } from '@/base/models/user-info'
+import { Injectable } from '@/base/util/injectable'
 
 type AuthenticatedRequest = FastifyRequest & {
   cookies?: { accessToken?: string }

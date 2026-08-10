@@ -1,4 +1,4 @@
-import { CustomError } from '@js-core/domain/errors'
+import { CustomError } from '@/base/errors/custom-error'
 
 export class RoleError {
   static AlreadyExists() {

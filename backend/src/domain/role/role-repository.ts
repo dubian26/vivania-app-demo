@@ -1,4 +1,4 @@
-import { SearchModel } from '@js-core/domain/models'
+import { SearchModel } from '@/base/models/search-model'
 import { Role } from './role'
 
 export abstract class RoleRepository {
