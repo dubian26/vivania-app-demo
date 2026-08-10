@@ -5,19 +5,30 @@ import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
 import { IdResult } from '@js-core/domain/models'
 import { Injectable } from '@js-core/domain/util'
-import { UpdateUserDTO } from './update-user.dto'
-import { UpdateUserValidator } from './update-user.validator'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface UpdateUserDTO {
+  active?: boolean
+  roleId?: string
+}
+
+export const schema = z.object({
+  active: z.boolean({ message: 'El campo active debe ser un booleano.' }).optional(),
+  roleId: z.string().uuid({ message: 'El roleId debe ser un UUID válido.' }).optional(),
+}).refine(data => data.active !== undefined || data.roleId !== undefined, {
+  message: 'Debe proporcionar al menos un campo para actualizar.',
+}) satisfies z.ZodType<UpdateUserDTO>
 
 @Injectable()
 export class UpdateUserCommand {
   constructor(
-    private readonly validator: UpdateUserValidator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
   ) { }
 
   async execute(id: string, input: UpdateUserDTO, currentRoleName: string): Promise<IdResult> {
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     if (currentRoleName !== Role.ADMIN) throw UserError.NotAuthorized()
 

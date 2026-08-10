@@ -1,21 +1,32 @@
 import { RoleRepository } from '@/domain/role/role-repository'
 import { Injectable } from '@js-core/domain/util'
-import { SearchRolesDTO } from './search-roles.dto'
-import { SearchRolesValidator } from './search-roles.validator'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface SearchRolesDTO {
+  skip: number
+  take: number
+  search?: string
+}
+
+export const schema = z.object({
+  skip: z.coerce.number().int().min(0, { message: 'El valor de skip debe ser mayor o igual a 0' }),
+  take: z.coerce.number().int().min(1, { message: 'El valor de take debe ser mayor o igual a 1' }),
+  search: z.string().optional(),
+}) satisfies z.ZodType<SearchRolesDTO>
 
 @Injectable()
 export class SearchRolesQuery {
   constructor(
-    private readonly validator: SearchRolesValidator,
     private readonly roleRepository: RoleRepository,
   ) { }
 
   async execute(input: SearchRolesDTO) {
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const roles = await this.roleRepository.search({
-      skip: Number(input.skip),
-      take: Number(input.take),
+      skip: input.skip,
+      take: input.take,
       search: input.search,
     })
 

@@ -1,11 +1,9 @@
-import { CreatePermissionCommand } from '@/application/permission/create-permission.command'
-import { type CreatePermissionDTO } from '@/application/permission/create-permission.dto'
+import { CreatePermissionCommand, type CreatePermissionDTO } from '@/application/permission/create-permission.command'
 import { DeletePermissionCommand } from '@/application/permission/delete-permission.command'
 import { GetPermissionsByRoleQuery } from '@/application/permission/get-permissions-by-role.query'
 import { ListPermissionsQuery } from '@/application/permission/list-permissions.query'
 import { SaveRolePermissionsCommand } from '@/application/permission/save-role-permissions.command'
-import { UpdatePermissionCommand } from '@/application/permission/update-permission.command'
-import { type UpdatePermissionDTO } from '@/application/permission/update-permission.dto'
+import { UpdatePermissionCommand, type UpdatePermissionDTO } from '@/application/permission/update-permission.command'
 import { type IdResult } from '@js-core/domain/models'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 

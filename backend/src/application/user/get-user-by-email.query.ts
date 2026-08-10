@@ -1,18 +1,27 @@
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
 import { Injectable } from '@js-core/domain/util'
-import { GetUserByEmailDTO } from './get-user-by-email.dto'
-import { GetUserByEmailValidator } from './get-user-by-email.validator'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface GetUserByEmailDTO {
+  email: string
+}
+
+export const schema = z.object({
+  email: z.string()
+    .min(1, { message: 'El correo electrónico es obligatorio' })
+    .email({ message: 'El formato del correo electrónico no es válido' }),
+}) satisfies z.ZodType<GetUserByEmailDTO>
 
 @Injectable()
 export class GetUserByEmailQuery {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly validator: GetUserByEmailValidator,
   ) { }
 
   async execute(input: GetUserByEmailDTO) {
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const user = await this.userRepository.findByEmail(input.email)
     if (!user) throw UserError.NotExists()

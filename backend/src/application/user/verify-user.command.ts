@@ -4,20 +4,37 @@ import { VerifyCodeError } from '@/domain/verify-code/verify-code-error'
 import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repository'
 import { TxManager } from '@js-core/domain/contracts'
 import { Injectable } from '@js-core/domain/util'
-import { VerifyUserDTO, VerifyUserResult } from './verify-user.dto'
-import { VerifyUserValidator } from './verify-user.validator'
+import { UserInfo } from '@js-core/domain/models'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface VerifyUserDTO {
+  email: string
+  code: string
+  purpose: 'REGISTRO' | 'RECUPERACION'
+}
+
+export interface VerifyUserResult {
+  message: string
+  userInfo?: UserInfo
+}
+
+export const schema = z.object({
+  email: z.email({ message: 'El email no es válido.' }),
+  code: z.string().length(6, { message: 'El código debe tener 6 dígitos.' }),
+  purpose: z.enum(['REGISTRO', 'RECUPERACION']).optional().default('REGISTRO'),
+}) satisfies z.ZodType<VerifyUserDTO>
 
 @Injectable()
 export class VerifyUserCommand {
   constructor(
-    private readonly validator: VerifyUserValidator,
     private readonly userRepo: UserRepository,
     private readonly verifyCodeRepo: VerifyCodeRepository,
     private readonly txManager: TxManager,
   ) { }
 
   async execute(input: VerifyUserDTO): Promise<VerifyUserResult> {
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const user = await this.userRepo.findByEmail(input.email)
     if (!user) throw UserError.NotExists()

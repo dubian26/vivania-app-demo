@@ -9,13 +9,22 @@ import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repositor
 import { EmailService, TxManager } from '@js-core/domain/contracts'
 import { Injectable } from '@js-core/domain/util'
 import { randomUUID } from 'node:crypto'
-import { ResendOtpDTO } from './resend-otp.dto'
-import { ResendOtpValidator } from './resend-otp.validator'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface ResendOtpDTO {
+  email: string
+  purpose: 'REGISTRO' | 'RECUPERACION'
+}
+
+export const schema = z.object({
+  email: z.email({ message: 'El email no es válido.' }),
+  purpose: z.enum(['REGISTRO', 'RECUPERACION']).optional().default('REGISTRO'),
+}) satisfies z.ZodType<ResendOtpDTO>
 
 @Injectable()
 export class ResendOtpCommand {
   constructor(
-    private readonly validator: ResendOtpValidator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
     private readonly verifyCodeRepo: VerifyCodeRepository,
@@ -24,7 +33,7 @@ export class ResendOtpCommand {
   ) { }
 
   async execute(input: ResendOtpDTO): Promise<{ message: string }> {
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const user = await this.userRepo.findByEmail(input.email)
     if (!user) throw UserError.NotExists()

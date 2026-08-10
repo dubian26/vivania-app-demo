@@ -3,20 +3,42 @@ import { RoleRepository } from '@/domain/role/role-repository'
 import { AuthService } from '@/shared/util/auth-service'
 import { IdResult } from '@js-core/domain/models'
 import { Injectable } from '@js-core/domain/util'
-import { UpdateRoleDTO } from './update-role.dto'
-import { UpdateRoleValidator } from './update-role.validator'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface UpdateRoleDTO {
+  id: string
+  name?: string
+  description?: string
+}
+
+export const schema = z.object({
+  id: z.uuid(),
+  name: z.string()
+    .min(3, 'El nombre debe tener al menos 3 caracteres')
+    .regex(
+      /^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9\s]+$/,
+      { message: 'El nombre contiene caracteres no válidos' }
+    )
+    .optional(),
+  description: z.string()
+    .optional()
+    .refine(
+      (val) => val === undefined || /^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9\s.,;:!?\-_@#$%&()/+=]+$/.test(val),
+      { message: 'La descripción contiene caracteres no válidos' }
+    ),
+}) satisfies z.ZodType<UpdateRoleDTO>
 
 @Injectable()
 export class UpdateRoleCommand {
   constructor(
-    private readonly validator: UpdateRoleValidator,
     private readonly roleRepository: RoleRepository,
     private readonly authService: AuthService,
   ) { }
 
   async execute(input: UpdateRoleDTO): Promise<IdResult> {
     this.authService.authorizedTo('/roles/editar')
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const role = await this.roleRepository.findById(input.id)
     if (!role) throw RoleError.NotExists()

@@ -1,16 +1,28 @@
-import { SaveRolePermissionsDTO } from './save-role-permissions.dto'
-import { SaveRolePermissionsValidator } from './save-role-permissions.validator'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
 import { AuthService } from '@/shared/util/auth-service'
+import { ZodValidator } from '@/shared/util/zod-validator'
 import { IdResult } from '@js-core/domain/models'
 import { Injectable } from '@js-core/domain/util'
+import { z } from 'zod'
+
+export interface SaveRolePermissionsDTO {
+  roleId: string
+  permissionIds: string[]
+}
+
+export const schema = z.object({
+  roleId: z.uuid({ message: 'El ID del rol no es un UUID válido.' }),
+  permissionIds: z.array(
+    z.uuid({ message: 'Uno de los IDs de permiso no es un UUID válido.' }),
+    { message: 'Los permisos deben enviarse como una lista de IDs.' }
+  ),
+}) satisfies z.ZodType<SaveRolePermissionsDTO>
 
 @Injectable()
 export class SaveRolePermissionsCommand {
   constructor(
-    private readonly validator: SaveRolePermissionsValidator,
     private readonly permissionRepository: PermissionRepository,
     private readonly roleRepository: RoleRepository,
     private readonly authService: AuthService,
@@ -18,7 +30,7 @@ export class SaveRolePermissionsCommand {
 
   async execute(input: SaveRolePermissionsDTO): Promise<IdResult> {
     this.authService.authorizedTo('/roles/permisos')
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const role = await this.roleRepository.findById(input.roleId)
     if (!role) throw RoleError.NotExists()

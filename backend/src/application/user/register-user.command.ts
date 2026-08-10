@@ -10,13 +10,32 @@ import { EmailService, PasswordHasher, TxManager } from '@js-core/domain/contrac
 import { IdResult } from '@js-core/domain/models'
 import { Injectable } from '@js-core/domain/util'
 import { randomUUID } from 'node:crypto'
-import { RegisterUserDTO } from './register-user.dto'
-import { RegisterUserValidator } from './register-user.validator'
+import { ZodValidator } from '@/shared/util/zod-validator'
+import { z } from 'zod'
+
+export interface RegisterUserDTO {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+}
+
+export const schema = z.object({
+  email: z.email({ message: 'El email no es válido.' }),
+  password: z.string()
+    .min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
+    .regex(/[A-Z]/, { message: 'Debe contener al menos una mayúscula.' }),
+  firstName: z.string()
+    .min(2, { message: 'El nombre es demasiado corto.' })
+    .max(50, { message: 'El nombre es demasiado largo.' }),
+  lastName: z.string()
+    .min(2, { message: 'El apellido es demasiado corto.' })
+    .max(50, { message: 'El apellido es demasiado largo.' }),
+}) satisfies z.ZodType<RegisterUserDTO>
 
 @Injectable()
 export class RegisterUserCommand {
   constructor(
-    private readonly validator: RegisterUserValidator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
     private readonly verifyCodeRepo: VerifyCodeRepository,
@@ -26,7 +45,7 @@ export class RegisterUserCommand {
   ) { }
 
   async execute(input: RegisterUserDTO): Promise<IdResult> {
-    this.validator.validate(input)
+    input = ZodValidator.parse(schema, input)
 
     const existe = await this.userRepo.findByEmail(input.email)
     if (existe) throw UserError.AlreadyExists()
