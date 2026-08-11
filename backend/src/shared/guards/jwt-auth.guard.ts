@@ -3,13 +3,13 @@ import { Reflector } from '@nestjs/core'
 import { FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 
-import { ContextStorageService } from '@/shared/context/context-storage.service'
-import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator'
-import { PermissionRepository } from '@/domain/permission/permission-repository'
 import { BaseError } from '@/base/errors/base-error'
 import { PermissionModel } from '@/base/models/permission-model'
 import { UserInfo } from '@/base/models/user-info'
 import { Injectable } from '@/base/util/injectable'
+import { PermissionRepository } from '@/domain/permission/permission-repository'
+import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator'
+import { ContextStorage } from '@/shared/util/context-storage'
 
 type AuthenticatedRequest = FastifyRequest & {
   cookies?: { accessToken?: string }
@@ -20,7 +20,7 @@ type AuthenticatedRequest = FastifyRequest & {
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly contextStorage: ContextStorageService,
+    private readonly contextStorage: ContextStorage,
     private readonly permissionRepository: PermissionRepository,
   ) { }
 
@@ -47,7 +47,7 @@ export class JwtAuthGuard implements CanActivate {
 
       const permissions = await this.loadPermissions(request.user.roleId)
 
-      this.contextStorage.setContext({
+      this.contextStorage.set({
         userInfo: request.user,
         permissions,
       })

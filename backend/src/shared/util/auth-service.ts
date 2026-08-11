@@ -1,11 +1,11 @@
 import { BaseError } from '@/base/errors/base-error'
 import { Injectable } from '@/base/util/injectable'
-import { ContextStorageService } from '../context/context-storage.service'
+import { ContextStorage } from './context-storage'
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly contextStorage: ContextStorageService,
+    private readonly contextStorage: ContextStorage,
   ) { }
 
   /**
@@ -14,7 +14,7 @@ export class AuthService {
   * Si no tiene permiso, arroja un error de tipo NoAutorizado.
   */
   authorizedTo(paths: AppPermissionPath | AppPermissionPath[]) {
-    const permissions = this.contextStorage.getContext()?.permissions || []
+    const permissions = this.contextStorage.get()?.permissions || []
 
     const pathsToCheck = Array.isArray(paths) ? paths : [paths]
     const hasPermission = permissions.some(p =>

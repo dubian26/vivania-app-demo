@@ -3,24 +3,24 @@ import { UserInfo } from '@/base/models/user-info'
 import { Injectable } from '@/base/util/injectable'
 import { AsyncLocalStorage } from 'node:async_hooks'
 
-export interface RequestContext {
+export interface ContextModel {
   userInfo: UserInfo | undefined
   permissions: PermissionModel[]
 }
 
 @Injectable()
-export class ContextStorageService {
-  private readonly storage = new AsyncLocalStorage<RequestContext>()
+export class ContextStorage {
+  private readonly storage = new AsyncLocalStorage<ContextModel>()
 
-  getContext(): RequestContext | undefined {
+  get(): ContextModel | undefined {
     return this.storage.getStore()
   }
 
-  setContext(context: RequestContext): void {
+  set(context: ContextModel): void {
     this.storage.enterWith(context)
   }
 
-  run<T>(context: RequestContext, work: () => T): T {
+  run<T>(context: ContextModel, work: () => T): T {
     return this.storage.run(context, work)
   }
 }
