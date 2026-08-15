@@ -34,5 +34,14 @@
          "package-lock.json",
          "**/.*"
       ]
+   },
+   "permissions": {
+      "read": "allow",
+      "list_dir": "allow",
+      "external_paths": "allow"
+   },
+   "autoApprove": {
+      "read": true,
+      "search": true
    }
 }

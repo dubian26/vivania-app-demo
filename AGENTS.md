@@ -47,13 +47,17 @@
 - Existing e2e tests import the real `AppModule` and only override `PasswordHasher`; DB-backed providers are still real, so e2e runs can require a reachable Postgres unless you override more providers.
 
 ## Frontend
-- Frontend is a Vite React 19 app and is still mostly scaffold-level.
-- Entry point is `frontend/src/main.tsx`; current app component is `frontend/src/App.tsx`.
+- Frontend is a Next.js 16 app (App Router, React 19, Tailwind CSS 4) with shadcn-style UI on `@base-ui/react`.
+- App Router entry points: root layout `frontend/app/layout.tsx`; routes live under `frontend/app/**`.
+- `/` redirects to `/login`; the login landing page is `frontend/app/login/page.tsx` with its layout in `frontend/app/login/layout.tsx`.
+- Login UI is presentation-only (no backend wired yet). Components live under `frontend/components/login`, `frontend/components/common` and `frontend/components/ui`.
+- The theme uses a green palette defined in `frontend/app/globals.css` (light/dark via `next-themes`).
 - Commands in `frontend/`:
   - install: `pnpm install`
   - dev server: `pnpm dev`
   - build: `pnpm build`
   - lint: `pnpm lint`
+  - typecheck: `pnpm typecheck`
 
 ## Style / Tooling
 - Both apps enforce single quotes in ESLint.

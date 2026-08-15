@@ -48,7 +48,7 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
+    --background: oklch(0.975 0.014 150);
     --foreground: oklch(0.147 0.004 49.3);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.147 0.004 49.3);
@@ -83,11 +83,11 @@
 }
 
 .dark {
-    --background: oklch(0.147 0.004 49.3);
+    --background: oklch(0.17 0.015 162);
     --foreground: oklch(0.986 0.002 67.8);
-    --card: oklch(0.214 0.009 43.1);
+    --card: oklch(0.225 0.02 160);
     --card-foreground: oklch(0.986 0.002 67.8);
-    --popover: oklch(0.214 0.009 43.1);
+    --popover: oklch(0.225 0.02 160);
     --popover-foreground: oklch(0.986 0.002 67.8);
     --primary: oklch(0.448 0.119 151.328);
     --primary-foreground: oklch(0.982 0.018 155.826);
@@ -126,4 +126,28 @@
   html {
     @apply font-sans;
     }
+}
+
+.glass-header {
+    background: color-mix(in oklch, var(--background) 55%, transparent);
+    color: var(--foreground);
+    backdrop-filter: blur(12px);
+    transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.bg-dots {
+    background-size: 24px 24px;
+    background-image: radial-gradient(circle, color-mix(in oklch, var(--primary) 22%, transparent) 2px, transparent 2px);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 10%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 10%, transparent 100%);
+}
+
+.theme-toggle-btn {
+    background: color-mix(in oklch, var(--primary) 15%, transparent);
+    border: 1px solid color-mix(in oklch, var(--primary) 25%, transparent);
+}
+
+.theme-toggle-btn:hover {
+    background: color-mix(in oklch, var(--primary) 25%, transparent);
+    border-color: color-mix(in oklch, var(--primary) 40%, transparent);
 }
