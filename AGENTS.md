@@ -49,12 +49,12 @@
 ## Frontend
 - Frontend is a Next.js 16 app (App Router, React 19, Tailwind CSS 4) with shadcn-style UI on `@base-ui/react`.
 - App Router entry points: root layout `frontend/app/layout.tsx`; routes live under `frontend/app/**`.
-- `/` redirects to `/login`; the login landing page is `frontend/app/login/page.tsx` with its layout in `frontend/app/login/layout.tsx`.
-- Login is wired to the backend (`POST /auth/login`). The backend returns `UserInfo` in the body and sets httpOnly cookies (`accessToken`/`refreshToken`).
+- `/` redirects to `/login`; the login landing page is `frontend/app/login/page.tsx`. Register lives at `/registrarse` (`frontend/app/registrarse/page.tsx`).
+- Pages/layouts are Server Components; interactive forms (`login-form`, `register-form`) are Client Components (`"use client"`). A shared `AuthLayout` (`frontend/components/login/auth-layout.tsx`) is reused by the `login` and `registrarse` layouts.
 - Data layer mirrors the reference architecture in `projects/demo-tienda-online-full`:
-  - `frontend/appconfig/`: `FetchUtility` (fetch wrapper), `CustomError`, `constants.ts`
-  - `frontend/models/`: `ErrorModel`, `UserInfoModel` (contracts matching the backend)
-  - `frontend/repositories/`: `UserRepository.authenticate(email, password)`
+  - `frontend/lib/`: `FetchUtility` (fetch wrapper), `CustomError`, `constants.ts` (`API_URL`, `GOOGLE_CLIENT_ID`)
+  - `frontend/models/`: `ErrorModel`, `UserInfoModel`, `RegisterUserModel`, `IdResult`, `VerifyUserResult`
+  - `frontend/repositories/`: `UserRepository` — `authenticate`, `authenticateWithGoogle`, `register`, `verifyEmail`, `resendOtp`
   - `frontend/contexts/`: `AppProvider`/`useAppContext` (session + alert toasts via `sonner`)
   - `frontend/hooks/`: `useAsync` (loading + automatic error toast)
 - Alert context API: `useAppContext()` exposes `showError(error)` and `showMessage(msg)`; call these instead of `toast` directly.
@@ -62,6 +62,8 @@
 - `pnpm dev` runs on port `3001` because the backend occupies `3000` locally.
 - UI components live under `frontend/components/login`, `frontend/components/common` and `frontend/components/ui`.
 - The theme uses a green palette defined in `frontend/app/globals.css` (light/dark via `next-themes`).
+- Registration: `POST /auth/register` (`{ email, password, firstName, lastName }`) → `IdResult`; user stays inactive until `POST /auth/verify-email` (`{ email, code, purpose }`), which performs an implicit login (sets cookies + returns `userInfo`). Resend OTP via `POST /auth/resend-otp`.
+- Google sign-in: frontend uses `@react-oauth/google` (`GoogleProvider` wraps the app; `GoogleLogin` in both forms). **The backend `/auth/google-login` endpoint is not implemented yet** — `UserRepository.authenticateWithGoogle` points to it but it will 404 until added. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` in `.env.local` to enable the Google button.
 - Commands in `frontend/`:
   - install: `pnpm install`
   - dev server: `pnpm dev`

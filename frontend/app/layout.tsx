@@ -1,6 +1,7 @@
 import { Geist_Mono, Inter } from "next/font/google"
 
 import { ThemeProvider } from "@/components/common/theme-provider"
+import { GoogleProvider } from "@/contexts/google-provider"
 import { AppProvider } from "@/contexts/app-provider"
 import { cn } from "@/lib/utils"
 import "./globals.css"
@@ -25,7 +26,9 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <AppProvider>{children}</AppProvider>
+          <GoogleProvider>
+            <AppProvider>{children}</AppProvider>
+          </GoogleProvider>
         </ThemeProvider>
       </body>
     </html>
