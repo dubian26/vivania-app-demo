@@ -1,8 +1,9 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { LogIn, Mail } from "lucide-react"
+import { Loader2, LogIn, Mail } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { Title } from "@/components/common/title"
@@ -10,6 +11,9 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
+import { useAppContext } from "@/contexts/app-context"
+import { useAsync } from "@/hooks/use-async"
+import { userRepository } from "@/repositories/user-repository"
 
 import {
     Dialog,
@@ -44,9 +48,32 @@ function GoogleIcon() {
 }
 
 export function LoginForm() {
+  const router = useRouter()
+  const { run, loading } = useAsync()
+  const { showError, showMessage, login } = useAppContext()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false)
+
+  const handleClickLogin = async () => {
+    if (!email.trim() || !password) {
+      showError("Ingresa tu correo electrónico y contraseña")
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      showError("El correo electrónico no es válido")
+      return
+    }
+
+    const userInfo = await run(userRepository.authenticate(email, password))
+    if (userInfo) {
+      login(userInfo)
+      showMessage(`Bienvenido/a, ${userInfo.firstName}`)
+      router.push("/dashboard")
+    }
+  }
 
   return (
     <div className={cn(
@@ -129,9 +156,22 @@ export function LoginForm() {
             <PasswordInput password={password} onChange={setPassword} />
           </div>
 
-          <Button type="submit" className="mt-4 w-full cursor-pointer">
-            <LogIn size={20} strokeWidth={3} />
-            Iniciar sesión
+          <Button
+            type="submit"
+            onClick={handleClickLogin}
+            disabled={loading}
+            className="mt-4 w-full cursor-pointer"
+          >
+            {
+              loading ?
+              <Loader2 size={20} className="animate-spin" /> :
+              <LogIn size={20} strokeWidth={3} />
+            }
+            {
+              loading ?
+              "Iniciando sesión..." :
+              "Iniciar sesión"
+            }
           </Button>
         </form>
 

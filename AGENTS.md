@@ -50,7 +50,17 @@
 - Frontend is a Next.js 16 app (App Router, React 19, Tailwind CSS 4) with shadcn-style UI on `@base-ui/react`.
 - App Router entry points: root layout `frontend/app/layout.tsx`; routes live under `frontend/app/**`.
 - `/` redirects to `/login`; the login landing page is `frontend/app/login/page.tsx` with its layout in `frontend/app/login/layout.tsx`.
-- Login UI is presentation-only (no backend wired yet). Components live under `frontend/components/login`, `frontend/components/common` and `frontend/components/ui`.
+- Login is wired to the backend (`POST /auth/login`). The backend returns `UserInfo` in the body and sets httpOnly cookies (`accessToken`/`refreshToken`).
+- Data layer mirrors the reference architecture in `projects/demo-tienda-online-full`:
+  - `frontend/appconfig/`: `FetchUtility` (fetch wrapper), `CustomError`, `constants.ts`
+  - `frontend/models/`: `ErrorModel`, `UserInfoModel` (contracts matching the backend)
+  - `frontend/repositories/`: `UserRepository.authenticate(email, password)`
+  - `frontend/contexts/`: `AppProvider`/`useAppContext` (session + alert toasts via `sonner`)
+  - `frontend/hooks/`: `useAsync` (loading + automatic error toast)
+- Alert context API: `useAppContext()` exposes `showError(error)` and `showMessage(msg)`; call these instead of `toast` directly.
+- The backend has no CORS and uses `sameSite: strict` cookies, so the frontend proxies `/api/*` to the backend via `rewrites()` in `frontend/next.config.ts` (target from `BACKEND_URL` in `.env.local`). Client code calls same-origin `/api/...`.
+- `pnpm dev` runs on port `3001` because the backend occupies `3000` locally.
+- UI components live under `frontend/components/login`, `frontend/components/common` and `frontend/components/ui`.
 - The theme uses a green palette defined in `frontend/app/globals.css` (light/dark via `next-themes`).
 - Commands in `frontend/`:
   - install: `pnpm install`
@@ -60,5 +70,5 @@
   - typecheck: `pnpm typecheck`
 
 ## Style / Tooling
-- Both apps enforce single quotes in ESLint.
+- Backend ESLint enforces single quotes. Frontend Prettier uses double quotes (`singleQuote: false`) and no semicolons.
 - Backend `.editorconfig` enforces 2 spaces, LF, and final newline.
