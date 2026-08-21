@@ -1,8 +1,9 @@
-import { UserError } from '@/domain/user/user-error'
-import { UserRepository } from '@/domain/user/user-repository'
 import { PasswordHasher } from '@/base/contracts/password-hasher'
 import { IdResult } from '@/base/models/id-result'
 import { Injectable } from '@/base/util/injectable'
+import { UserError } from '@/domain/user/user-error'
+import { UserRepository } from '@/domain/user/user-repository'
+import { firstNameCheck, lastNameCheck, passCheck } from '@/shared/util/zod-custom-schemas'
 import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 
@@ -12,20 +13,14 @@ export interface UpdateProfileDTO {
   password?: string
 }
 
-export const schema = z.object({
-  firstName: z.string()
-    .min(2, { message: 'El nombre es demasiado corto.' })
-    .max(50, { message: 'El nombre es demasiado largo.' })
-    .optional(),
-  lastName: z.string()
-    .min(2, { message: 'El apellido es demasiado corto.' })
-    .max(50, { message: 'El apellido es demasiado largo.' })
-    .optional(),
-  password: z.string()
-    .min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
-    .regex(/[A-Z]/, { message: 'Debe contener al menos una mayúscula.' })
-    .optional(),
-}).refine(data => data.firstName !== undefined || data.lastName !== undefined || data.password !== undefined, {
+const schema = z.object({
+  firstName: firstNameCheck().optional(),
+  lastName: lastNameCheck().optional(),
+  password: passCheck().optional(),
+}).refine(
+  data => data.firstName !== undefined ||
+    data.lastName !== undefined ||
+    data.password !== undefined, {
   message: 'Debe proporcionar al menos un campo para actualizar.',
 }) satisfies z.ZodType<UpdateProfileDTO>
 

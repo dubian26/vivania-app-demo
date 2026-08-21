@@ -1,8 +1,9 @@
-import { UserError } from '@/domain/user/user-error'
-import { UserRepository } from '@/domain/user/user-repository'
 import { PasswordHasher } from '@/base/contracts/password-hasher'
 import { type UserInfo } from '@/base/models/user-info'
 import { Injectable } from '@/base/util/injectable'
+import { UserError } from '@/domain/user/user-error'
+import { UserRepository } from '@/domain/user/user-repository'
+import { passCheck } from '@/shared/util/zod-custom-schemas'
 import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 
@@ -11,9 +12,9 @@ export interface LoginUserDTO {
   password: string
 }
 
-export const schema = z.object({
+const schema = z.object({
   email: z.email({ message: 'El email no es válido.' }),
-  password: z.string().min(1, { message: 'La contraseña es requerida.' }),
+  password: passCheck(),
 }) satisfies z.ZodType<LoginUserDTO>
 
 @Injectable()

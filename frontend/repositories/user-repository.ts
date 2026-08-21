@@ -1,12 +1,9 @@
 import { API_URL } from "@/lib/constants"
 import { FetchUtility } from "@/lib/fetch-utility"
-import { type IdResult } from "@/models/id-result"
-import { type RegisterUserModel } from "@/models/register-user-model"
-import { type UserInfoModel } from "@/models/user-info-model"
-import {
-  type VerifyPurpose,
-  type VerifyUserResult,
-} from "@/models/verify-user-result"
+import type { IdResult } from "@/models/id-result"
+import type { RegisterUserModel } from "@/models/register-user-model"
+import type { UserInfoModel } from "@/models/user-info-model"
+import type { VerifyPurpose, VerifyUserResult } from "@/models/verify-user-result"
 
 export class UserApiRepository {
   // Login: public route (POST /auth/login). The backend returns UserInfo
@@ -23,7 +20,7 @@ export class UserApiRepository {
 
   // NOTE: the backend does not implement /auth/google-login yet.
   // Once added, it receives { token } (Google credential) and returns UserInfo.
-  async authenticateWithGoogle(
+  async googleAuthenticate(
     token: string
   ): Promise<UserInfoModel | undefined> {
     const url = `${API_URL}/auth/google-login`

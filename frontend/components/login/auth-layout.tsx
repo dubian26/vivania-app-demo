@@ -1,7 +1,6 @@
-import type { ReactNode } from "react"
-
 import { LoginNav } from "@/components/login/login-nav"
 import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
 
 interface Props {
   children: ReactNode
@@ -30,7 +29,7 @@ export function AuthLayout({ children }: Props) {
           "text-muted-foreground md:flex-row lg:px-20"
         )}
       >
-        <p>© 2026 Vivania. Demo de tienda online.</p>
+        <p>© 2026 Vivania. Demo de aplicación de gestión de condominios.</p>
       </footer>
     </div>
   )

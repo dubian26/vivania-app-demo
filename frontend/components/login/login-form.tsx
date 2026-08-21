@@ -6,7 +6,6 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-import { cn } from "@/lib/utils"
 import { Title } from "@/components/common/title"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -14,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { useAppContext } from "@/contexts/app-context"
 import { useAsync } from "@/hooks/use-async"
+import { cn } from "@/lib/utils"
 import { userRepository } from "@/repositories/user-repository"
 
 import {
@@ -39,13 +39,9 @@ export function LoginForm() {
       return
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      showError("El correo electrónico no es válido")
-      return
-    }
+    const authPromise = userRepository.authenticate(email, password)
+    const userInfo = await run(authPromise)
 
-    const userInfo = await run(userRepository.authenticate(email, password))
     if (userInfo) {
       login(userInfo)
       showMessage(`Bienvenido/a, ${userInfo.firstName}`)
@@ -53,12 +49,10 @@ export function LoginForm() {
     }
   }
 
-  const handleGoogleSuccess = async (
-    credentialResponse: CredentialResponse
-  ) => {
-    const userInfo = await run(
-      userRepository.authenticateWithGoogle(credentialResponse.credential!)
-    )
+  const handleGoogleSuccess = async (response: CredentialResponse) => {
+    const authPromise = userRepository.googleAuthenticate(response.credential!)
+    const userInfo = await run(authPromise)
+
     if (userInfo) {
       login(userInfo)
       showMessage(`Bienvenido/a, ${userInfo.firstName}`)

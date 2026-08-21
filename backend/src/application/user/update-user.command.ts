@@ -1,10 +1,10 @@
+import { IdResult } from '@/base/models/id-result'
+import { Injectable } from '@/base/util/injectable'
 import { Role } from '@/domain/role/role'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { IdResult } from '@/base/models/id-result'
-import { Injectable } from '@/base/util/injectable'
 import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 
@@ -13,9 +13,9 @@ export interface UpdateUserDTO {
   roleId?: string
 }
 
-export const schema = z.object({
+const schema = z.object({
   active: z.boolean({ message: 'El campo active debe ser un booleano.' }).optional(),
-  roleId: z.string().uuid({ message: 'El roleId debe ser un UUID válido.' }).optional(),
+  roleId: z.uuid({ message: 'El roleId debe ser un UUID válido.' }).optional(),
 }).refine(data => data.active !== undefined || data.roleId !== undefined, {
   message: 'Debe proporcionar al menos un campo para actualizar.',
 }) satisfies z.ZodType<UpdateUserDTO>

@@ -1,3 +1,8 @@
+import { EmailService } from '@/base/contracts/email-service'
+import { PasswordHasher } from '@/base/contracts/password-hasher'
+import { TxManager } from '@/base/contracts/tx-manager'
+import { IdResult } from '@/base/models/id-result'
+import { Injectable } from '@/base/util/injectable'
 import { Role } from '@/domain/role/role'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
@@ -6,13 +11,9 @@ import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
 import { VerifyCode } from '@/domain/verify-code/verify-code'
 import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repository'
-import { EmailService } from '@/base/contracts/email-service'
-import { PasswordHasher } from '@/base/contracts/password-hasher'
-import { TxManager } from '@/base/contracts/tx-manager'
-import { IdResult } from '@/base/models/id-result'
-import { Injectable } from '@/base/util/injectable'
-import { randomUUID } from 'node:crypto'
+import { firstNameCheck, lastNameCheck, passCheck } from '@/shared/util/zod-custom-schemas'
 import { ZodValidator } from '@/shared/util/zod-validator'
+import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 
 export interface RegisterUserDTO {
@@ -22,17 +23,11 @@ export interface RegisterUserDTO {
   lastName: string
 }
 
-export const schema = z.object({
+const schema = z.object({
   email: z.email({ message: 'El email no es válido.' }),
-  password: z.string()
-    .min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
-    .regex(/[A-Z]/, { message: 'Debe contener al menos una mayúscula.' }),
-  firstName: z.string()
-    .min(2, { message: 'El nombre es demasiado corto.' })
-    .max(50, { message: 'El nombre es demasiado largo.' }),
-  lastName: z.string()
-    .min(2, { message: 'El apellido es demasiado corto.' })
-    .max(50, { message: 'El apellido es demasiado largo.' }),
+  password: passCheck(),
+  firstName: firstNameCheck(),
+  lastName: lastNameCheck(),
 }) satisfies z.ZodType<RegisterUserDTO>
 
 @Injectable()

@@ -1,22 +1,21 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useSyncExternalStore } from "react"
-
-import { cn } from "@/lib/utils"
 
 const subscribe = () => () => {}
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
+
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,
     () => false
   )
-
-  const isDark = resolvedTheme === "dark"
 
   return (
     <button
@@ -29,11 +28,11 @@ export function ThemeToggle() {
         "cursor-pointer transition-all hover:scale-110 active:scale-90"
       )}
     >
-      {mounted && isDark ? (
-        <Sun className="size-5 text-primary" />
-      ) : (
+      {
+        mounted && isDark ?
+        <Sun className="size-5 text-primary" /> :
         <Moon className="size-5 text-primary" />
-      )}
+      }
     </button>
   )
 }

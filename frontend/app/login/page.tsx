@@ -1,7 +1,6 @@
-import type { Metadata } from "next"
-
 import { LoginFeatures } from "@/components/login/login-features"
 import { LoginForm } from "@/components/login/login-form"
+import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Iniciar sesión | Vivania",

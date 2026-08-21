@@ -13,16 +13,14 @@ const navItems = [
 
 export function LoginNav() {
   return (
-    <header
-      className={cn(
+    <header className={cn(
         "glass-header fixed top-0 right-0 left-0 z-50 border-b border-primary/10",
         "flex items-center justify-between px-6 py-4 lg:px-20"
       )}
     >
       <div className="flex items-center gap-10">
         <Link href="/login" className="group flex items-center gap-3">
-          <div
-            className={cn(
+          <div className={cn(
               "flex items-center justify-center rounded-lg bg-primary p-2",
               "text-primary-foreground shadow-lg shadow-primary/20",
               "transition-transform group-hover:scale-110"

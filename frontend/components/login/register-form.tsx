@@ -1,31 +1,32 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
-import {
-  CheckCircle2,
-  Loader2,
-  Mail,
-  User,
-  UserRoundPlus,
-} from "lucide-react"
-import { useRouter } from "next/navigation"
-
 import { Title } from "@/components/common/title"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/ui/input-otp"
 import { PasswordInput } from "@/components/ui/password-input"
 import { useAppContext } from "@/contexts/app-context"
 import { useAsync } from "@/hooks/use-async"
 import { cn } from "@/lib/utils"
 import { userRepository } from "@/repositories/user-repository"
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
+import {
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSeparator,
+    InputOTPSlot,
+} from "@/components/ui/input-otp"
+
+import {
+    CheckCircle2,
+    Loader2,
+    Mail,
+    User,
+    UserRoundPlus,
+} from "lucide-react"
 
 type Step = "REGISTER" | "VERIFY"
 
@@ -47,20 +48,15 @@ export function RegisterForm() {
 
   useEffect(() => {
     if (step === "VERIFY" && countdown > 0) {
-      const timer = setTimeout(
-        () => setCountdown((current) => current - 1),
-        1000
-      )
+      const timer = setTimeout(() => setCountdown(prev => prev - 1), 1000)
       return () => clearTimeout(timer)
     }
   }, [step, countdown])
 
-  const handleGoogleSuccess = async (
-    credentialResponse: CredentialResponse
-  ) => {
-    const userInfo = await run(
-      userRepository.authenticateWithGoogle(credentialResponse.credential!)
-    )
+  const handleGoogleSuccess = async (response: CredentialResponse) => {
+    const authPromise = userRepository.googleAuthenticate(response.credential!)
+    const userInfo = await run(authPromise)
+
     if (userInfo) {
       login(userInfo)
       showMessage(`Bienvenido/a, ${userInfo.firstName}`)
@@ -74,34 +70,17 @@ export function RegisterForm() {
       return
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      showError("El correo electrónico no es válido")
-      return
-    }
-
-    if (password.length < 8) {
-      showError("La contraseña debe tener al menos 8 caracteres")
-      return
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      showError("La contraseña debe contener al menos una mayúscula")
-      return
-    }
-
     if (password !== confirmPassword) {
       showError("Las contraseñas no coinciden")
       return
     }
 
-    const result = await run(
-      userRepository.register({ email, password, firstName, lastName })
-    )
+    const regisPromise = userRepository.register({ email, password, firstName, lastName })
+    const result = await run(regisPromise)
+
     if (result) {
-      showMessage(
-        result.message || "Cuenta creada. Te enviamos un código a tu correo."
-      )
+      const msg = "Cuenta creada. Te enviamos un código a tu correo."
+      showMessage(result.message || msg)
       setStep("VERIFY")
       setCountdown(60)
     }
@@ -113,9 +92,12 @@ export function RegisterForm() {
       return
     }
 
-    const result = await run(userRepository.verifyEmail(email, code))
+    const verifyPromise = userRepository.verifyEmail(email, code)
+    const result = await run(verifyPromise)
+
     if (result) {
-      showMessage(result.message)
+      const msg = "Correo verificado. Bienvenido/a."
+      showMessage(result.message || msg)
       if (result.userInfo) {
         login(result.userInfo)
         router.push("/dashboard")
@@ -128,9 +110,12 @@ export function RegisterForm() {
   const handleClickResend = async () => {
     if (countdown > 0) return
 
-    const result = await run(userRepository.resendOtp(email))
+    const resendPromise = userRepository.resendOtp(email)
+    const result = await run(resendPromise)
+
     if (result) {
-      showMessage(result.message)
+      const msg = "Código reenviado. Revisa tu correo."
+      showMessage(result.message || msg)
       setCountdown(60)
       setCode("")
     }
@@ -157,10 +142,7 @@ export function RegisterForm() {
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => showError("Error al registrarse con Google")}
-                useOneTap
-                theme="outline"
-                shape="pill"
-                width="100%"
+                useOneTap={true} theme="outline" shape="pill" width="100%"
               />
 
               <div className="relative w-full">
@@ -270,16 +252,14 @@ export function RegisterForm() {
 
                 <div className="col-span-12 mt-2">
                   <Button
-                    type="submit"
-                    onClick={handleClickRegister}
-                    disabled={loading}
+                    type="submit" onClick={handleClickRegister} disabled={loading}
                     className="h-11 w-full cursor-pointer gap-2 text-base font-bold"
                   >
-                    {loading ? (
-                      <Loader2 size={20} className="animate-spin" />
-                    ) : (
+                    {
+                      loading ?
+                      <Loader2 size={20} className="animate-spin" /> :
                       <UserRoundPlus size={20} strokeWidth={3} />
-                    )}
+                    }
                     {loading ? "Registrando..." : "Crear mi cuenta"}
                   </Button>
                 </div>
@@ -288,9 +268,13 @@ export function RegisterForm() {
           </>
         )}
 
-        {step === "VERIFY" && (
+        {
+          step === "VERIFY" &&
           <div className="flex flex-col items-center justify-center gap-6 text-center">
-            <div className="mb-2 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <div className={cn(
+              "mb-2 flex size-16 items-center justify-center",
+              "rounded-full bg-primary/10 text-primary"
+            )}>
               <Mail size={32} />
             </div>
 
@@ -304,10 +288,8 @@ export function RegisterForm() {
 
             <div className="flex w-full justify-center py-4">
               <InputOTP
-                maxLength={6}
-                value={code}
-                onChange={setCode}
-                disabled={loading}
+                maxLength={6} value={code}
+                onChange={setCode} disabled={loading}
               >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
@@ -329,11 +311,11 @@ export function RegisterForm() {
                 disabled={loading || code.length !== 6}
                 className="h-11 w-full cursor-pointer gap-2 text-base font-bold"
               >
-                {loading ? (
-                  <Loader2 size={20} className="animate-spin" />
-                ) : (
+                {
+                  loading ?
+                  <Loader2 size={20} className="animate-spin" /> :
                   <CheckCircle2 size={20} />
-                )}
+                }
                 Verificar Código
               </Button>
 
@@ -343,14 +325,15 @@ export function RegisterForm() {
                 onClick={handleClickResend}
                 className="h-11 w-full cursor-pointer"
               >
-                {countdown > 0
-                  ? `Reenviar código en ${countdown}s`
-                  : "Reenviar código"}
+                {
+                  countdown > 0 ?
+                  `Reenviar código en ${countdown}s`:
+                  "Reenviar código"
+                }
               </Button>
 
               <Button
-                variant="ghost"
-                disabled={loading}
+                variant="ghost" disabled={loading}
                 onClick={() => setStep("REGISTER")}
                 className="h-11 w-full cursor-pointer text-muted-foreground"
               >
@@ -358,18 +341,16 @@ export function RegisterForm() {
               </Button>
             </div>
           </div>
-        )}
+        }
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Al registrarte, aceptas nuestros{" "}
           <a href="#" className="font-semibold text-primary hover:underline">
             Términos de Servicio
-          </a>{" "}
-          y{" "}
+          </a>{" y "}
           <a href="#" className="font-semibold text-primary hover:underline">
             Política de Privacidad
-          </a>
-          .
+          </a>{"."}
         </p>
       </Card>
     </div>
