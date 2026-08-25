@@ -77,10 +77,7 @@ export function LoginForm() {
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => showError("Error al iniciar sesión con Google")}
-            useOneTap
-            theme="outline"
-            shape="pill"
-            width="100%"
+            useOneTap={false} theme="outline" shape="pill"
           />
 
           <div className="relative w-full">
