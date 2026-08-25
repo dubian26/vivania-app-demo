@@ -88,7 +88,7 @@ export class BaseError {
 
   static ValidationError(details: ErrorDetail[]): CustomError {
     return new CustomError(
-      'Errores de validación en los datos enviados.',
+      'Errores de validación:',
       'validation',
       'Schema.ValidationError',
       details,

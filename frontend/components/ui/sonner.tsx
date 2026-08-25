@@ -22,7 +22,7 @@ export const Toaster = ({ ...props }: ToasterProps) => {
             classNames: {
                toast: "items-start! gap-3! border-l-5! shadow-lg! py-3! px-4!",
                title: "font-semibold! text-md!",
-               description: "text-lg! text-muted-foreground!",
+               description: "text-md! text-muted-foreground!",
                icon: "mt-1! w-8! h-8!",
             },
          }}
