@@ -1,13 +1,14 @@
+import { GoogleLoginUserCommand, type GoogleLoginUserDTO } from '@/application/user/google-login-user.command'
 import { LoginUserQuery, type LoginUserDTO } from '@/application/user/login-user.query'
 import { RegisterUserCommand, type RegisterUserDTO } from '@/application/user/register-user.command'
 import { ResendOtpCommand, type ResendOtpDTO } from '@/application/user/resend-otp.command'
 import { UpdateProfileCommand, type UpdateProfileDTO } from '@/application/user/update-profile.command'
 import { VerifyUserCommand, type VerifyUserDTO, type VerifyUserResult } from '@/application/user/verify-user.command'
-import { Public } from '@/shared/decorators/public.decorator'
-import { setAccessTokenCookie, setAuthCookies } from '@/shared/util/cookie-helper'
 import { BaseError } from '@/base/errors/base-error'
 import { type IdResult } from '@/base/models/id-result'
 import { UserInfo } from '@/base/models/user-info'
+import { Public } from '@/shared/decorators/public.decorator'
+import { setAccessTokenCookie, setAuthCookies } from '@/shared/util/cookie-helper'
 import { Body, Controller, Get, Patch, Post, Req, Res } from '@nestjs/common'
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
@@ -23,6 +24,7 @@ export class AuthController {
   constructor(
     private readonly loginUserQuery: LoginUserQuery,
     private readonly registerUserCommand: RegisterUserCommand,
+    private readonly googleLoginUserCommand: GoogleLoginUserCommand,
     private readonly verifyUserQuery: VerifyUserCommand,
     private readonly resendOtpCommand: ResendOtpCommand,
     private readonly updateProfileCommand: UpdateProfileCommand,
@@ -35,6 +37,17 @@ export class AuthController {
     @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<UserInfo> {
     const userInfo = await this.loginUserQuery.execute(req)
+    setAuthCookies(reply, userInfo)
+    return userInfo
+  }
+
+  @Public()
+  @Post('google-login')
+  async googleLogin(
+    @Body() req: GoogleLoginUserDTO,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ): Promise<UserInfo> {
+    const userInfo = await this.googleLoginUserCommand.execute(req)
     setAuthCookies(reply, userInfo)
     return userInfo
   }

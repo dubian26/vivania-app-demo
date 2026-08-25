@@ -1,5 +1,6 @@
 import { GetUserByEmailQuery } from '@/application/user/get-user-by-email.query'
 import { GetUserQuery } from '@/application/user/get-user.query'
+import { GoogleLoginUserCommand } from '@/application/user/google-login-user.command'
 import { LoginUserQuery } from '@/application/user/login-user.query'
 import { RegisterUserCommand } from '@/application/user/register-user.command'
 import { ResendOtpCommand } from '@/application/user/resend-otp.command'
@@ -16,6 +17,7 @@ import { UserController } from './user.controller'
   providers: [
     LoginUserQuery,
     RegisterUserCommand,
+    GoogleLoginUserCommand,
     ResendOtpCommand,
     VerifyUserCommand,
     SearchUsersQuery,
