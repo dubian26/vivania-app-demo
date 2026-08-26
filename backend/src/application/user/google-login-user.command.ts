@@ -8,7 +8,7 @@ import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { User } from '@/domain/user/user'
 import { UserRepository } from '@/domain/user/user-repository'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 
@@ -23,13 +23,14 @@ const schema = z.object({
 @Injectable()
 export class GoogleLoginUserCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
     private readonly oauthTokenVerifier: OauthTokenVerifier,
   ) { }
 
   async execute(input: GoogleLoginUserDTO): Promise<UserInfo> {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     try {
       const payload = await this.oauthTokenVerifier.verify(input.token)

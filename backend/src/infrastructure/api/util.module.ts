@@ -1,13 +1,13 @@
 import { EmailService } from '@/base/contracts/email-service'
 import { OauthTokenVerifier } from '@/base/contracts/oauth-token-verifier'
 import { PasswordHasher } from '@/base/contracts/password-hasher'
-import { UuidValidator } from '@/base/contracts/uuid.validator'
-import { AuthService } from '@/shared/util/auth-service'
+import { Validator } from '@/base/contracts/validator'
+import { AuthService } from '@/base/util/auth-service'
+import { ContextStorage } from '@/base/util/context-storage'
+import { ZodValidator } from '@/base/util/zod-validator'
 import { BcryptPasswordHasher } from '@/shared/util/bcrypt-password-hasher'
 import { BrevoEmailService } from '@/shared/util/brevo-email-service'
 import { GoogleOauthTokenVerifier } from '@/shared/util/google-oauth-token-verifier'
-import { ContextStorage } from '@/shared/util/context-storage'
-import { ZodUuidValidator } from '@/shared/util/zod-uuid.validator'
 import { Global, Module } from '@nestjs/common'
 
 @Global()
@@ -26,8 +26,8 @@ import { Global, Module } from '@nestjs/common'
       useClass: GoogleOauthTokenVerifier,
     },
     {
-      provide: UuidValidator,
-      useClass: ZodUuidValidator,
+      provide: Validator,
+      useClass: ZodValidator,
     },
     ContextStorage,
     AuthService,
@@ -36,7 +36,7 @@ import { Global, Module } from '@nestjs/common'
     PasswordHasher,
     EmailService,
     OauthTokenVerifier,
-    UuidValidator,
+    Validator,
     ContextStorage,
     AuthService,
   ],

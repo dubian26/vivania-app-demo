@@ -5,7 +5,7 @@ import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface UpdateUserDTO {
@@ -23,12 +23,13 @@ const schema = z.object({
 @Injectable()
 export class UpdateUserCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
   ) { }
 
   async execute(id: string, input: UpdateUserDTO, currentRoleName: string): Promise<IdResult> {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     if (currentRoleName !== Role.ADMIN) throw UserError.NotAuthorized()
 

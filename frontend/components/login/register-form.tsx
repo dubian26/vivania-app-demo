@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import { userRepository } from "@/repositories/user-repository"
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import {
     InputOTP,
@@ -53,7 +53,7 @@ export function RegisterForm() {
     }
   }, [step, countdown])
 
-  const handleGoogleSuccess = async (response: CredentialResponse) => {
+  const handleGoogleSuccess = useCallback(async (response: CredentialResponse) => {
     const authPromise = userRepository.googleAuthenticate(response.credential!)
     const userInfo = await run(authPromise)
 
@@ -62,7 +62,11 @@ export function RegisterForm() {
       showMessage(`Bienvenido/a, ${userInfo.firstName}`)
       router.push("/dashboard")
     }
-  }
+  }, [login, run, router, showMessage])
+
+  const handleGoogleError = useCallback(() => {
+    showError("Error al registrarse con Google")
+  }, [showError])
 
   const handleClickRegister = async () => {
     if (!firstName.trim() || !lastName.trim()) {
@@ -141,7 +145,7 @@ export function RegisterForm() {
             <div className="mb-6 flex flex-col items-center gap-4">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => showError("Error al registrarse con Google")}
+                onError={handleGoogleError}
                 useOneTap={false} theme="outline" shape="pill"
               />
 

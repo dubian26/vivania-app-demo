@@ -15,3 +15,5 @@ export const firstNameCheck = () => z.string()
 export const lastNameCheck = () => z.string()
   .min(2, { message: 'El apellido es demasiado corto.' })
   .max(50, { message: 'El apellido es demasiado largo.' })
+
+export const uuidCheck = () => z.uuid({ message: 'El ID proporcionado no es un UUID válido' })

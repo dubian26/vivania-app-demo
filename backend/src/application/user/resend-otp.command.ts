@@ -1,3 +1,7 @@
+import { EmailService } from '@/base/contracts/email-service'
+import { TxManager } from '@/base/contracts/tx-manager'
+import { Validator } from '@/base/contracts/validator'
+import { Injectable } from '@/base/util/injectable'
 import { Role } from '@/domain/role/role'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
@@ -6,11 +10,7 @@ import { UserRepository } from '@/domain/user/user-repository'
 import { VerifyCode } from '@/domain/verify-code/verify-code'
 import { VerifyCodeError } from '@/domain/verify-code/verify-code-error'
 import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repository'
-import { EmailService } from '@/base/contracts/email-service'
-import { TxManager } from '@/base/contracts/tx-manager'
-import { Injectable } from '@/base/util/injectable'
 import { randomUUID } from 'node:crypto'
-import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 
 export interface ResendOtpDTO {
@@ -26,6 +26,7 @@ export const schema = z.object({
 @Injectable()
 export class ResendOtpCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
     private readonly verifyCodeRepo: VerifyCodeRepository,
@@ -34,7 +35,7 @@ export class ResendOtpCommand {
   ) { }
 
   async execute(input: ResendOtpDTO): Promise<{ message: string }> {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const user = await this.userRepo.findByEmail(input.email)
     if (!user) throw UserError.NotExists()
@@ -49,9 +50,8 @@ export class ResendOtpCommand {
     const recentCode = verifyCodes.find(code => code.purpose === input.purpose)
     if (!recentCode) throw VerifyCodeError.CodeDoesNotMatch()
 
-    const diffSegundos = (new Date().getTime() - recentCode.createdAt.getTime()) / 1000
-    if (diffSegundos < 60)
-      throw VerifyCodeError.RetryVerySoon(Math.ceil(60 - diffSegundos))
+    const diffSec = (new Date().getTime() - recentCode.createdAt.getTime()) / 1000
+    if (diffSec < 60) throw VerifyCodeError.RetryVerySoon(Math.ceil(60 - diffSec))
 
     await this.txManager.run(async () => {
       const otp = Math.floor(100000 + Math.random() * 900000).toString()

@@ -1,7 +1,7 @@
 import { Injectable } from '@/base/util/injectable'
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface GetUserByEmailDTO {
@@ -15,11 +15,12 @@ const schema = z.object({
 @Injectable()
 export class GetUserByEmailQuery {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepository: UserRepository,
   ) { }
 
   async execute(input: GetUserByEmailDTO) {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const user = await this.userRepository.findByEmail(input.email)
     if (!user) throw UserError.NotExists()

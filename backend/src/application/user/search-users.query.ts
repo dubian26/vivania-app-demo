@@ -1,6 +1,6 @@
 import { UserRepository } from '@/domain/user/user-repository'
 import { Injectable } from '@/base/util/injectable'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface SearchUsersDTO {
@@ -18,11 +18,12 @@ export const schema = z.object({
 @Injectable()
 export class SearchUsersQuery {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepository: UserRepository,
   ) { }
 
   async execute(input: SearchUsersDTO) {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const users = await this.userRepository.search({
       skip: input.skip,

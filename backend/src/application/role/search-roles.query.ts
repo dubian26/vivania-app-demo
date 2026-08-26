@@ -1,6 +1,6 @@
 import { RoleRepository } from '@/domain/role/role-repository'
 import { Injectable } from '@/base/util/injectable'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface SearchRolesDTO {
@@ -18,11 +18,12 @@ export const schema = z.object({
 @Injectable()
 export class SearchRolesQuery {
   constructor(
+    private readonly validator: Validator,
     private readonly roleRepository: RoleRepository,
   ) { }
 
   async execute(input: SearchRolesDTO) {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const roles = await this.roleRepository.search({
       skip: input.skip,

@@ -1,5 +1,5 @@
-import { BaseError } from '@/base/errors/base-error'
-import { Injectable } from '@/base/util/injectable'
+import { BaseError } from '../errors/base-error'
+import { Injectable } from './injectable'
 import { ContextStorage } from './context-storage'
 
 @Injectable()

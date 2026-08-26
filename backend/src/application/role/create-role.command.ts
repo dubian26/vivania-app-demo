@@ -1,10 +1,10 @@
 import { Role } from '@/domain/role/role'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
-import { AuthService } from '@/shared/util/auth-service'
+import { AuthService } from '@/base/util/auth-service'
 import { IdResult } from '@/base/models/id-result'
 import { Injectable } from '@/base/util/injectable'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 
@@ -32,13 +32,14 @@ export const schema = z.object({
 @Injectable()
 export class CreateRoleCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly roleRepository: RoleRepository,
     private readonly authService: AuthService,
   ) { }
 
   async execute(input: CreateRoleDTO): Promise<IdResult> {
     this.authService.authorizedTo('/roles/nuevo')
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const rol = await this.roleRepository.findByName(input.name)
     if (rol) throw RoleError.AlreadyExists()

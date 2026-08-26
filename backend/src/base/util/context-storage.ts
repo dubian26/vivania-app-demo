@@ -1,6 +1,6 @@
-import { PermissionModel } from '@/base/models/permission-model'
-import { UserInfo } from '@/base/models/user-info'
-import { Injectable } from '@/base/util/injectable'
+import { PermissionModel } from '../models/permission-model'
+import { UserInfo } from '../models/user-info'
+import { Injectable } from './injectable'
 import { AsyncLocalStorage } from 'node:async_hooks'
 
 export interface ContextModel {

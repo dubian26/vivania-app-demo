@@ -11,8 +11,8 @@ import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
 import { VerifyCode } from '@/domain/verify-code/verify-code'
 import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repository'
-import { firstNameCheck, lastNameCheck, passCheck } from '@/shared/util/zod-custom-schemas'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { firstNameCheck, lastNameCheck, passCheck } from '@/base/util/zod-custom-schemas'
+import { Validator } from '@/base/contracts/validator'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 
@@ -33,6 +33,7 @@ const schema = z.object({
 @Injectable()
 export class RegisterUserCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepo: UserRepository,
     private readonly roleRepo: RoleRepository,
     private readonly verifyCodeRepo: VerifyCodeRepository,
@@ -42,7 +43,7 @@ export class RegisterUserCommand {
   ) { }
 
   async execute(input: RegisterUserDTO): Promise<IdResult> {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const existe = await this.userRepo.findByEmail(input.email)
     if (existe) throw UserError.AlreadyExists()

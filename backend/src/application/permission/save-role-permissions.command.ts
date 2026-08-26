@@ -1,8 +1,8 @@
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
-import { AuthService } from '@/shared/util/auth-service'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { AuthService } from '@/base/util/auth-service'
+import { Validator } from '@/base/contracts/validator'
 import { IdResult } from '@/base/models/id-result'
 import { Injectable } from '@/base/util/injectable'
 import { z } from 'zod'
@@ -23,6 +23,7 @@ export const schema = z.object({
 @Injectable()
 export class SaveRolePermissionsCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly permissionRepository: PermissionRepository,
     private readonly roleRepository: RoleRepository,
     private readonly authService: AuthService,
@@ -30,7 +31,7 @@ export class SaveRolePermissionsCommand {
 
   async execute(input: SaveRolePermissionsDTO): Promise<IdResult> {
     this.authService.authorizedTo('/roles/permisos')
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const role = await this.roleRepository.findById(input.roleId)
     if (!role) throw RoleError.NotExists()

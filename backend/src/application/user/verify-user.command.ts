@@ -5,7 +5,7 @@ import { VerifyCodeRepository } from '@/domain/verify-code/verify-code-repositor
 import { TxManager } from '@/base/contracts/tx-manager'
 import { Injectable } from '@/base/util/injectable'
 import { UserInfo } from '@/base/models/user-info'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface VerifyUserDTO {
@@ -28,13 +28,14 @@ export const schema = z.object({
 @Injectable()
 export class VerifyUserCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepo: UserRepository,
     private readonly verifyCodeRepo: VerifyCodeRepository,
     private readonly txManager: TxManager,
   ) { }
 
   async execute(input: VerifyUserDTO): Promise<VerifyUserResult> {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const user = await this.userRepo.findByEmail(input.email)
     if (!user) throw UserError.NotExists()

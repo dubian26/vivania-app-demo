@@ -3,8 +3,8 @@ import { IdResult } from '@/base/models/id-result'
 import { Injectable } from '@/base/util/injectable'
 import { UserError } from '@/domain/user/user-error'
 import { UserRepository } from '@/domain/user/user-repository'
-import { firstNameCheck, lastNameCheck, passCheck } from '@/shared/util/zod-custom-schemas'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { firstNameCheck, lastNameCheck, passCheck } from '@/base/util/zod-custom-schemas'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface UpdateProfileDTO {
@@ -27,12 +27,13 @@ const schema = z.object({
 @Injectable()
 export class UpdateProfileCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly userRepo: UserRepository,
     private readonly passwordHasher: PasswordHasher,
   ) { }
 
   async execute(userId: string, input: UpdateProfileDTO): Promise<IdResult> {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const user = await this.userRepo.findById(userId)
     if (!user) throw UserError.NotExists()

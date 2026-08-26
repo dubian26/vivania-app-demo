@@ -1,9 +1,9 @@
+import { Validator } from '@/base/contracts/validator'
+import { IdResult } from '@/base/models/id-result'
+import { AuthService } from '@/base/util/auth-service'
+import { Injectable } from '@/base/util/injectable'
 import { RoleError } from '@/domain/role/role-error'
 import { RoleRepository } from '@/domain/role/role-repository'
-import { AuthService } from '@/shared/util/auth-service'
-import { IdResult } from '@/base/models/id-result'
-import { Injectable } from '@/base/util/injectable'
-import { ZodValidator } from '@/shared/util/zod-validator'
 import { z } from 'zod'
 
 export interface UpdateRoleDTO {
@@ -32,13 +32,14 @@ export const schema = z.object({
 @Injectable()
 export class UpdateRoleCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly roleRepository: RoleRepository,
     private readonly authService: AuthService,
   ) { }
 
   async execute(input: UpdateRoleDTO): Promise<IdResult> {
-    this.authService.authorizedTo('/roles/editar')
-    input = ZodValidator.parse(schema, input)
+    //this.authService.authorizedTo('/roles/editar')
+    input = this.validator.parse(schema, input)
 
     const role = await this.roleRepository.findById(input.id)
     if (!role) throw RoleError.NotExists()

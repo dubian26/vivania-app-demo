@@ -13,7 +13,7 @@ export class VerifyCodeError {
     return new CustomError(
       'El código no corresponde a este usuario.',
       'validation',
-      'VerifyCode.CodigoNoCorresponde'
+      'VerifyCode.CodeDoesNotMatch'
     )
   }
 

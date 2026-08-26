@@ -1,8 +1,8 @@
 import { Permission } from '@/domain/permission/permission'
 import { PermissionError } from '@/domain/permission/permission-error'
 import { PermissionRepository } from '@/domain/permission/permission-repository'
-import { AuthService } from '@/shared/util/auth-service'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { AuthService } from '@/base/util/auth-service'
+import { Validator } from '@/base/contracts/validator'
 import { PermissionType } from '@/base/models/permission-model'
 import { Injectable } from '@/base/util/injectable'
 import { z } from 'zod'
@@ -37,13 +37,14 @@ export const schema = z.object({
 @Injectable()
 export class UpdatePermissionCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly permissionRepository: PermissionRepository,
     private readonly authService: AuthService,
   ) { }
 
   async execute(input: UpdatePermissionDTO) {
     this.authService.authorizedTo('/roles/permisos')
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const existing = await this.permissionRepository.findById(input.id)
     if (!existing) throw PermissionError.NotExists()

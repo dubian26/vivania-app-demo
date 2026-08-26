@@ -1,6 +1,6 @@
 import { PermissionRepository } from '@/domain/permission/permission-repository'
 import { Injectable } from '@/base/util/injectable'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { z } from 'zod'
 
 export interface GetPermissionsByRoleDTO {
@@ -14,11 +14,12 @@ export const schema = z.object({
 @Injectable()
 export class GetPermissionsByRoleQuery {
   constructor(
+    private readonly validator: Validator,
     private readonly permissionRepository: PermissionRepository,
   ) { }
 
   async execute(input: GetPermissionsByRoleDTO) {
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const permissions = await this.permissionRepository.listByRole(input.roleId)
     return permissions.map((permission) => permission.toResult())

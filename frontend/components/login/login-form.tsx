@@ -4,7 +4,7 @@ import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
 import { Loader2, LogIn, Mail } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 import { Title } from "@/components/common/title"
 import { Button } from "@/components/ui/button"
@@ -32,6 +32,7 @@ export function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false)
+  const [recoveryLoading, setRecoveryLoading] = useState(false)
 
   const handleClickLogin = async () => {
     if (!email.trim() || !password) {
@@ -49,7 +50,7 @@ export function LoginForm() {
     }
   }
 
-  const handleGoogleSuccess = async (response: CredentialResponse) => {
+  const handleGoogleSuccess = useCallback(async (response: CredentialResponse) => {
     const authPromise = userRepository.googleAuthenticate(response.credential!)
     const userInfo = await run(authPromise)
 
@@ -58,8 +59,35 @@ export function LoginForm() {
       showMessage(`Bienvenido/a, ${userInfo.firstName}`)
       router.push("/dashboard")
     }
+  }, [login, run, router, showMessage])
+
+  const handleGoogleError = useCallback(() => {
+    showError("Error al iniciar sesión con Google")
+  }, [showError])
+
+  const handleClickPassRecovery = () => {
+    if (!email.trim()) {
+      showError("Ingresa tu correo electrónico para recuperar tu contraseña")
+      return
+    }
+
+    setShowRecoveryDialog(true)
   }
 
+  const handleRequestPassRecovery = async () => {
+      setRecoveryLoading(true)
+      
+      const resendOtpPromise = userRepository.resendOtp(email, "RECUPERACION")
+      const result = await run(resendOtpPromise)
+
+      if (result !== undefined) {
+         showMessage("Código de recuperación enviado a tu correo")
+         setShowRecoveryDialog(false)
+      }
+
+      setRecoveryLoading(false)
+   }
+  
   return (
     <div className={cn(
       "w-full max-w-md animate-in duration-500 fade-in slide-in-from-left-5",
@@ -76,7 +104,7 @@ export function LoginForm() {
         <div className="mb-6 flex flex-col items-center gap-4">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
-            onError={() => showError("Error al iniciar sesión con Google")}
+            onError={handleGoogleError}
             useOneTap={false} theme="outline" shape="pill"
           />
 
@@ -126,7 +154,7 @@ export function LoginForm() {
                 Contraseña
               </label>
               <button
-                type="button" onClick={() => setShowRecoveryDialog(true)}
+                type="button" onClick={handleClickPassRecovery}
                 className={cn(
                   "cursor-pointer border-none bg-transparent text-xs",
                   "font-semibold text-primary hover:underline"
@@ -181,13 +209,11 @@ export function LoginForm() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4">
-            <Button
-              variant="outline"
-              onClick={() => setShowRecoveryDialog(false)}
-            >
+            <Button variant="outline" onClick={() => setShowRecoveryDialog(false)}>
               Cancelar
             </Button>
-            <Button onClick={() => setShowRecoveryDialog(false)}>
+            <Button onClick={handleRequestPassRecovery} disabled={recoveryLoading}>
+              {recoveryLoading && <Loader2 className="animate-spin mr-2" size={16} />}
               Confirmar y enviar
             </Button>
           </DialogFooter>

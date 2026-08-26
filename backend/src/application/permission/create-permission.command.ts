@@ -1,9 +1,9 @@
-import { Permission } from '@/domain/permission/permission'
-import { PermissionRepository } from '@/domain/permission/permission-repository'
-import { AuthService } from '@/shared/util/auth-service'
-import { ZodValidator } from '@/shared/util/zod-validator'
+import { Validator } from '@/base/contracts/validator'
 import { PermissionType } from '@/base/models/permission-model'
 import { Injectable } from '@/base/util/injectable'
+import { Permission } from '@/domain/permission/permission'
+import { PermissionRepository } from '@/domain/permission/permission-repository'
+import { AuthService } from '@/base/util/auth-service'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 
@@ -35,13 +35,14 @@ export const schema = z.object({
 @Injectable()
 export class CreatePermissionCommand {
   constructor(
+    private readonly validator: Validator,
     private readonly permissionRepository: PermissionRepository,
     private readonly authService: AuthService,
   ) { }
 
   async execute(input: CreatePermissionDTO) {
     this.authService.authorizedTo('/roles/permisos')
-    input = ZodValidator.parse(schema, input)
+    input = this.validator.parse(schema, input)
 
     const permission = Permission.create({
       id: randomUUID(),
