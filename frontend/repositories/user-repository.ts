@@ -61,6 +61,18 @@ export class UserApiRepository {
     const data = await FetchUtility.getData<{ message: string }>(response)
     return data
   }
+
+  // Updates the authenticated user's profile (PATCH /auth/profile).
+  // Requires a valid session cookie. verifyEmail with purpose RECUPERACION
+  // sets those cookies (implicit login), so password recovery can reuse this.
+  async updateProfile(
+    payload: { password: string }
+  ): Promise<IdResult | undefined> {
+    const url = `${API_URL}/auth/profile`
+    const response = await FetchUtility.fetch(url, payload, "PATCH")
+    const data = await FetchUtility.getData<IdResult>(response)
+    return data
+  }
 }
 
 export const userRepository = new UserApiRepository()

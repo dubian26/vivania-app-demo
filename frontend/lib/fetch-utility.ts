@@ -1,7 +1,7 @@
 import { CustomError } from "@/lib/custom-error"
 import { type ErrorModel } from "@/models/error-model"
 
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 
 /**
  * Centralized HTTP client (native fetch).

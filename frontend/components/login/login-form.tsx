@@ -83,6 +83,7 @@ export function LoginForm() {
       if (result !== undefined) {
          showMessage("Código de recuperación enviado a tu correo")
          setShowRecoveryDialog(false)
+         router.push(`/recuperar-password?email=${encodeURIComponent(email)}`)
       }
 
       setRecoveryLoading(false)

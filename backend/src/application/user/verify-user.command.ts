@@ -56,7 +56,11 @@ export class VerifyUserCommand {
       verifyCode.markAsUsed()
       await this.verifyCodeRepo.update(verifyCode)
 
-      if (input.purpose === 'REGISTRO') {
+      // Entering a valid OTP proves ownership of the email, regardless of the
+      // purpose (REGISTRO is always unverified here; RECUPERACION may be used
+      // by an account that never completed registration). Mark it verified and
+      // active so the user can actually log in afterwards.
+      if (!user.emailVerified) {
         user.verifyEmail()
         user.activate()
         await this.userRepo.update(user)

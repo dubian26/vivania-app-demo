@@ -48,10 +48,13 @@ export class ResendOtpCommand {
 
     const verifyCodes = await this.verifyCodeRepo.findByUserId(user.id)
     const recentCode = verifyCodes.find(code => code.purpose === input.purpose)
-    if (!recentCode) throw VerifyCodeError.CodeDoesNotMatch()
 
-    const diffSec = (new Date().getTime() - recentCode.createdAt.getTime()) / 1000
-    if (diffSec < 60) throw VerifyCodeError.RetryVerySoon(Math.ceil(60 - diffSec))
+    // The first request for a given purpose has no previous code, so there is
+    // no cooldown to enforce yet. Only block when a recent code exists.
+    if (recentCode) {
+      const diffSec = (new Date().getTime() - recentCode.createdAt.getTime()) / 1000
+      if (diffSec < 60) throw VerifyCodeError.RetryVerySoon(Math.ceil(60 - diffSec))
+    }
 
     await this.txManager.run(async () => {
       const otp = Math.floor(100000 + Math.random() * 900000).toString()
