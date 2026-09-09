@@ -42,7 +42,7 @@
 - `PORT` defaults to `3000` in code; `docker-compose.yml` maps the containerized app to `3001`.
 
 ## Backend Tests
-- Unit tests use Jest with `rootDir: src`; place specs under `backend/src/**/*.spec.ts`.
+- Unit tests use Jest with `rootDir: .`; place specs under `backend/test/**` mirroring the `backend/src/**` folder structure (e.g. `test/base/util/context-storage.spec.ts`). Tests import source via the `@/` alias (mapped in the jest config).
 - E2E config is `backend/test/jest-e2e.json`.
 - Existing e2e tests import the real `AppModule` and only override `PasswordHasher`; DB-backed providers are still real, so e2e runs can require a reachable Postgres unless you override more providers.
 

@@ -17,6 +17,13 @@ export class ContextStorage {
   }
 
   set(context: ContextModel): void {
+    const store = this.storage.getStore()
+
+    if (store) {
+      Object.assign(store, context)
+      return
+    }
+
     this.storage.enterWith(context)
   }
 

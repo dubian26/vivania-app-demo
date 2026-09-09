@@ -1,6 +1,7 @@
 import { GlobalExceptionFilter } from '@/shared/filters/global-exception.filter'
 import { JwtAuthGuard } from '@/shared/guards/jwt-auth.guard'
-import { Module } from '@nestjs/common'
+import { ContextMiddleware } from '@/shared/middleware/context.middleware'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { PermissionModule } from './permission/permission.module'
 import { RepoModule } from './repo.module'
@@ -25,4 +26,8 @@ import { UtilModule } from './util.module'
     },
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ContextMiddleware).forRoutes('*')
+  }
+}
