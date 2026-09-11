@@ -1,13 +1,13 @@
-import { GetUserByEmailQuery } from '@/application/user/get-user-by-email.query'
-import { GetUserQuery } from '@/application/user/get-user.query'
-import { GoogleLoginUserCommand } from '@/application/user/google-login-user.command'
-import { LoginUserQuery } from '@/application/user/login-user.query'
-import { RegisterUserCommand } from '@/application/user/register-user.command'
-import { ResendOtpCommand } from '@/application/user/resend-otp.command'
-import { SearchUsersQuery } from '@/application/user/search-users.query'
-import { UpdateProfileCommand } from '@/application/user/update-profile.command'
-import { UpdateUserCommand } from '@/application/user/update-user.command'
-import { VerifyUserCommand } from '@/application/user/verify-user.command'
+import { GetUserByEmailHandler } from '@/application/user/get-user-by-email.handler'
+import { GetUserHandler } from '@/application/user/get-user.handler'
+import { GoogleLoginUserHandler } from '@/application/user/google-login-user.handler'
+import { LoginUserHandler } from '@/application/user/login-user.handler'
+import { RegisterUserHandler } from '@/application/user/register-user.handler'
+import { ResendOtpHandler } from '@/application/user/resend-otp.handler'
+import { SearchUsersHandler } from '@/application/user/search-users.handler'
+import { UpdateProfileHandler } from '@/application/user/update-profile.handler'
+import { UpdateUserHandler } from '@/application/user/update-user.handler'
+import { VerifyUserHandler } from '@/application/user/verify-user.handler'
 import { Module } from '@nestjs/common'
 import { AuthController } from './auth.controller'
 import { UserController } from './user.controller'
@@ -15,16 +15,16 @@ import { UserController } from './user.controller'
 @Module({
   controllers: [AuthController, UserController],
   providers: [
-    LoginUserQuery,
-    RegisterUserCommand,
-    GoogleLoginUserCommand,
-    ResendOtpCommand,
-    VerifyUserCommand,
-    SearchUsersQuery,
-    GetUserQuery,
-    GetUserByEmailQuery,
-    UpdateUserCommand,
-    UpdateProfileCommand,
+    LoginUserHandler,
+    RegisterUserHandler,
+    GoogleLoginUserHandler,
+    ResendOtpHandler,
+    VerifyUserHandler,
+    SearchUsersHandler,
+    GetUserHandler,
+    GetUserByEmailHandler,
+    UpdateUserHandler,
+    UpdateProfileHandler,
   ],
 })
 export class UserModule { }

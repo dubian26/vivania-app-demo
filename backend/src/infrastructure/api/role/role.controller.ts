@@ -12,11 +12,6 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 export class RoleController {
   constructor(
     private readonly mediator: Mediator,
-    private readonly listRolesQuery: ListRolesQuery,
-    private readonly searchRolesQuery: SearchRolesQuery,
-    private readonly getRoleQuery: GetRoleQuery,
-    private readonly updateRoleCommand: UpdateRoleCommand,
-    private readonly deleteRoleCommand: DeleteRoleCommand,
   ) { }
 
   @Post()
@@ -26,26 +21,26 @@ export class RoleController {
 
   @Get()
   list() {
-    return this.listRolesQuery.execute()
+    return this.mediator.send(new ListRolesQuery())
   }
 
   @Get('search')
   search(@Query() filtros: SearchRolesDTO) {
-    return this.searchRolesQuery.execute(filtros)
+    return this.mediator.send(new SearchRolesQuery(filtros))
   }
 
   @Get(':id')
   findById(@Param('id') id: string) {
-    return this.getRoleQuery.execute(id)
+    return this.mediator.send(new GetRoleQuery(id))
   }
 
   @Put()
   update(@Body() req: UpdateRoleDTO): Promise<IdResult> {
-    return this.updateRoleCommand.execute(req)
+    return this.mediator.send(new UpdateRoleCommand(req))
   }
 
   @Delete(':id')
   delete(@Param('id') id: string): Promise<IdResult> {
-    return this.deleteRoleCommand.execute(id)
+    return this.mediator.send(new DeleteRoleCommand(id))
   }
 }

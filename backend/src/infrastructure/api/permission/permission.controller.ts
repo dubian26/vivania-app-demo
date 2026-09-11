@@ -4,28 +4,24 @@ import { GetPermissionsByRoleQuery } from '@/application/permission/get-permissi
 import { ListPermissionsQuery } from '@/application/permission/list-permissions.query'
 import { SaveRolePermissionsCommand } from '@/application/permission/save-role-permissions.command'
 import { UpdatePermissionCommand, type UpdatePermissionDTO } from '@/application/permission/update-permission.command'
+import { Mediator } from '@/base/mediator'
 import { type IdResult } from '@/base/models/id-result'
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 
 @Controller('permissions')
 export class PermissionController {
   constructor(
-    private readonly listPermissionsQuery: ListPermissionsQuery,
-    private readonly getPermissionsByRoleQuery: GetPermissionsByRoleQuery,
-    private readonly saveRolePermissionsCommand: SaveRolePermissionsCommand,
-    private readonly createPermissionCommand: CreatePermissionCommand,
-    private readonly updatePermissionCommand: UpdatePermissionCommand,
-    private readonly deletePermissionCommand: DeletePermissionCommand,
+    private readonly mediator: Mediator,
   ) { }
 
   @Get()
   list() {
-    return this.listPermissionsQuery.execute()
+    return this.mediator.send(new ListPermissionsQuery())
   }
 
   @Get('role/:roleId')
   listByRole(@Param('roleId') roleId: string) {
-    return this.getPermissionsByRoleQuery.execute({ roleId })
+    return this.mediator.send(new GetPermissionsByRoleQuery({ roleId }))
   }
 
   @Post('role/:roleId')
@@ -33,24 +29,24 @@ export class PermissionController {
     @Param('roleId') roleId: string,
     @Body() req: { permissionIds: string[] },
   ): Promise<IdResult> {
-    return this.saveRolePermissionsCommand.execute({
+    return this.mediator.send(new SaveRolePermissionsCommand({
       roleId,
       permissionIds: req.permissionIds,
-    })
+    }))
   }
 
   @Post()
   create(@Body() req: CreatePermissionDTO) {
-    return this.createPermissionCommand.execute(req)
+    return this.mediator.send(new CreatePermissionCommand(req))
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() req: UpdatePermissionDTO) {
-    return this.updatePermissionCommand.execute({ ...req, id })
+    return this.mediator.send(new UpdatePermissionCommand({ ...req, id }))
   }
 
   @Delete(':id')
   delete(@Param('id') id: string): Promise<IdResult> {
-    return this.deletePermissionCommand.execute(id)
+    return this.mediator.send(new DeletePermissionCommand(id))
   }
 }

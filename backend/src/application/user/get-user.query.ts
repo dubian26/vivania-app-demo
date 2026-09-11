@@ -1,21 +1,13 @@
-import { UserError } from '@/domain/user/user-error'
-import { UserRepository } from '@/domain/user/user-repository'
-import { Validator } from '@/base/contracts/validator'
-import { uuidCheck } from '@/base/util/zod-custom-schemas'
-import { Injectable } from '@/base/util/injectable'
+import { Query } from '@/base/mediator'
+import { UserResult } from '@/domain/user/user'
+import { LoggingBehavior } from '@/shared/util/logging-behavior'
+import { GetUserHandler } from './get-user.handler'
 
-@Injectable()
-export class GetUserQuery {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly validator: Validator,
-  ) { }
+export class GetUserQuery extends Query<UserResult> {
+  readonly handlerType = GetUserHandler
+  readonly behaviorTypes = [LoggingBehavior]
 
-  async execute(id: string) {
-    this.validator.parse(uuidCheck(), id)
-    const user = await this.userRepository.findById(id)
-    if (!user) throw UserError.NotExists()
-
-    return user.toResult()
+  constructor(readonly id: string) {
+    super()
   }
 }

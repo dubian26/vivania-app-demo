@@ -1,14 +1,8 @@
-import { RoleRepository } from '@/domain/role/role-repository'
-import { Injectable } from '@/base/util/injectable'
+import { Query } from '@/base/mediator'
+import { LoggingBehavior } from '@/shared/util/logging-behavior'
+import { ListRolesHandler } from './list-roles.handler'
 
-@Injectable()
-export class ListRolesQuery {
-  constructor(
-    private readonly roleRepository: RoleRepository,
-  ) { }
-
-  async execute() {
-    const roles = await this.roleRepository.listAll()
-    return roles.map((role) => role.toResult())
-  }
+export class ListRolesQuery extends Query<unknown[]> {
+  readonly handlerType = ListRolesHandler
+  readonly behaviorTypes = [LoggingBehavior]
 }

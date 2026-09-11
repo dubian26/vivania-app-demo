@@ -1,21 +1,21 @@
-import { CreatePermissionCommand } from '@/application/permission/create-permission.command'
-import { DeletePermissionCommand } from '@/application/permission/delete-permission.command'
-import { GetPermissionsByRoleQuery } from '@/application/permission/get-permissions-by-role.query'
-import { ListPermissionsQuery } from '@/application/permission/list-permissions.query'
-import { SaveRolePermissionsCommand } from '@/application/permission/save-role-permissions.command'
-import { UpdatePermissionCommand } from '@/application/permission/update-permission.command'
+import { CreatePermissionHandler } from '@/application/permission/create-permission.handler'
+import { DeletePermissionHandler } from '@/application/permission/delete-permission.handler'
+import { GetPermissionsByRoleHandler } from '@/application/permission/get-permissions-by-role.handler'
+import { ListPermissionsHandler } from '@/application/permission/list-permissions.handler'
+import { SaveRolePermissionsHandler } from '@/application/permission/save-role-permissions.handler'
+import { UpdatePermissionHandler } from '@/application/permission/update-permission.handler'
 import { Module } from '@nestjs/common'
 import { PermissionController } from './permission.controller'
 
 @Module({
   controllers: [PermissionController],
   providers: [
-    CreatePermissionCommand,
-    ListPermissionsQuery,
-    GetPermissionsByRoleQuery,
-    SaveRolePermissionsCommand,
-    UpdatePermissionCommand,
-    DeletePermissionCommand,
+    CreatePermissionHandler,
+    DeletePermissionHandler,
+    GetPermissionsByRoleHandler,
+    ListPermissionsHandler,
+    SaveRolePermissionsHandler,
+    UpdatePermissionHandler,
   ],
 })
 export class PermissionModule { }

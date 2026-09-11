@@ -4,6 +4,7 @@ import { RegisterUserCommand, type RegisterUserDTO } from '@/application/user/re
 import { ResendOtpCommand, type ResendOtpDTO } from '@/application/user/resend-otp.command'
 import { UpdateProfileCommand, type UpdateProfileDTO } from '@/application/user/update-profile.command'
 import { VerifyUserCommand, type VerifyUserDTO, type VerifyUserResult } from '@/application/user/verify-user.command'
+import { Mediator } from '@/base/mediator'
 import { BaseError } from '@/base/errors/base-error'
 import { type IdResult } from '@/base/models/id-result'
 import { UserInfo } from '@/base/models/user-info'
@@ -22,12 +23,7 @@ type AuthenticatedRequest = FastifyRequest & { user?: UserInfo }
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly loginUserQuery: LoginUserQuery,
-    private readonly registerUserCommand: RegisterUserCommand,
-    private readonly googleLoginUserCommand: GoogleLoginUserCommand,
-    private readonly verifyUserQuery: VerifyUserCommand,
-    private readonly resendOtpCommand: ResendOtpCommand,
-    private readonly updateProfileCommand: UpdateProfileCommand,
+    private readonly mediator: Mediator,
   ) { }
 
   @Public()
@@ -36,7 +32,7 @@ export class AuthController {
     @Body() req: LoginUserDTO,
     @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<UserInfo> {
-    const userInfo = await this.loginUserQuery.execute(req)
+    const userInfo = await this.mediator.send(new LoginUserQuery(req))
     setAuthCookies(reply, userInfo)
     return userInfo
   }
@@ -47,7 +43,7 @@ export class AuthController {
     @Body() req: GoogleLoginUserDTO,
     @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<UserInfo> {
-    const userInfo = await this.googleLoginUserCommand.execute(req)
+    const userInfo = await this.mediator.send(new GoogleLoginUserCommand(req))
     setAuthCookies(reply, userInfo)
     return userInfo
   }
@@ -55,7 +51,7 @@ export class AuthController {
   @Public()
   @Post('register')
   register(@Body() req: RegisterUserDTO): Promise<IdResult> {
-    return this.registerUserCommand.execute(req)
+    return this.mediator.send(new RegisterUserCommand(req))
   }
 
   @Public()
@@ -107,7 +103,7 @@ export class AuthController {
     @Body() req: VerifyUserDTO,
     @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<VerifyUserResult> {
-    const result = await this.verifyUserQuery.execute(req)
+    const result = await this.mediator.send(new VerifyUserCommand(req))
     if (result.userInfo) setAuthCookies(reply, result.userInfo)
     return result
   }
@@ -115,7 +111,7 @@ export class AuthController {
   @Public()
   @Post('resend-otp')
   async resendOtp(@Body() req: ResendOtpDTO): Promise<{ message: string }> {
-    const result = await this.resendOtpCommand.execute(req)
+    const result = await this.mediator.send(new ResendOtpCommand(req))
     return result
   }
 
@@ -125,6 +121,6 @@ export class AuthController {
     @Req() request: AuthenticatedRequest,
   ): Promise<IdResult> {
     const userId = request.user!.id
-    return this.updateProfileCommand.execute(userId, req)
+    return this.mediator.send(new UpdateProfileCommand(userId, req))
   }
 }

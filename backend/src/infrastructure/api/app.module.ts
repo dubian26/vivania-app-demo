@@ -1,6 +1,6 @@
-import { GlobalExceptionFilter } from '@/shared/filters/global-exception.filter'
-import { JwtAuthGuard } from '@/shared/guards/jwt-auth.guard'
 import { ContextMiddleware } from '@/shared/middleware/context.middleware'
+import { GlobalExceptionFilter } from '@/shared/middleware/global-exception.filter'
+import { JwtAuthGuard } from '@/shared/middleware/jwt-auth.guard'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { PermissionModule } from './permission/permission.module'

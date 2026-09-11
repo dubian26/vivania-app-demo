@@ -1,30 +1,17 @@
-import { Injectable } from '@/base/util/injectable'
-import { UserError } from '@/domain/user/user-error'
-import { UserRepository } from '@/domain/user/user-repository'
-import { Validator } from '@/base/contracts/validator'
-import { z } from 'zod'
+import { Query } from '@/base/mediator'
+import { UserResult } from '@/domain/user/user'
+import { LoggingBehavior } from '@/shared/util/logging-behavior'
+import { GetUserByEmailHandler } from './get-user-by-email.handler'
 
 export interface GetUserByEmailDTO {
   email: string
 }
 
-const schema = z.object({
-  email: z.email({ message: 'El email no es válido.' }),
-}) satisfies z.ZodType<GetUserByEmailDTO>
+export class GetUserByEmailQuery extends Query<UserResult> {
+  readonly handlerType = GetUserByEmailHandler
+  readonly behaviorTypes = [LoggingBehavior]
 
-@Injectable()
-export class GetUserByEmailQuery {
-  constructor(
-    private readonly validator: Validator,
-    private readonly userRepository: UserRepository,
-  ) { }
-
-  async execute(input: GetUserByEmailDTO) {
-    input = this.validator.parse(schema, input)
-
-    const user = await this.userRepository.findByEmail(input.email)
-    if (!user) throw UserError.NotExists()
-
-    return user.toResult()
+  constructor(readonly input: GetUserByEmailDTO) {
+    super()
   }
 }

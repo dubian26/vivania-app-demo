@@ -1,9 +1,9 @@
 import { CreateRoleHandler } from '@/application/role/create-role.handler'
-import { DeleteRoleCommand } from '@/application/role/delete-role.command'
-import { GetRoleQuery } from '@/application/role/get-role.query'
-import { ListRolesQuery } from '@/application/role/list-roles.query'
-import { SearchRolesQuery } from '@/application/role/search-roles.query'
-import { UpdateRoleCommand } from '@/application/role/update-role.command'
+import { DeleteRoleHandler } from '@/application/role/delete-role.handler'
+import { GetRoleHandler } from '@/application/role/get-role.handler'
+import { ListRolesHandler } from '@/application/role/list-roles.handler'
+import { SearchRolesHandler } from '@/application/role/search-roles.handler'
+import { UpdateRoleHandler } from '@/application/role/update-role.handler'
 import { Module } from '@nestjs/common'
 import { RoleController } from './role.controller'
 
@@ -11,11 +11,11 @@ import { RoleController } from './role.controller'
   controllers: [RoleController],
   providers: [
     CreateRoleHandler,
-    ListRolesQuery,
-    SearchRolesQuery,
-    GetRoleQuery,
-    UpdateRoleCommand,
-    DeleteRoleCommand,
+    DeleteRoleHandler,
+    GetRoleHandler,
+    ListRolesHandler,
+    SearchRolesHandler,
+    UpdateRoleHandler,
   ],
 })
 export class RoleModule { }

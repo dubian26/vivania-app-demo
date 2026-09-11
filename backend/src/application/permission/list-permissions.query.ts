@@ -1,14 +1,8 @@
-import { PermissionRepository } from '@/domain/permission/permission-repository'
-import { Injectable } from '@/base/util/injectable'
+import { Query } from '@/base/mediator'
+import { LoggingBehavior } from '@/shared/util/logging-behavior'
+import { ListPermissionsHandler } from './list-permissions.handler'
 
-@Injectable()
-export class ListPermissionsQuery {
-  constructor(
-    private readonly permissionRepository: PermissionRepository,
-  ) { }
-
-  async execute() {
-    const permissions = await this.permissionRepository.listAll()
-    return permissions.map((permission) => permission.toResult())
-  }
+export class ListPermissionsQuery extends Query<unknown[]> {
+  readonly handlerType = ListPermissionsHandler
+  readonly behaviorTypes = [LoggingBehavior]
 }
