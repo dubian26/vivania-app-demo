@@ -4,13 +4,14 @@ import { GetRoleQuery } from '@/application/role/get-role.query'
 import { ListRolesQuery } from '@/application/role/list-roles.query'
 import { SearchRolesQuery, type SearchRolesDTO } from '@/application/role/search-roles.query'
 import { UpdateRoleCommand, type UpdateRoleDTO } from '@/application/role/update-role.command'
+import { Mediator } from '@/base/mediator'
 import { type IdResult } from '@/base/models/id-result'
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 
 @Controller('roles')
 export class RoleController {
   constructor(
-    private readonly createRoleCommand: CreateRoleCommand,
+    private readonly mediator: Mediator,
     private readonly listRolesQuery: ListRolesQuery,
     private readonly searchRolesQuery: SearchRolesQuery,
     private readonly getRoleQuery: GetRoleQuery,
@@ -20,7 +21,7 @@ export class RoleController {
 
   @Post()
   create(@Body() req: CreateRoleDTO): Promise<IdResult> {
-    return this.createRoleCommand.execute(req)
+    return this.mediator.send(new CreateRoleCommand(req))
   }
 
   @Get()

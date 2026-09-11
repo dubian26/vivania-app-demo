@@ -11,8 +11,10 @@ import { UtilModule } from './util.module'
 
 @Module({
   imports: [
-    RepoModule, UtilModule,
-    UserModule, RoleModule,
+    RepoModule,
+    UtilModule,
+    UserModule,
+    RoleModule,
     PermissionModule
   ],
   providers: [

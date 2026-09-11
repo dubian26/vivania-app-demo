@@ -1,4 +1,4 @@
-import { CreateRoleCommand } from '@/application/role/create-role.command'
+import { CreateRoleHandler } from '@/application/role/create-role.handler'
 import { DeleteRoleCommand } from '@/application/role/delete-role.command'
 import { GetRoleQuery } from '@/application/role/get-role.query'
 import { ListRolesQuery } from '@/application/role/list-roles.query'
@@ -10,7 +10,7 @@ import { RoleController } from './role.controller'
 @Module({
   controllers: [RoleController],
   providers: [
-    CreateRoleCommand,
+    CreateRoleHandler,
     ListRolesQuery,
     SearchRolesQuery,
     GetRoleQuery,

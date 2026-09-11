@@ -1,7 +1,6 @@
+import { ContextStorage } from '@/base/util/context-storage'
 import { Injectable, NestMiddleware } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
-
-import { ContextStorage } from '@/base/util/context-storage'
 
 @Injectable()
 export class ContextMiddleware implements NestMiddleware {
