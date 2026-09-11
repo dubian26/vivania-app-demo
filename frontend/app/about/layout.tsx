@@ -5,6 +5,6 @@ interface Props {
   children: ReactNode
 }
 
-export default function LoginLayout({ children }: Props) {
+export default function AboutLayout({ children }: Props) {
   return <AuthLayout>{children}</AuthLayout>
 }

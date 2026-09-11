@@ -1,5 +1,5 @@
-import { LoginFeatures } from "@/components/login/login-features"
-import { LoginForm } from "@/components/login/login-form"
+import { LoginFeatures } from "@/app/login/login-features"
+import { LoginForm } from "@/app/login/login-form"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {

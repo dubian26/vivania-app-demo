@@ -1,4 +1,4 @@
-import { LoginNav } from "@/components/login/login-nav"
+import { LoginNav } from "@/app/login/login-nav"
 import { cn } from "@/lib/utils"
 import type { ReactNode } from "react"
 

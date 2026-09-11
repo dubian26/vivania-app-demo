@@ -83,7 +83,7 @@ export function LoginForm() {
       if (result !== undefined) {
          showMessage("Código de recuperación enviado a tu correo")
          setShowRecoveryDialog(false)
-         router.push(`/recuperar-password?email=${encodeURIComponent(email)}`)
+         router.push(`/pass-recovery?email=${encodeURIComponent(email)}`)
       }
 
       setRecoveryLoading(false)
@@ -190,7 +190,7 @@ export function LoginForm() {
           <p className="text-sm text-muted-foreground">
             ¿No tienes una cuenta?
             <Link
-              href="/registrarse"
+              href="/signup"
               className="ml-1 font-bold text-primary hover:underline"
             >
               Registrarse

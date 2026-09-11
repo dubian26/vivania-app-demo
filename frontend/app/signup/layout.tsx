@@ -1,10 +1,6 @@
 import { AuthLayout } from "@/components/common/auth-layout"
 import type { ReactNode } from "react"
 
-interface Props {
-  children: ReactNode
-}
-
-export default function LoginLayout({ children }: Props) {
+export default function SignUpLayout({ children }: { children: ReactNode }) {
   return <AuthLayout>{children}</AuthLayout>
 }

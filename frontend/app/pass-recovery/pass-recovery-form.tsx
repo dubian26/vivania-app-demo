@@ -3,11 +3,7 @@
 import { Title } from "@/components/common/title"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { PasswordInput } from "@/components/ui/password-input"
 import { useAppContext } from "@/contexts/app-context"
 import { useAsync } from "@/hooks/use-async"
@@ -23,7 +19,7 @@ interface Props {
   email: string
 }
 
-export function RecuperarPasswordForm({ email }: Props) {
+export function PassRecoveryForm({ email }: Props) {
   const router = useRouter()
   const { run, loading } = useAsync()
   const { showError, showMessage } = useAppContext()

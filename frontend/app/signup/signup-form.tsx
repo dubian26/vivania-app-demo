@@ -30,7 +30,7 @@ import {
 
 type Step = "REGISTER" | "VERIFY"
 
-export function RegisterForm() {
+export function SignupForm() {
   const router = useRouter()
   const { run, loading } = useAsync()
   const { showError, showMessage, login } = useAppContext()

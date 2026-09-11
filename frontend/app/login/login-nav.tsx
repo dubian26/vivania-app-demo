@@ -1,14 +1,14 @@
 import { Leaf } from "lucide-react"
 import Link from "next/link"
 
-import { MobileNavMenu } from "@/components/login/mobile-nav-menu"
-import { ThemeToggle } from "@/components/login/theme-toggle"
+import { MobileNavMenu } from "@/app/login/mobile-nav-menu"
+import { ThemeToggle } from "@/components/common/theme-toggle"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { label: "Inicio", path: "/" },
-  { label: "Registrarse", path: "/registrarse" },
-  { label: "Acerca de", path: "/acerca-de" },
+  { label: "Registrarse", path: "/signup" },
+  { label: "Acerca de", path: "/about" },
 ]
 
 export function LoginNav() {
