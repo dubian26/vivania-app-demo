@@ -1,9 +1,8 @@
-import { Leaf } from "lucide-react"
-import Link from "next/link"
-
-import { MobileNavMenu } from "@/app/login/mobile-nav-menu"
 import { ThemeToggle } from "@/components/common/theme-toggle"
 import { cn } from "@/lib/utils"
+import { Leaf } from "lucide-react"
+import Link from "next/link"
+import { MobileNavMenu } from "./mobile-nav-menu"
 
 const navItems = [
   { label: "Inicio", path: "/" },
@@ -11,7 +10,7 @@ const navItems = [
   { label: "Acerca de", path: "/about" },
 ]
 
-export function LoginNav() {
+export function PublicNav() {
   return (
     <header className={cn(
         "glass-header fixed top-0 right-0 left-0 z-50 border-b border-primary/10",

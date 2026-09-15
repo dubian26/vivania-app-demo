@@ -1,17 +1,16 @@
-import { LoginNav } from "@/app/login/login-nav"
-import { cn } from "@/lib/utils"
-import type { ReactNode } from "react"
+import { cn } from "cn"
+import { type ReactNode } from "react"
+import { PublicNav } from "./public-nav"
 
 interface Props {
   children: ReactNode
 }
 
-// Shared layout for public auth pages (login, register, etc.).
-export function AuthLayout({ children }: Props) {
+export default function PublicLayout({ children }: Props) {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden">
       <div className="bg-dots pointer-events-none fixed inset-0 -z-1" />
-      <LoginNav />
+      <PublicNav />
 
       <main
         className={cn(

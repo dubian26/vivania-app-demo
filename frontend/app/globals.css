@@ -146,12 +146,10 @@
 
 .theme-toggle-btn {
   background: color-mix(in oklch, var(--primary) 15%, transparent);
-  border: 1px solid color-mix(in oklch, var(--primary) 25%, transparent);
 }
 
 .theme-toggle-btn:hover {
   background: color-mix(in oklch, var(--primary) 25%, transparent);
-  border-color: color-mix(in oklch, var(--primary) 40%, transparent);
 }
 
 /* Sonner toast border-left colors by type */

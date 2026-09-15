@@ -28,9 +28,9 @@ import {
 export function LoginForm() {
   const router = useRouter()
   const { run, loading } = useAsync()
-  const { showError, showMessage, login } = useAppContext()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const { showError, showMessage } = useAppContext()
+  const [email, setEmail] = useState("root@admin.com")
+  const [password, setPassword] = useState("Admin*123")
   const [showRecoveryDialog, setShowRecoveryDialog] = useState(false)
   const [recoveryLoading, setRecoveryLoading] = useState(false)
 
@@ -42,24 +42,14 @@ export function LoginForm() {
 
     const authPromise = userRepository.authenticate(email, password)
     const userInfo = await run(authPromise)
-
-    if (userInfo) {
-      login(userInfo)
-      showMessage(`Bienvenido/a, ${userInfo.firstName}`)
-      router.push("/dashboard")
-    }
+    if (userInfo) router.push("/dashboard")
   }
 
   const handleGoogleSuccess = useCallback(async (response: CredentialResponse) => {
     const authPromise = userRepository.googleAuthenticate(response.credential!)
     const userInfo = await run(authPromise)
-
-    if (userInfo) {
-      login(userInfo)
-      showMessage(`Bienvenido/a, ${userInfo.firstName}`)
-      router.push("/dashboard")
-    }
-  }, [login, run, router, showMessage])
+    if (userInfo) router.push("/dashboard")
+  }, [run, router])
 
   const handleGoogleError = useCallback(() => {
     showError("Error al iniciar sesión con Google")
@@ -164,7 +154,10 @@ export function LoginForm() {
                 ¿Olvidaste tu contraseña?
               </button>
             </div>
-            <PasswordInput password={password} onChange={setPassword} />
+            <PasswordInput 
+              password={password} 
+              onChange={setPassword}
+            />
           </div>
 
           <Button

@@ -4,8 +4,8 @@ import { RegisterUserCommand, type RegisterUserDTO } from '@/application/user/re
 import { ResendOtpCommand, type ResendOtpDTO } from '@/application/user/resend-otp.command'
 import { UpdateProfileCommand, type UpdateProfileDTO } from '@/application/user/update-profile.command'
 import { VerifyUserCommand, type VerifyUserDTO, type VerifyUserResult } from '@/application/user/verify-user.command'
-import { Mediator } from '@/base/mediator'
 import { BaseError } from '@/base/errors/base-error'
+import { Mediator } from '@/base/mediator'
 import { type IdResult } from '@/base/models/id-result'
 import { UserInfo } from '@/base/models/user-info'
 import { Public } from '@/shared/decorators/public.decorator'
@@ -59,7 +59,7 @@ export class AuthController {
   async refreshToken(
     @Req() request: RefreshTokenRequest,
     @Res({ passthrough: true }) reply: FastifyReply,
-  ): Promise<string> {
+  ): Promise<UserInfo> {
     const refreshToken = request.cookies?.refreshToken
 
     if (!refreshToken)
@@ -83,6 +83,7 @@ export class AuthController {
       }
 
       setAccessTokenCookie(reply, userInfo)
+      return await Promise.resolve(userInfo)
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError)
         throw BaseError.SessionExpired()
@@ -93,8 +94,6 @@ export class AuthController {
 
       throw error
     }
-
-    return await Promise.resolve('Token refrescado')
   }
 
   @Public()

@@ -33,7 +33,7 @@ type Step = "REGISTER" | "VERIFY"
 export function SignupForm() {
   const router = useRouter()
   const { run, loading } = useAsync()
-  const { showError, showMessage, login } = useAppContext()
+  const { showError, showMessage } = useAppContext()
 
   const [step, setStep] = useState<Step>("REGISTER")
 
@@ -56,13 +56,8 @@ export function SignupForm() {
   const handleGoogleSuccess = useCallback(async (response: CredentialResponse) => {
     const authPromise = userRepository.googleAuthenticate(response.credential!)
     const userInfo = await run(authPromise)
-
-    if (userInfo) {
-      login(userInfo)
-      showMessage(`Bienvenido/a, ${userInfo.firstName}`)
-      router.push("/dashboard")
-    }
-  }, [login, run, router, showMessage])
+    if (userInfo) router.push("/dashboard")
+  }, [run, router])
 
   const handleGoogleError = useCallback(() => {
     showError("Error al registrarse con Google")
@@ -103,7 +98,6 @@ export function SignupForm() {
       const msg = "Correo verificado. Bienvenido/a."
       showMessage(result.message || msg)
       if (result.userInfo) {
-        login(result.userInfo)
         router.push("/dashboard")
       } else {
         router.push("/login")

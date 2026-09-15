@@ -1,10 +1,10 @@
-import { features } from "@/app/about/features"
 import { Card, CardContent } from "@/components/ui/card"
 import { formatDate } from "@/lib/date-utility"
 import { cn } from '@/lib/utils'
 import { CalendarPlus, Sparkles } from "lucide-react"
 import Link from "next/link"
 import type { ReactNode } from "react"
+import { features } from "./features"
 
 // Turns "Ver imagen: /file-upload.png" into a plain text + link fragment.
 function renderDescription(text: string): ReactNode {

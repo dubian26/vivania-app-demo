@@ -1,6 +1,6 @@
-import { LoginFeatures } from "@/app/login/login-features"
-import { LoginForm } from "@/app/login/login-form"
 import type { Metadata } from "next"
+import { LoginFeatures } from "./login-features"
+import { LoginForm } from "./login-form"
 
 export const metadata: Metadata = {
   title: "Iniciar sesión | Vivania",

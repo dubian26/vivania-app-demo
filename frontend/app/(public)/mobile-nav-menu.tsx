@@ -1,16 +1,15 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { Menu } from "lucide-react"
 import Link from "next/link"
 
-import { cn } from "@/lib/utils"
-
-interface MobileNavMenuProps {
+interface Props {
   items: { label: string; path: string }[]
 }
 
-export function MobileNavMenu({ items }: MobileNavMenuProps) {
+export function MobileNavMenu({ items }: Props) {
   return (
     <MenuPrimitive.Root>
       <MenuPrimitive.Trigger

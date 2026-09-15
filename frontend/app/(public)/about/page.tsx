@@ -1,6 +1,6 @@
-import { FeatureMosaic } from "@/app/about/feature-mosaic"
 import { Title } from "@/components/common/title"
 import type { Metadata } from "next"
+import { FeatureMosaic } from "./feature-mosaic"
 
 export const metadata: Metadata = {
   title: "Acerca de | Vivania",

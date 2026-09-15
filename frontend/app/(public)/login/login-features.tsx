@@ -1,4 +1,5 @@
 import { FeatureCard } from "@/components/common/feature-card"
+import { Title } from '@/components/common/title'
 import { cn } from "@/lib/utils"
 import { KeyRound, ScanSearch, UserCog } from "lucide-react"
 
@@ -9,10 +10,10 @@ export function LoginFeatures() {
       "fade-in slide-in-from-right-5 fill-mode-backwards motion-reduce:animate-none"
     )}>
       <div className="mb-3">
-        <h2 className="mt-3 text-3xl leading-tight font-extrabold lg:text-4xl">
+        <Title className="text-3xl font-extrabold lg:text-4xl">
           Demo Vivania App
-        </h2>
-        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+        </Title>
+        <p className="text-lg leading-relaxed text-muted-foreground">
           Proyecto demo creado para mostrar el desarrollo de algunas
           características de seguridad, gestión de contenido y optimización de
           una aplicación web moderna.
