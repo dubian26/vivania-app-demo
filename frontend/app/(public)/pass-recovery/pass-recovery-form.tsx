@@ -8,10 +8,12 @@ import { PasswordInput } from "@/components/ui/password-input"
 import { useAppContext } from "@/contexts/app-context"
 import { useAsync } from "@/hooks/use-async"
 import { cn } from "@/lib/utils"
-import { userRepository } from "@/repositories/user-repository"
+import { createUserRepo } from "@/repositories/user-repository"
 import { CheckCircle2, Loader2, Lock, Mail } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+
+const userRepository = createUserRepo()
 
 type Step = "otp" | "password" | "success"
 

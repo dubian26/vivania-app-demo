@@ -8,7 +8,7 @@ import { PasswordInput } from "@/components/ui/password-input"
 import { useAppContext } from "@/contexts/app-context"
 import { useAsync } from "@/hooks/use-async"
 import { cn } from "@/lib/utils"
-import { userRepository } from "@/repositories/user-repository"
+import { createUserRepo } from "@/repositories/user-repository"
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
@@ -27,6 +27,8 @@ import {
     User,
     UserRoundPlus,
 } from "lucide-react"
+
+const userRepository = createUserRepo()
 
 type Step = "REGISTER" | "VERIFY"
 

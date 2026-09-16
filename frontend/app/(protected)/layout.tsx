@@ -1,8 +1,9 @@
 import { Sidebar } from '@/components/layout/sidebar'
 import { SidebarItem } from '@/components/layout/sidebar-item'
 import { Topbar } from '@/components/layout/topbar'
-import { getSession } from '@/lib/auth'
 import { menuRepository } from '@/repositories/menu-repository'
+import { createUserRepo } from '@/repositories/user-repository'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { type ReactNode } from "react"
 
@@ -11,9 +12,12 @@ interface Props {
 }
 
 export default async function ProtectedLayout({ children }: Props) {
-  const userInfo = await getSession()
+  const cookieStore = await cookies()
+  const userRepository = createUserRepo({ cookie: cookieStore.toString() })
+  const userInfo = await userRepository.refreshToken()
   if (!userInfo)  redirect("/login")
 
+  console.log("User info:", userInfo)
   const items = await menuRepository.listByRole(userInfo.roleName)
 
   return (

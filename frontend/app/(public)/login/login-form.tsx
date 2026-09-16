@@ -14,7 +14,7 @@ import { PasswordInput } from "@/components/ui/password-input"
 import { useAppContext } from "@/contexts/app-context"
 import { useAsync } from "@/hooks/use-async"
 import { cn } from "@/lib/utils"
-import { userRepository } from "@/repositories/user-repository"
+import { createUserRepo } from "@/repositories/user-repository"
 
 import {
     Dialog,
@@ -24,6 +24,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
+
+const userRepository = createUserRepo()
 
 export function LoginForm() {
   const router = useRouter()
