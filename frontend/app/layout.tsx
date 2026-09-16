@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/common/theme-provider"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import { AppProvider } from "@/contexts/app-provider"
 import { GoogleProvider } from "@/contexts/google-provider"
 import { cn } from "@/lib/utils"
@@ -22,7 +23,9 @@ export default function RootLayout({children}: Readonly<Props>) {
       <body>
         <ThemeProvider>
           <GoogleProvider>
-            <AppProvider>{children}</AppProvider>
+            <TooltipProvider>
+              <AppProvider>{children}</AppProvider>
+            </TooltipProvider>
           </GoogleProvider>
         </ThemeProvider>
       </body>

@@ -4,7 +4,8 @@ import { ProfileMenu } from "@/components/layout/profile-menu"
 import { SidebarContext } from "@/components/layout/sidebar-context"
 import { cn } from "@/lib/utils"
 import { UserInfoModel } from '@/models/user-info-model'
-import { Leaf, Link, Menu, Settings } from "lucide-react"
+import { Leaf, Menu, Settings } from "lucide-react"
+import Link from "next/link"
 import { useMemo, useState, type ReactNode } from "react"
 
 interface Props {
@@ -19,8 +20,8 @@ export function Sidebar({ userSession, children }: Props) {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 bottom-0 z-50 glass-header",
-        "shrink-0 overflow-hidden transition-all duration-300",
+        "sticky top-0 h-screen shrink-0 z-50 glass-header flex flex-col",
+        "overflow-hidden transition-all duration-300",
         expanded ? "w-72" : "md:w-16 w-0"
       )}
     >
@@ -52,9 +53,9 @@ export function Sidebar({ userSession, children }: Props) {
         </div>
       </div>
 
-      <nav className="h-full flex flex-col pt-3">
+      <nav className="flex-1 min-h-0 flex flex-col pt-3">
         <SidebarContext.Provider value={contextValue}>
-          <ul className="flex-1 px-3">{children}</ul>
+          <ul className="flex-1 overflow-y-auto px-3">{children}</ul>
         </SidebarContext.Provider>
 
         <div className="border-t border-primary flex justify-end items-center p-3">

@@ -12,7 +12,7 @@ export function Topbar({ userSession }: Props) {
   return (
     <div
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 glass-header",
+        "sticky top-0 z-40 glass-header",
         "p-2 flex justify-between items-center"
       )}
     >
