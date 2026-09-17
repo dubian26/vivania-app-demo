@@ -22,7 +22,7 @@ export function ThemeToggle() {
       type="button"
       id="theme-toggle"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Tema claro" : "Tema oscuro"}
+      aria-label={mounted ? (isDark ? "Tema claro" : "Tema oscuro") : "Cambiar tema"}
       className={cn(
         "theme-toggle-btn flex size-10 items-center justify-center rounded-full",
         "cursor-pointer transition-all hover:scale-110 active:scale-90"

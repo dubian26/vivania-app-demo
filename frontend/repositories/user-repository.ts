@@ -24,6 +24,12 @@ class UserRepository extends HttpClient {
     return this.getData<UserInfoModel>(response)
   }
 
+  // Logout: the backend clears the httpOnly accessToken/refreshToken cookies.
+  async logout(): Promise<void> {
+    const response = await this.fetch("/auth/logout", { method: "POST" })
+    await this.getData<void>(response)
+  }
+
   // Registration: public route (POST /auth/register). Sends an OTP by email
   // and returns { id, message }. The user stays inactive until verified.
   async register(payload: RegisterUserModel): Promise<IdResult | undefined> {

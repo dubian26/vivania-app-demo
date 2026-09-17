@@ -1,9 +1,12 @@
 import { Title } from "@/components/common/title"
 import { Card } from "@/components/ui/card"
-import { getSession } from '@/lib/auth'
+import { createUserRepo } from '@/repositories/user-repository'
+import { cookies } from 'next/headers'
 
 export default async function DashboardPage() {
-  const userInfo = await getSession()
+  const cookieStore = await cookies()
+  const userRepository = createUserRepo({ cookie: cookieStore.toString() })
+  const userInfo = await userRepository.refreshToken()
 
   return (
     <div className="w-full max-w-3xl py-6">

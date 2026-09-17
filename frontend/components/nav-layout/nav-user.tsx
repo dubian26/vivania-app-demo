@@ -28,10 +28,18 @@ import {
     BellIcon,
     ChevronsUpDownIcon,
     CreditCardIcon,
-    LogOutIcon
+    LogOutIcon,
+    MoonIcon,
+    SunIcon
 } from "lucide-react"
 
+import { useTheme } from "next-themes"
+
+import { useAsync } from "@/hooks/use-async"
 import { UserInfoModel } from "@/models/user-info-model"
+import { createUserRepo } from "@/repositories/user-repository"
+
+const userRepository = createUserRepo()
 
 interface Props {
   user: UserInfoModel
@@ -39,8 +47,20 @@ interface Props {
 
 export function NavUser({ user }: Props) {
   const { isMobile } = useSidebar()
+  const { run, loading } = useAsync()
+  const { resolvedTheme, setTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
   const fullName = `${user.firstName} ${user.lastName}`
   const avatarIniciales = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
+
+  const handleToggleTheme = () => {
+    setTheme(isDark ? "light" : "dark")
+  }
+
+  const handleLogout = async () => {
+    const loggedOut = await run(userRepository.logout().then(() => true))
+    if (loggedOut) window.location.replace("/login")
+  }
 
   return (
     <SidebarMenu>
@@ -97,9 +117,18 @@ export function NavUser({ user }: Props) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleToggleTheme}>
+              {isDark ? <SunIcon /> : <MoonIcon />}
+              {isDark ? "Modo claro" : "Modo oscuro"}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              disabled={loading}
+              onClick={handleLogout}
+            >
               <LogOutIcon />
-              Log out
+              Cerrar sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

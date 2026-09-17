@@ -9,8 +9,8 @@ import { Mediator } from '@/base/mediator'
 import { type IdResult } from '@/base/models/id-result'
 import { UserInfo } from '@/base/models/user-info'
 import { Public } from '@/shared/decorators/public.decorator'
-import { setAccessTokenCookie, setAuthCookies } from '@/shared/util/cookie-helper'
-import { Body, Controller, Get, Patch, Post, Req, Res } from '@nestjs/common'
+import { setAccessTokenCookie, setAuthCookies, clearAuthCookies } from '@/shared/util/cookie-helper'
+import { Body, Controller, Get, HttpCode, Patch, Post, Req, Res } from '@nestjs/common'
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 
@@ -46,6 +46,13 @@ export class AuthController {
     const userInfo = await this.mediator.send(new GoogleLoginUserCommand(req))
     setAuthCookies(reply, userInfo)
     return userInfo
+  }
+
+  @Public()
+  @Post('logout')
+  @HttpCode(204)
+  logout(@Res({ passthrough: true }) reply: FastifyReply): void {
+    clearAuthCookies(reply)
   }
 
   @Public()
