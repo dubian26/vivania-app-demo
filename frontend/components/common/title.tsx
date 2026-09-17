@@ -1,15 +1,16 @@
-import type { ReactNode } from "react"
-
 import { cn } from "@/lib/utils"
+import type { ComponentPropsWithoutRef, ReactNode } from "react"
 
-interface TitleProps {
+type TitleTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div"
+
+interface TitleProps extends Omit<ComponentPropsWithoutRef<"h1">, "children"> {
+  as?: TitleTag
   children: ReactNode
-  className?: string
 }
 
-export function Title({ children, className }: TitleProps) {
+export function Title({ children, className, as: Tag = "h1", ...props }: TitleProps) {
   return (
-    <h1
+    <Tag
       className={cn(
         "mb-3 inline-block self-start text-2xl font-extrabold md:text-3xl",
         "[&_svg]:shrink-0 [&_svg]:text-primary",
@@ -17,8 +18,9 @@ export function Title({ children, className }: TitleProps) {
         "bg-clip-text text-transparent",
         className
       )}
+      {...props}
     >
       {children}
-    </h1>
+    </Tag>
   )
 }

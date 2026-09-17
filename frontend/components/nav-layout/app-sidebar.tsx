@@ -1,11 +1,13 @@
 "use client"
 
-import * as React from "react"
+import { ComponentProps } from "react"
 
-import { NavMain } from "@/components/nav-layout/nav-main"
-import { NavProjects } from "@/components/nav-layout/nav-projects"
-import { NavSecondary } from "@/components/nav-layout/nav-secondary"
-import { NavUser } from "@/components/nav-layout/nav-user"
+import { NavFavorites } from "./nav-favorites"
+import { NavMain } from "./nav-main"
+import { NavUser } from "./nav-user"
+
+import { PermissionTreeModel } from "@/models/permission-model"
+import { UserInfoModel } from "@/models/user-info-model"
 
 import {
     Sidebar,
@@ -17,192 +19,60 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import {
-    BookOpenIcon,
-    BotIcon,
-    FrameIcon,
-    HousePlugIcon,
-    LifeBuoyIcon,
-    MapIcon,
-    PieChartIcon,
-    SendIcon,
-    Settings2Icon,
-    TerminalSquareIcon
-} from "lucide-react"
+import { HousePlugIcon } from "lucide-react"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: <TerminalSquareIcon />,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: (
-        <BotIcon
-        />
-      ),
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: (
-        <BookOpenIcon
-        />
-      ),
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <Settings2Icon
-        />
-      ),
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: (
-        <LifeBuoyIcon
-        />
-      ),
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: (
-        <SendIcon
-        />
-      ),
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: (
-        <FrameIcon
-        />
-      ),
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: (
-        <PieChartIcon
-        />
-      ),
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: (
-        <MapIcon
-        />
-      ),
-    },
-  ],
+import { Title } from "@/components/common/title"
+import { cn } from '@/lib/utils'
+import Link from 'next/link'
+
+interface Props extends ComponentProps<typeof Sidebar> {
+  userInfo: UserInfoModel
+  menuItems: PermissionTreeModel[]
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ userInfo, menuItems, ...props }: Props) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<a href="#" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <HousePlugIcon className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Vivania</span>
-                <span className="truncate text-xs">Enterprise</span>
+            <SidebarMenuButton
+              size="lg"
+              tooltip="Vivania"
+              render={<Link href="/dashboard" />}
+              className="gap-3 focus-visible:bg-sidebar-accent"
+            >
+              <HousePlugIcon
+                strokeWidth={2}
+                className="size-8! text-primary"
+              />
+              <div className="grid min-w-0 flex-1 text-left leading-tight">
+                <Title
+                  as="span" translate="no"
+                  className={cn(
+                    "mb-0 max-w-full truncate text-lg",
+                    "leading-none tracking-tight md:text-lg"
+                  )}
+                >
+                  Vivania
+                </Title>
+                <span className={cn(
+                  "truncate text-[11px] font-medium",
+                  "tracking-wide text-muted-foreground"
+                )}>
+                  Gestión de Condominios
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={menuItems} />
+        <NavFavorites favorites={[]} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userInfo} />
       </SidebarFooter>
     </Sidebar>
   )

@@ -13,3 +13,9 @@ export interface PermissionModel {
   createdAt: string
   updatedAt: string
 }
+
+// Permission with its descendants nested, built from the flat list
+// using parentId (see buildPermissionTree).
+export interface PermissionTreeModel extends PermissionModel {
+  children: PermissionTreeModel[]
+}

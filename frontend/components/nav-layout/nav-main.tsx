@@ -1,79 +1,142 @@
 "use client"
 
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { ChevronRightIcon } from "lucide-react"
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon: React.ReactNode
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+import {
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
+} from "@/components/ui/sidebar"
+
+import { PermissionTreeModel } from "@/models/permission-model"
+import { cn } from 'cn'
+import * as Icon from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
+// Icons travel from the backend as names (e.g. "BarChart3").
+function PermissionIcon({ name }: { name: string | null }) {
+  const IconComponent = name
+    ? (Icon[name as keyof typeof Icon] as Icon.LucideIcon | undefined)
+    : undefined
+  const Component = IconComponent ?? Icon.LayoutGrid
+  return <Component />
+}
+
+function isPathActive(pathname: string, path: string) {
+  return pathname === path || pathname.startsWith(`${path}/`)
+}
+
+// A branch is active when it or any descendant matches the current path.
+function isBranchActive(pathname: string, node: PermissionTreeModel): boolean {
+  return (
+    isPathActive(pathname, node.path) ||
+    node.children.some(child => isBranchActive(pathname, child))
+  )
+}
+
+interface NavItemProps {
+  item: PermissionTreeModel
+  pathname: string
+  depth?: number
+}
+
+function NavItem({ item, pathname, depth = 0 }: NavItemProps) {
+  const isRoot = depth === 0
+  const active = isBranchActive(pathname, item)
+
+  if (item.children.length === 0) {
+    const content = (
+      <>
+        <PermissionIcon name={item.icon} />
+        <span>{item.title}</span>
+      </>
+    )
+
+    if (isRoot) {
+      return (
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            tooltip={item.title}
+            isActive={active}
+            render={<Link href={item.path} />}
+          >
+            {content}
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      )
+    }
+
+    return (
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton 
+          isActive={active} 
+          render={<Link href={item.path} />}
+        >
+          {content}
+        </SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+    )
+  }
+
+  return (
+    <Collapsible
+      defaultOpen={active}
+      className="group/collapsible"
+      render={isRoot ? <SidebarMenuItem /> : <SidebarMenuSubItem />}
+    >
+      <CollapsibleTrigger render={
+        <SidebarMenuButton 
+          tooltip={item.title} 
+          isActive={active} 
+        />
+      }>
+        <PermissionIcon name={item.icon} />
+        <span>{item.title}</span>
+        <Icon.ChevronRight className={cn(
+          "ml-auto transition-transform duration-200",
+          "group-data-open/collapsible:rotate-90"
+        )} />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <SidebarMenuSub>
+          {item.children.map(child => (
+            <NavItem
+              key={child.id}
+              item={child}
+              pathname={pathname}
+              depth={depth + 1}
+            />
+          ))}
+        </SidebarMenuSub>
+      </CollapsibleContent>
+    </Collapsible>
+  )
+}
+
+
+interface Props {
+  items: PermissionTreeModel[]
+}
+
+export function NavMain({ items }: Props) {
+  const pathname = usePathname()
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Accesos</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            defaultOpen={item.isActive}
-            render={<SidebarMenuItem />}
-          >
-            <SidebarMenuButton
-              tooltip={item.title}
-              render={<a href={item.url} />}
-            >
-              {item.icon}
-              <span>{item.title}</span>
-            </SidebarMenuButton>
-            {item.items?.length ? (
-              <>
-                <CollapsibleTrigger
-                  render={
-                    <SidebarMenuAction className="aria-expanded:rotate-90" />
-                  }
-                >
-                  <ChevronRightIcon
-                  />
-                  <span className="sr-only">Toggle</span>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton render={<a href={subItem.url} />}>
-                          <span>{subItem.title}</span>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </>
-            ) : null}
-          </Collapsible>
+        {items.map(item => (
+          <NavItem key={item.id} item={item} pathname={pathname} />
         ))}
       </SidebarMenu>
     </SidebarGroup>

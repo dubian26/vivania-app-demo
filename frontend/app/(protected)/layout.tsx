@@ -1,14 +1,28 @@
-import { Sidebar } from '@/components/layout/sidebar'
-import { SidebarItem } from '@/components/layout/sidebar-item'
-import { Topbar } from '@/components/layout/topbar'
+import { AppSidebar } from "@/components/nav-layout/app-sidebar"
+import { Separator } from "@/components/ui/separator"
+
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
+import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from "@/components/ui/sidebar"
+
+import { buildPermissionTree } from '@/lib/permission-tree'
 import { UserInfoModel } from '@/models/user-info-model'
 import { createPermissionRepo } from '@/repositories/permission-repository'
 import { createUserRepo } from '@/repositories/user-repository'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { type ReactNode } from "react"
-
-const DEFAULT_ICON = "LayoutGrid"
 
 interface Props {
   children: ReactNode
@@ -29,33 +43,42 @@ export default async function ProtectedLayout({ children }: Props) {
   const permRepository = createPermissionRepo({ cookie: cookieStore.toString() })
   const permissions = await permRepository.listByRole(userInfo.roleId)
 
-  const items =  permissions
-    .filter(per => per.type === "MENU" && per.active)
-    .sort((a, b) => a.order - b.order)
+  const menuItems = buildPermissionTree(
+    permissions.filter(per => per.type === "MENU" && per.active))
 
   return (
-    <div className="min-h-screen flex">
-      <div className="fixed inset-0 -z-10 bg-dots pointer-events-none" />
-      <Sidebar userSession={userInfo}>
-        {
-          items.map(item =>
-            <SidebarItem
-                key={item.id}
-                iconName={item.icon ?? DEFAULT_ICON}
-                text={item.title}
-                alert={false}
-                to={item.path}
+    <SidebarProvider>
+      <AppSidebar
+        userInfo={userInfo}
+        menuItems={menuItems}
+      />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-vertical:h-4 data-vertical:self-auto"
             />
-          )
-        }
-      </Sidebar>
-
-      <div className="flex-1 flex flex-col min-w-0">
-        <Topbar userSession={userInfo} />
-        <main className="flex-1">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Build Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
           {children}
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
