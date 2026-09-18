@@ -19,7 +19,7 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import { HousePlugIcon } from "lucide-react"
+import { BuildingComplexIcon } from "lucide-react"
 
 import { Title } from "@/components/common/title"
 import { cn } from '@/lib/utils'
@@ -42,7 +42,7 @@ export function AppSidebar({ userInfo, menuItems, ...props }: Props) {
               render={<Link href="/dashboard" />}
               className="gap-3 focus-visible:bg-sidebar-accent"
             >
-              <HousePlugIcon
+              <BuildingComplexIcon
                 strokeWidth={2}
                 className="size-8! text-primary"
               />

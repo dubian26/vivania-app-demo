@@ -1,13 +1,17 @@
 -- 1. Insertar Permisos iniciales (IDs fijos para consistencia)
 -- Nota: se descartan permisos/accesos de la app de tienda (contenido, productos,
--- pedidos, mis-pedidos y tienda). El árbol queda con los módulos de administración:
--- Dashboard, Usuarios y Roles.
+-- pedidos, mis-pedidos y tienda). El árbol queda con los módulos de administración
+-- agrupados bajo el menú padre "Administración": Dashboard (raíz) y
+-- Administración > Usuarios, Roles.
 INSERT INTO "Permissions" ("id", "path", "title", "type", "icon", "order", "active", "parentId", "created_at", "updated_at")
 VALUES
 -- Menús Raíz
 ('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0002', '/dashboard', 'Dashboard', 'MENU', 'BarChart3', 5, true, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0003', '/usuarios', 'Usuarios', 'MENU', 'Users', 10, true, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0004', '/roles', 'Roles', 'MENU', 'ShieldCheck', 15, true, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0001', '/administracion', 'Administración', 'MENU', 'Settings', 10, true, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+-- Submenús de Administración
+('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0003', '/usuarios', 'Usuarios', 'MENU', 'Users', 1, true, 'b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0004', '/roles', 'Roles', 'MENU', 'ShieldCheck', 5, true, 'b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
 -- Acciones de Dashboard
 ('b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0201', '/dashboard/acceso', 'Acceso', 'ACTION', 'LogIn', 1, true, 'b1c1dbd9-a0eb-4e8f-8d6a-9f4b7c1a0002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

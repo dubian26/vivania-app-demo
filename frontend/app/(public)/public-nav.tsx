@@ -1,6 +1,7 @@
+import { Title } from "@/components/common/title"
 import { ThemeToggle } from "@/components/common/theme-toggle"
 import { cn } from "@/lib/utils"
-import { Leaf } from "lucide-react"
+import { BuildingComplexIcon } from "lucide-react"
 import Link from "next/link"
 import { MobileNavMenu } from "./mobile-nav-menu"
 
@@ -19,17 +20,16 @@ export function PublicNav() {
     >
       <div className="flex items-center gap-10">
         <Link href="/login" className="group flex items-center gap-3">
-          <div className={cn(
-              "flex items-center justify-center rounded-lg bg-primary p-2",
-              "text-primary-foreground shadow-lg shadow-primary/20",
-              "transition-transform group-hover:scale-110"
-            )}
+          <BuildingComplexIcon
+            strokeWidth={2}
+            className="size-8! text-primary"
+          />
+          <Title
+            as="span" translate="no"
+            className="mb-0 self-center truncate text-xl leading-none tracking-tight md:text-2xl"
           >
-            <Leaf size={20} />
-          </div>
-          <h2 className="text-xl font-bold tracking-tight transition-colors group-hover:text-primary">
             Vivania
-          </h2>
+          </Title>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (

@@ -22,6 +22,7 @@ import { cn } from 'cn'
 import * as Icon from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
 
 // Icons travel from the backend as names (e.g. "BarChart3").
 function PermissionIcon({ name }: { name: string | null }) {
@@ -53,6 +54,11 @@ interface NavItemProps {
 function NavItem({ item, pathname, depth = 0 }: NavItemProps) {
   const isRoot = depth === 0
   const active = isBranchActive(pathname, item)
+  const [open, setOpen] = useState(active)
+
+  useEffect(() => {
+    if (active) setOpen(true)
+  }, [active])
 
   if (item.children.length === 0) {
     const content = (
@@ -90,7 +96,8 @@ function NavItem({ item, pathname, depth = 0 }: NavItemProps) {
 
   return (
     <Collapsible
-      defaultOpen={active}
+      open={open}
+      onOpenChange={setOpen}
       className="group/collapsible"
       render={isRoot ? <SidebarMenuItem /> : <SidebarMenuSubItem />}
     >

@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   const userInfo = await userRepository.refreshToken()
 
   return (
-    <div className="w-full max-w-3xl py-6">
+    <div className="w-full max-w-3xl">
       <Title>¡Hola, {userInfo?.firstName}!</Title>
       <Card className="p-6">
         <p className="text-sm text-muted-foreground">

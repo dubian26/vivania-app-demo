@@ -1,14 +1,7 @@
 import { AppSidebar } from "@/components/nav-layout/app-sidebar"
 import { Separator } from "@/components/ui/separator"
 
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 
 import {
     SidebarInset,
@@ -31,16 +24,17 @@ interface Props {
 export default async function ProtectedLayout({ children }: Props) {
   let userInfo: UserInfoModel | undefined = undefined
   const cookieStore = await cookies()
+  const userRepository = createUserRepo({ cookie: cookieStore.toString() })
 
   try {
-    const userRepository = createUserRepo({ cookie: cookieStore.toString() })
     userInfo = await userRepository.refreshToken()
     if (!userInfo) throw new Error("User not found")
   } catch {
     redirect("/login")
   }
 
-  const permRepository = createPermissionRepo({ cookie: cookieStore.toString() })
+  // Reuse the cookie refreshed above so protected calls do not refresh again.
+  const permRepository = createPermissionRepo({ cookie: userRepository.cookie })
   const permissions = await permRepository.listByRole(userInfo.roleId)
 
   const menuItems = buildPermissionTree(
@@ -52,30 +46,18 @@ export default async function ProtectedLayout({ children }: Props) {
         userInfo={userInfo}
         menuItems={menuItems}
       />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2">
+      <SidebarInset className="overflow-hidden">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-dashed border-border/70 bg-background">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
               className="mr-2 data-vertical:h-4 data-vertical:self-auto"
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Build Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <Breadcrumbs items={permissions} />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <main className="flex flex-1 flex-col gap-4 bg-content p-4 md:px-6 md:py-5">
           {children}
         </main>
       </SidebarInset>

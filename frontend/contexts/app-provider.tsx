@@ -3,6 +3,7 @@
 import { Toaster } from "@/components/ui/sonner"
 import { AppContext } from "@/contexts/app-context"
 import { CustomError } from "@/lib/custom-error"
+import { HttpClient } from "@/lib/http-client"
 import { useCallback, useEffect, useMemo, type ReactNode } from "react"
 import { toast } from "sonner"
 
@@ -77,6 +78,13 @@ export const AppProvider = ({ children }: Props) => {
       window.removeEventListener("unhandledrejection", handleUnhandledRejection)
     }
   }, [showError])
+
+  // Silent refresh could not renew the session: send the user back to login.
+  useEffect(() => {
+    HttpClient.setSessionExpiredHandler(() => {
+      window.location.replace("/login")
+    })
+  }, [])
 
   const context = useMemo(
     () => ({ showError, showMessage }),

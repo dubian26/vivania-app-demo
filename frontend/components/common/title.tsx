@@ -12,7 +12,7 @@ export function Title({ children, className, as: Tag = "h1", ...props }: TitlePr
   return (
     <Tag
       className={cn(
-        "mb-3 inline-block self-start text-2xl font-extrabold md:text-3xl",
+        "mb-1 inline-block self-start text-lg font-bold md:text-xl",
         "[&_svg]:shrink-0 [&_svg]:text-primary",
         "bg-linear-to-r from-primary to-emerald-400 to-150%",
         "bg-clip-text text-transparent",

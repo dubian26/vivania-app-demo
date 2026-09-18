@@ -2,6 +2,7 @@ import { CustomError } from "@/lib/custom-error"
 import { type ErrorModel } from "@/models/error-model"
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+type SessionExpiredHandler = () => void
 
 export interface FetchOptions extends Omit<RequestInit, "method" | "body"> {
   method?: HttpMethod
@@ -15,8 +16,15 @@ export interface HttpClientOptions {
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "/api"
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000"
+const REFRESH_TOKEN_PATH = "/auth/refresh-token"
 
 const defaultBaseUrl = () => typeof window === "undefined" ? BACKEND_URL : FRONTEND_URL
+
+// Invoked when the refresh token is no longer valid (definitive logout).
+let onSessionExpired: SessionExpiredHandler = () => { }
+
+// Client-only shared promise so concurrent 401s trigger a single refresh.
+let clientRefreshPromise: Promise<boolean> | null = null
 
 /**
  * Centralized HTTP client (native fetch).
@@ -24,10 +32,20 @@ const defaultBaseUrl = () => typeof window === "undefined" ? BACKEND_URL : FRONT
  * httpOnly cookies are sent automatically with credentials: "include".
  * On the server there is no cookie jar: pass the incoming request cookies
  * through HttpClientOptions.cookie and they will be forwarded upstream.
+ *
+ * Silent refresh: when the access token expires the backend answers 401
+ * (type "token_expired"). The client renews it via GET /auth/refresh-token
+ * and replays the original request once. On the server the renewed
+ * Set-Cookie is merged into this.cookie so the retry carries the new token.
  */
 export class HttpClient {
-  readonly cookie?: string
+  cookie?: string
   protected readonly baseUrl: string
+  private serverRefreshPromise: Promise<boolean> | null = null
+
+  static setSessionExpiredHandler(handler: SessionExpiredHandler) {
+    onSessionExpired = handler
+  }
 
   constructor(options: HttpClientOptions = {}) {
     this.baseUrl = options.baseUrl ?? defaultBaseUrl()
@@ -78,14 +96,97 @@ export class HttpClient {
   }
 
   async fetch(path: string, options: FetchOptions = {}): Promise<Response> {
+    const response = await this.request(path, options)
+
+    // Silent refresh: any 401 means the access token is no longer valid.
+    // Renew it and replay the original request once.
+    if (response.status !== 401) {
+      return response
+    }
+
+    const refreshed = await this.refreshSession()
+    if (!refreshed) {
+      onSessionExpired()
+      return response
+    }
+
+    return this.request(path, options)
+  }
+
+  private async request(path: string, options: FetchOptions): Promise<Response> {
     try {
       const url = `${this.baseUrl}${path}`
       const init = this.buildInit(options)
-      return await fetch(url, init)
+      const response = await fetch(url, init)
+      this.captureCookies(response)
+      return response
     } catch {
       // Network error: the backend is down or unreachable
       throw CustomError.fromConnection()
     }
+  }
+
+  /**
+   * Renews the access token using the refreshToken httpOnly cookie.
+   * Concurrent calls share a single in-flight request (per instance on the
+   * server, globally on the client).
+   */
+  private refreshSession(): Promise<boolean> {
+    if (typeof window === "undefined") {
+      this.serverRefreshPromise ??= this.performRefresh().finally(() => {
+        this.serverRefreshPromise = null
+      })
+      return this.serverRefreshPromise
+    }
+
+    clientRefreshPromise ??= this.performRefresh().finally(() => {
+      clientRefreshPromise = null
+    })
+    return clientRefreshPromise
+  }
+
+  private async performRefresh(): Promise<boolean> {
+    try {
+      const response = await this.request(REFRESH_TOKEN_PATH, {
+        method: "GET",
+        cache: "no-store",
+      })
+      return response.ok
+    } catch {
+      return false
+    }
+  }
+
+  /**
+   * On the server there is no cookie jar: keep the cookies returned by the
+   * backend (e.g. the renewed accessToken) so subsequent calls reuse them.
+   * In the browser the cookie jar is managed by the browser itself.
+   */
+  private captureCookies(response: Response): void {
+    if (typeof window !== "undefined") return
+
+    const headers = response.headers as Headers & {
+      getSetCookie?: () => string[]
+    }
+    const setCookies = headers.getSetCookie?.() ?? []
+    if (setCookies.length === 0) return
+
+    const jar = new Map<string, string>()
+
+    for (const part of (this.cookie ?? "").split(";")) {
+      const separator = part.indexOf("=")
+      if (separator === -1) continue
+      jar.set(part.slice(0, separator).trim(), part.slice(separator + 1).trim())
+    }
+
+    for (const setCookie of setCookies) {
+      const pair = setCookie.split(";", 1)[0]
+      const separator = pair.indexOf("=")
+      if (separator === -1) continue
+      jar.set(pair.slice(0, separator).trim(), pair.slice(separator + 1).trim())
+    }
+
+    this.cookie = Array.from(jar, ([name, value]) => `${name}=${value}`).join("; ")
   }
 
   /**
