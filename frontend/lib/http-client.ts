@@ -1,13 +1,15 @@
 import { CustomError } from "@/lib/custom-error"
 import { type ErrorModel } from "@/models/error-model"
 
-type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 type SessionExpiredHandler = () => void
 
 export interface FetchOptions extends Omit<RequestInit, "method" | "body"> {
   method?: HttpMethod
   body?: unknown
 }
+
+export type HttpOptions = Omit<FetchOptions, "method">
 
 export interface HttpClientOptions {
   baseUrl?: string
@@ -95,8 +97,13 @@ export class HttpClient {
     )
   }
 
-  async fetch(path: string, options: FetchOptions = {}): Promise<Response> {
-    const response = await this.request(path, options)
+  async http(
+    method: HttpMethod,
+    path: string,
+    options: HttpOptions = {}
+  ): Promise<Response> {
+    const fetchOptions: FetchOptions = { ...options, method }
+    const response = await this.request(path, fetchOptions)
 
     // Silent refresh: any 401 means the access token is no longer valid.
     // Renew it and replay the original request once.
@@ -110,7 +117,7 @@ export class HttpClient {
       return response
     }
 
-    return this.request(path, options)
+    return this.request(path, fetchOptions)
   }
 
   private async request(path: string, options: FetchOptions): Promise<Response> {

@@ -5,7 +5,7 @@ import type { SearchModel } from "@/models/search-model"
 
 class RoleRepository extends HttpClient {
   async listAll(): Promise<RoleModel[]> {
-    const response = await this.fetch("/roles", { method: "GET", cache: "no-store" })
+    const response = await this.http("GET", "/roles", { cache: "no-store" })
     const data = await this.getData<RoleModel[]>(response)
     return data ?? []
   }
@@ -19,23 +19,23 @@ class RoleRepository extends HttpClient {
     if (params.search) query.set("search", params.search)
 
     const url = `/roles/search?${query.toString()}`
-    const response = await this.fetch(url, { method: "GET", cache: "no-store" })
+    const response = await this.http("GET", url, { cache: "no-store" })
     const data = await this.getData<RoleModel[]>(response)
     return data ?? []
   }
 
   async create(payload: RoleCreateModel): Promise<IdResult | undefined> {
-    const response = await this.fetch("/roles", { body: payload })
+    const response = await this.http("POST", "/roles", { body: payload })
     return this.getData<IdResult>(response)
   }
 
   async update(payload: RoleUpdateModel): Promise<IdResult | undefined> {
-    const response = await this.fetch("/roles", { method: "PUT", body: payload })
+    const response = await this.http("PUT", "/roles", { body: payload })
     return this.getData<IdResult>(response)
   }
 
   async delete(id: string): Promise<IdResult | undefined> {
-    const response = await this.fetch(`/roles/${id}`, { method: "DELETE" })
+    const response = await this.http("DELETE", `/roles/${id}`)
     return this.getData<IdResult>(response)
   }
 }

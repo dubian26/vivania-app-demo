@@ -19,3 +19,8 @@ export interface PermissionModel {
 export interface PermissionTreeModel extends PermissionModel {
   children: PermissionTreeModel[]
 }
+
+export interface PermissionSaveRoleModel {
+  roleId: string,
+  permissionIds: string[]
+}

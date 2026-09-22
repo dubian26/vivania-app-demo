@@ -1,17 +1,5 @@
 "use client"
 
-import { useAppContext } from "@/contexts/app-context"
-import { useAsync } from "@/hooks/use-async"
-import { buildPermissionTree } from "@/lib/permission-tree"
-import type {
-  PermissionModel,
-  PermissionTreeModel,
-} from "@/models/permission-model"
-import type { RoleModel } from "@/models/role-model"
-import { createPermissionRepo } from "@/repositories/permission-repository"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -20,7 +8,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+
+import type {
+  PermissionModel,
+  PermissionTreeModel,
+} from "@/models/permission-model"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { useAppContext } from "@/contexts/app-context"
+import { useAsync } from "@/hooks/use-async"
+import { buildPermissionTree } from "@/lib/permission-tree"
+import type { RoleModel } from "@/models/role-model"
+import { createPermissionRepo } from "@/repositories/permission-repository"
 import { Loader2 } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
@@ -114,12 +116,15 @@ function RolePermissionsContent({ role, onOpenChange, onSaved }: ContentProps) {
     )
 
   const handleSave = async () => {
+    const repository = createPermissionRepo()
+
     const result = await run(
-      createPermissionRepo().saveRolePermissions(
-        role.id,
-        Array.from(checkedIds)
-      )
+      repository.saveRolePermissions({
+        roleId: role.id,
+        permissionIds: Array.from(checkedIds)
+      })
     )
+
     if (!result) return
 
     showMessage(result.message)

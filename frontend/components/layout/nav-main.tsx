@@ -57,7 +57,12 @@ function NavItem({ item, pathname, depth = 0 }: NavItemProps) {
   const [open, setOpen] = useState(active)
 
   useEffect(() => {
-    if (active) setOpen(true)
+    if (!active) return
+
+    const id = requestAnimationFrame(() => {
+      setOpen(true)
+    })
+    return () => cancelAnimationFrame(id)
   }, [active])
 
   if (item.children.length === 0) {

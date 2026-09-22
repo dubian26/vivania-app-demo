@@ -1,10 +1,5 @@
 "use client"
 
-import { useAppContext } from "@/contexts/app-context"
-import { useAsync } from "@/hooks/use-async"
-import type { RoleModel } from "@/models/role-model"
-import type { UserResultModel } from "@/models/user-result-model"
-import { createUserRepo } from "@/repositories/user-repository"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -24,11 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useAppContext } from "@/contexts/app-context"
+import { useAsync } from "@/hooks/use-async"
+import type { RoleModel } from "@/models/role-model"
+import type { UserModel } from "@/models/user-model"
+import { createUserRepo } from "@/repositories/user-repository"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
 
 interface Props {
-  user: UserResultModel | null
+  user: UserModel | null
   roles: RoleModel[]
   onOpenChange: (open: boolean) => void
   onUpdated: () => void
@@ -58,7 +58,7 @@ export function UserEditDialog({
 }
 
 interface FormProps {
-  user: UserResultModel
+  user: UserModel
   roles: RoleModel[]
   onOpenChange: (open: boolean) => void
   onUpdated: () => void
@@ -72,9 +72,9 @@ function UserEditForm({ user, roles, onOpenChange, onUpdated }: FormProps) {
   const [active, setActive] = useState(user.active)
 
   const handleSubmit = async () => {
-    const result = await run(
-      createUserRepo().update(user.id, { roleId, active })
-    )
+    const repository = createUserRepo()
+    const promise = repository.update({ id: user.id, roleId, active })
+    const result = await run(promise)
     if (!result) return
 
     showMessage(result.message)

@@ -45,9 +45,9 @@ export function PassRecoveryForm({ email }: Props) {
       return
     }
 
-    const result = await run(
-      userRepository.verifyEmail(email, code, "RECUPERACION")
-    )
+    const purpose = "RECUPERACION"
+    const verifyPromese = userRepository.verifyEmail({ email, code, purpose })
+    const result = await run(verifyPromese)
 
     if (result) {
       showMessage(result.message || "Código verificado correctamente.")
@@ -68,9 +68,8 @@ export function PassRecoveryForm({ email }: Props) {
 
     // verifyEmail already set the session cookies (implicit login),
     // so PATCH /auth/profile is authenticated.
-    const result = await run(
-      userRepository.updateProfile({ password: newPassword })
-    )
+    const promise = userRepository.updateProfile({ password: newPassword })
+    const result = await run(promise)
 
     if (result !== undefined) {
       showMessage(result.message || "Contraseña actualizada con éxito")
@@ -81,7 +80,9 @@ export function PassRecoveryForm({ email }: Props) {
   const handleResendOtp = async () => {
     if (countdown > 0) return
 
-    const result = await run(userRepository.resendOtp(email, "RECUPERACION"))
+    const promise = userRepository.resendOtp({ email, purpose: "RECUPERACION" })
+    const result = await run(promise)
+
     if (result) {
       showMessage(result.message || "Nuevo código enviado")
       setCountdown(60)

@@ -1,11 +1,5 @@
 "use client"
 
-import { useAppContext } from "@/contexts/app-context"
-import { useAsync } from "@/hooks/use-async"
-import { formatDate } from "@/lib/date-utility"
-import type { RoleModel } from "@/models/role-model"
-import type { UserResultModel } from "@/models/user-result-model"
-import { createUserRepo } from "@/repositories/user-repository"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,6 +26,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useAppContext } from "@/contexts/app-context"
+import { useAsync } from "@/hooks/use-async"
+import { formatDate } from "@/lib/date-utility"
+import type { RoleModel } from "@/models/role-model"
+import type { UserModel } from "@/models/user-model"
+import { createUserRepo } from "@/repositories/user-repository"
 import {
   ChevronLeft,
   ChevronRight,
@@ -50,7 +50,7 @@ import { UserCreateDialog } from "./user-create-dialog"
 import { UserEditDialog } from "./user-edit-dialog"
 
 interface Props {
-  users: UserResultModel[]
+  users: UserModel[]
   roles: RoleModel[]
   page: number
   hasMore: boolean
@@ -79,10 +79,10 @@ export function UsersBoard({
 
   const [term, setTerm] = useState(search)
   const [createOpen, setCreateOpen] = useState(false)
-  const [userToEdit, setUserToEdit] = useState<UserResultModel | null>(null)
+  const [userToEdit, setUserToEdit] = useState<UserModel | null>(null)
   const [roleToManage, setRoleToManage] = useState<RoleModel | null>(null)
   const [userToDeactivate, setUserToDeactivate] =
-    useState<UserResultModel | null>(null)
+    useState<UserModel | null>(null)
 
   // Server-side search: debounce the input and reflect it in the URL so the
   // server component refetches. Page resets by dropping the page param.
@@ -114,9 +114,13 @@ export function UsersBoard({
   const handleDeactivate = async () => {
     if (!userToDeactivate) return
 
-    const result = await run(
-      createUserRepo().update(userToDeactivate.id, { active: false })
-    )
+    const repository = createUserRepo()
+    const userUpdatePromise = repository.update({
+      id: userToDeactivate.id,
+      active: false,
+    })
+
+    const result = await run(userUpdatePromise)
     if (!result) return
 
     showMessage(result.message)
@@ -221,7 +225,7 @@ export function UsersBoard({
                             onClick={() =>
                               setRoleToManage(
                                 roles.find((role) => role.id === user.roleId) ??
-                                  null
+                                null
                               )
                             }
                           >
@@ -310,7 +314,7 @@ export function UsersBoard({
 }
 
 interface DeactivateProps {
-  user: UserResultModel
+  user: UserModel
   loading: boolean
   onCancel: () => void
   onConfirm: () => void

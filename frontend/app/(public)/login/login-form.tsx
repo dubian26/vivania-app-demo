@@ -17,12 +17,12 @@ import { cn } from "@/lib/utils"
 import { createUserRepo } from "@/repositories/user-repository"
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 
 const userRepository = createUserRepo()
@@ -67,20 +67,20 @@ export function LoginForm() {
   }
 
   const handleRequestPassRecovery = async () => {
-      setRecoveryLoading(true)
-      
-      const resendOtpPromise = userRepository.resendOtp(email, "RECUPERACION")
-      const result = await run(resendOtpPromise)
+    setRecoveryLoading(true)
 
-      if (result !== undefined) {
-         showMessage("Código de recuperación enviado a tu correo")
-         setShowRecoveryDialog(false)
-         router.push(`/pass-recovery?email=${encodeURIComponent(email)}`)
-      }
+    const resendOtpPromise = userRepository.resendOtp({ email, purpose: "RECUPERACION" })
+    const result = await run(resendOtpPromise)
 
-      setRecoveryLoading(false)
-   }
-  
+    if (result !== undefined) {
+      showMessage("Código de recuperación enviado a tu correo")
+      setShowRecoveryDialog(false)
+      router.push(`/pass-recovery?email=${encodeURIComponent(email)}`)
+    }
+
+    setRecoveryLoading(false)
+  }
+
   return (
     <div className={cn(
       "w-full max-w-md animate-in duration-500 fade-in slide-in-from-left-5",
@@ -156,8 +156,8 @@ export function LoginForm() {
                 ¿Olvidaste tu contraseña?
               </button>
             </div>
-            <PasswordInput 
-              password={password} 
+            <PasswordInput
+              password={password}
               onChange={setPassword}
             />
           </div>
@@ -170,13 +170,13 @@ export function LoginForm() {
           >
             {
               loading ?
-              <Loader2 size={20} className="animate-spin" /> :
-              <LogIn size={20} strokeWidth={3} />
+                <Loader2 size={20} className="animate-spin" /> :
+                <LogIn size={20} strokeWidth={3} />
             }
             {
               loading ?
-              "Iniciando sesión..." :
-              "Iniciar sesión"
+                "Iniciando sesión..." :
+                "Iniciar sesión"
             }
           </Button>
         </form>

@@ -1,5 +1,20 @@
 "use client"
 
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+
+import {
+  CheckCircle2,
+  Loader2,
+  Mail,
+  User,
+  UserRoundPlus,
+} from "lucide-react"
+
 import { Title } from "@/components/common/title"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -12,21 +27,6 @@ import { createUserRepo } from "@/repositories/user-repository"
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
-
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
-} from "@/components/ui/input-otp"
-
-import {
-    CheckCircle2,
-    Loader2,
-    Mail,
-    User,
-    UserRoundPlus,
-} from "lucide-react"
 
 const userRepository = createUserRepo()
 
@@ -93,7 +93,7 @@ export function SignupForm() {
       return
     }
 
-    const verifyPromise = userRepository.verifyEmail(email, code)
+    const verifyPromise = userRepository.verifyEmail({ email, code, purpose: "REGISTRO" })
     const result = await run(verifyPromise)
 
     if (result) {
@@ -110,7 +110,7 @@ export function SignupForm() {
   const handleClickResend = async () => {
     if (countdown > 0) return
 
-    const resendPromise = userRepository.resendOtp(email)
+    const resendPromise = userRepository.resendOtp({ email, purpose: "REGISTRO" })
     const result = await run(resendPromise)
 
     if (result) {
@@ -257,8 +257,8 @@ export function SignupForm() {
                   >
                     {
                       loading ?
-                      <Loader2 size={20} className="animate-spin" /> :
-                      <UserRoundPlus size={20} strokeWidth={3} />
+                        <Loader2 size={20} className="animate-spin" /> :
+                        <UserRoundPlus size={20} strokeWidth={3} />
                     }
                     {loading ? "Registrando..." : "Crear mi cuenta"}
                   </Button>
@@ -313,8 +313,8 @@ export function SignupForm() {
               >
                 {
                   loading ?
-                  <Loader2 size={20} className="animate-spin" /> :
-                  <CheckCircle2 size={20} />
+                    <Loader2 size={20} className="animate-spin" /> :
+                    <CheckCircle2 size={20} />
                 }
                 Verificar Código
               </Button>
@@ -327,8 +327,8 @@ export function SignupForm() {
               >
                 {
                   countdown > 0 ?
-                  `Reenviar código en ${countdown}s`:
-                  "Reenviar código"
+                    `Reenviar código en ${countdown}s` :
+                    "Reenviar código"
                 }
               </Button>
 
