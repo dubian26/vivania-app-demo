@@ -1,6 +1,7 @@
 import { HttpClient, type HttpClientOptions } from "@/lib/http-client"
 import type { IdResult } from "@/models/id-result"
 import type { RegisterUserModel } from "@/models/register-user-model"
+import type { SearchModel } from "@/models/search-model"
 import type { UserInfoModel } from "@/models/user-info-model"
 import type { UserResultModel } from "@/models/user-result-model"
 import type { VerifyPurpose, VerifyUserResult } from "@/models/verify-user-result"
@@ -77,11 +78,7 @@ class UserRepository extends HttpClient {
 
   // Offset pagination over users (GET /users?skip&take[&search]).
   // Requires a valid session cookie.
-  async search(params: {
-    skip: number
-    take: number
-    search?: string
-  }): Promise<UserResultModel[]> {
+  async search(params: SearchModel): Promise<UserResultModel[]> {
     const query = new URLSearchParams({
       skip: String(params.skip),
       take: String(params.take),

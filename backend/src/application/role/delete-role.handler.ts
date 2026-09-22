@@ -1,6 +1,7 @@
 import { Validator } from '@/base/contracts/validator'
 import { RequestHandler } from '@/base/mediator'
 import { IdResult } from '@/base/models/id-result'
+import { AuthService } from '@/base/util/auth-service'
 import { Injectable } from '@/base/util/injectable'
 import { uuidCheck } from '@/base/util/zod-custom-schemas'
 import { RoleError } from '@/domain/role/role-error'
@@ -12,9 +13,11 @@ export class DeleteRoleHandler implements RequestHandler<DeleteRoleCommand, IdRe
   constructor(
     private readonly roleRepository: RoleRepository,
     private readonly validator: Validator,
+    private readonly authService: AuthService,
   ) { }
 
   async handle(request: DeleteRoleCommand): Promise<IdResult> {
+    this.authService.authorizedTo('/roles/inactivar')
     this.validator.parse(uuidCheck(), request.id)
 
     const role = await this.roleRepository.findById(request.id)

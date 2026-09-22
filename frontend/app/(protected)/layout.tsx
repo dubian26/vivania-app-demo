@@ -1,15 +1,15 @@
-import { AppSidebar } from "@/components/nav-layout/app-sidebar"
-import { Separator } from "@/components/ui/separator"
-
-import { Breadcrumbs } from "@/components/layout/breadcrumbs"
-
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+import { AuthPermissionsSync } from "@/components/common/auth-permissions-sync"
+import { Breadcrumbs } from "@/components/layout/breadcrumbs"
+import { AppSidebar } from "@/components/nav-layout/app-sidebar"
+import { Separator } from "@/components/ui/separator"
 import { buildPermissionTree } from '@/lib/permission-tree'
+import { cn } from '@/lib/utils'
 import { UserInfoModel } from '@/models/user-info-model'
 import { createPermissionRepo } from '@/repositories/permission-repository'
 import { createUserRepo } from '@/repositories/user-repository'
@@ -42,12 +42,13 @@ export default async function ProtectedLayout({ children }: Props) {
 
   return (
     <SidebarProvider>
-      <AppSidebar
-        userInfo={userInfo}
-        menuItems={menuItems}
-      />
+      <AuthPermissionsSync permissions={permissions} />
+      <AppSidebar userInfo={userInfo} menuItems={menuItems} />
       <SidebarInset className="overflow-hidden">
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-dashed border-border/70 bg-background">
+        <header className={cn(
+          "flex h-14 shrink-0 items-center gap-2 border-b",
+          "border-dashed border-border/70 bg-background"
+        )}>
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -57,7 +58,7 @@ export default async function ProtectedLayout({ children }: Props) {
             <Breadcrumbs items={permissions} />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 bg-content p-4 md:px-6 md:py-5">
+        <main className="flex flex-1 flex-col gap-4 bg-content p-3 md:p-5">
           {children}
         </main>
       </SidebarInset>

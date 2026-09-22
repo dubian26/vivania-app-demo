@@ -8,15 +8,20 @@ const BASE_PATH = "/roles"
 interface Props {
   page: number
   hasMore: boolean
+  search?: string
 }
 
-function buildHref(page: number) {
-  return page <= 1 ? BASE_PATH : `${BASE_PATH}?page=${page}`
+function buildHref(page: number, search?: string) {
+  const params = new URLSearchParams()
+  if (search) params.set("search", search)
+  if (page > 1) params.set("page", String(page))
+  const query = params.toString()
+  return query ? `${BASE_PATH}?${query}` : BASE_PATH
 }
 
-export function RolesPagination({ page, hasMore }: Props) {
-  const previousHref = buildHref(page - 1)
-  const nextHref = buildHref(page + 1)
+export function RolesPagination({ page, hasMore, search }: Props) {
+  const previousHref = buildHref(page - 1, search)
+  const nextHref = buildHref(page + 1, search)
 
   return (
     <div className="flex items-center justify-between">
