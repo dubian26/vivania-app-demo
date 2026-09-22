@@ -1,43 +1,42 @@
 "use client"
 
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
 } from "@/components/ui/avatar"
 
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 import {
-    BadgeCheckIcon,
-    BellIcon,
-    ChevronsUpDownIcon,
-    CreditCardIcon,
-    LogOutIcon,
-    MoonIcon,
-    SunIcon
+  BadgeCheckIcon,
+  BellIcon,
+  ChevronsUpDownIcon,
+  CreditCardIcon,
+  LogOutIcon,
+  MoonIcon,
+  SunIcon
 } from "lucide-react"
-
-import { useTheme } from "next-themes"
 
 import { useAsync } from "@/hooks/use-async"
 import { UserInfoModel } from "@/models/user-info-model"
 import { createUserRepo } from "@/repositories/user-repository"
+import { useTheme } from "next-themes"
 
 const userRepository = createUserRepo()
 
@@ -68,7 +67,10 @@ export function NavUser({ user }: Props) {
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <SidebarMenuButton size="lg" className="aria-expanded:bg-muted" />
+              <SidebarMenuButton
+                size="lg"
+                className="aria-expanded:bg-muted"
+              />
             }
           >
             <Avatar>

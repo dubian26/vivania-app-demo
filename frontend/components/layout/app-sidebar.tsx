@@ -1,14 +1,5 @@
 "use client"
 
-import { ComponentProps } from "react"
-
-import { NavFavorites } from "./nav-favorites"
-import { NavMain } from "./nav-main"
-import { NavUser } from "./nav-user"
-
-import { PermissionTreeModel } from "@/models/permission-model"
-import { UserInfoModel } from "@/models/user-info-model"
-
 import {
     Sidebar,
     SidebarContent,
@@ -19,11 +10,16 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import { BuildingComplexIcon } from "lucide-react"
-
 import { Title } from "@/components/common/title"
 import { cn } from '@/lib/utils'
+import { PermissionTreeModel } from "@/models/permission-model"
+import { UserInfoModel } from "@/models/user-info-model"
+import { BuildingComplexIcon } from "lucide-react"
 import Link from 'next/link'
+import { ComponentProps } from "react"
+import { NavFavorites } from "./nav-favorites"
+import { NavMain } from "./nav-main"
+import { NavUser } from "./nav-user"
 
 interface Props extends ComponentProps<typeof Sidebar> {
   userInfo: UserInfoModel

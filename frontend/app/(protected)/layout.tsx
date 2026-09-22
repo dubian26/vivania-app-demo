@@ -1,12 +1,12 @@
 import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 import { AuthPermissionsSync } from "@/components/common/auth-permissions-sync"
+import { AppSidebar } from "@/components/layout/app-sidebar"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
-import { AppSidebar } from "@/components/nav-layout/app-sidebar"
 import { Separator } from "@/components/ui/separator"
 import { buildPermissionTree } from '@/lib/permission-tree'
 import { cn } from '@/lib/utils'

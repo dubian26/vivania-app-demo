@@ -1,13 +1,14 @@
 "use client"
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+
 import type { PermissionModel } from "@/models/permission-model"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
