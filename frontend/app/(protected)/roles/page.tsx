@@ -25,7 +25,9 @@ export default async function RolesPage({ searchParams }: Props) {
   }
 
   const cookieStore = await cookies()
-  const roleRepository = createRoleRepo({ cookie: cookieStore.toString() })
+  const cookie = cookieStore.toString()
+
+  const roleRepository = createRoleRepo({ cookie })
   const roles = await roleRepository.search(searchModel)
 
   return (

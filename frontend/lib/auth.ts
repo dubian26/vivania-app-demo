@@ -11,6 +11,7 @@ export type PermissionPath =
    | "/roles/editar"
    | "/roles/inactivar"
    | "/roles/permisos"
+   | "/usuarios/nuevo"
    | "/usuarios/editar"
    | "/usuarios/inactivar"
    | (string & {})

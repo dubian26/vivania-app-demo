@@ -66,7 +66,7 @@ export class PrismaUserRepository implements UserRepository {
           select: { name: true },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
     })
 
     return records.map((record) => {

@@ -1,56 +1,41 @@
 import { Title } from "@/components/common/title"
-import { UsersBoard } from "@/components/usuarios/users-board"
-import { createPermissionRepo } from "@/repositories/permission-repository"
-import { createRoleRepo } from "@/repositories/role-repository"
+import { UserFilters } from "@/components/usuarios/user-filters"
+import { UserTable } from "@/components/usuarios/user-table"
+import type { SearchParams } from "@/models/search-model"
 import { createUserRepo } from "@/repositories/user-repository"
 import { cookies } from "next/headers"
 
 const PAGE_SIZE = 10
 
 interface Props {
-  searchParams: Promise<{ search?: string; page?: string }>
+  searchParams: Promise<SearchParams>
 }
 
 export default async function UsuariosPage({ searchParams }: Props) {
   const params = await searchParams
   const search = params.search?.trim() || undefined
-  const page = Math.max(1, Number(params.page) || 1)
-  const skip = (page - 1) * PAGE_SIZE
 
   const cookieStore = await cookies()
+  const cookie = cookieStore.toString()
 
-  const userRepository = createUserRepo({ cookie: cookieStore.toString() })
-  const userInfo = await userRepository.refreshToken()
+  const userRepository = createUserRepo({ cookie })
 
-  // Reuse the cookie refreshed above so protected calls do not refresh again.
-  const cookie = userRepository.cookie
-  const roleRepository = createRoleRepo({ cookie })
-  const permissionRepository = createPermissionRepo({ cookie })
-
-  const permissions = userInfo
-    ? await permissionRepository.listByRole(userInfo.roleId)
-    : []
-
-  const [users, roles] = await Promise.all([
-    userRepository.search({ skip, take: PAGE_SIZE + 1, search }),
-    roleRepository.listAll(),
-  ])
-
-  const allowedPaths = new Set(permissions.map((permission) => permission.path))
+  // PAGE_SIZE + 1 detects whether there is a next page without a count query.
+  const users = await userRepository.search({
+    skip: 0,
+    take: PAGE_SIZE + 1,
+    search,
+  })
 
   return (
-    <div className="flex w-full max-w-5xl flex-col gap-5">
+    <div className="flex w-full flex-col gap-3">
       <Title>Usuarios</Title>
-      <UsersBoard
-        users={users.slice(0, PAGE_SIZE)}
-        roles={roles}
-        page={page}
-        hasMore={users.length > PAGE_SIZE}
-        search={search ?? ""}
-        canCreate={allowedPaths.has("/usuarios/nuevo")}
-        canEdit={allowedPaths.has("/usuarios/editar")}
-        canDeactivate={allowedPaths.has("/usuarios/inactivar")}
-        canManagePermissions={allowedPaths.has("/roles/permisos")}
+      <UserFilters search={search ?? ""} />
+      <UserTable
+        key={search ?? "default"}
+        initialUsers={users.slice(0, PAGE_SIZE)}
+        initialHasMore={users.length > PAGE_SIZE}
+        search={search}
       />
     </div>
   )

@@ -90,6 +90,12 @@ class UserRepository extends HttpClient {
     const response = await this.http("PATCH", url, { body: params })
     return this.getData<IdResult>(response)
   }
+
+  // Admin-only deletion (DELETE /users/:id).
+  async delete(id: string): Promise<IdResult | undefined> {
+    const response = await this.http("DELETE", `/users/${id}`)
+    return this.getData<IdResult>(response)
+  }
 }
 
 export const createUserRepo = (options: HttpClientOptions = {}) =>

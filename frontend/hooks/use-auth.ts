@@ -1,5 +1,8 @@
 import { auth, type PermissionPath } from "@/lib/auth"
+import type { PermissionModel } from "@/models/permission-model"
 import { useCallback, useSyncExternalStore } from "react"
+
+const EMPTY_PERMISSIONS: PermissionModel[] = []
 
 /**
  * Hook para usar la autorización en componentes de React.
@@ -10,7 +13,8 @@ export const useAuth = () => {
    // cuando el caché de permisos cambie.
    const permisos = useSyncExternalStore(
       (callback) => auth.subscribe(callback),
-      () => auth.getPermisos()
+      () => auth.getPermisos(),
+      () => EMPTY_PERMISSIONS
    )
 
    /**
