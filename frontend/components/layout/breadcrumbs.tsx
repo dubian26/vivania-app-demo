@@ -26,6 +26,7 @@ interface Crumb {
 
 export function Breadcrumbs({ items }: Props) {
   const pathname = usePathname()
+  const currentPageIsHeading = pathname === "/usuarios" || pathname === "/roles"
 
   const byId = new Map(items.map((item) => [item.id, item]))
 
@@ -62,7 +63,9 @@ export function Breadcrumbs({ items }: Props) {
                 }
               >
                 {isLast ? (
-                  <BreadcrumbPage>{crumb.title}</BreadcrumbPage>
+                  <BreadcrumbPage asHeading={currentPageIsHeading}>
+                    {crumb.title}
+                  </BreadcrumbPage>
                 ) : isGroup ? (
                   <span className="text-muted-foreground">{crumb.title}</span>
                 ) : (

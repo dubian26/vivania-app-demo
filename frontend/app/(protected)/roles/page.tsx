@@ -1,4 +1,3 @@
-import { Title } from "@/components/common/title"
 import { RolesFilters } from "@/components/roles/roles-filters"
 import { RolesPagination } from "@/components/roles/roles-pagination"
 import { RolesTable } from "@/components/roles/roles-table"
@@ -32,7 +31,6 @@ export default async function RolesPage({ searchParams }: Props) {
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <Title>Roles</Title>
       <div className="flex w-full flex-col gap-3">
         <RolesFilters search={search ?? ""} />
         <RolesTable roles={roles.slice(0, PAGE_SIZE)} />

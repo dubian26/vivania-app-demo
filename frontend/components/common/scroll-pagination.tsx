@@ -87,16 +87,9 @@ export function ScrollPagination({ loading, hasMore, onLoadMore }: Props) {
 
   return (
     <section
-      className="relative flex w-full justify-center py-6"
+      className="flex w-full justify-center py-6"
       aria-label="Paginación de registros"
     >
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0 h-40",
-          "bg-linear-to-t from-background via-background/80 to-transparent"
-        )}
-        aria-hidden="true"
-      />
       <div className="relative flex flex-col items-center gap-4">
         {
           loading ?
@@ -136,9 +129,11 @@ function LoadMoreState({ pullDistance, onLoadMore }: LoadMoreStateProps) {
     <div
       className={cn(
         "flex w-full max-w-md flex-col items-center gap-3 rounded-2xl border",
-        "border-border/60 bg-background/65 px-8 py-5 shadow-lg shadow-foreground/5",
-        "backdrop-blur-md transition-transform duration-150 ease-out",
-        "supports-backdrop-filter:bg-background/55"
+        "border-primary/20 bg-card/45 px-8 py-5 shadow-md shadow-foreground/10",
+        "backdrop-blur-sm",
+        "transition-transform duration-150 ease-out",
+        "dark:border-white/15 dark:bg-card/40",
+        "supports-backdrop-filter:bg-card/15 dark:supports-backdrop-filter:bg-card/12"
       )}
       style={{ transform: `translateY(-${pullDistance}px)` }}
     >

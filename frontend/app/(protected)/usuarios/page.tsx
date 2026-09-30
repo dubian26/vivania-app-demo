@@ -1,4 +1,3 @@
-import { Title } from "@/components/common/title"
 import { UserFilters } from "@/components/usuarios/user-filters"
 import { UserTable } from "@/components/usuarios/user-table"
 import type { SearchParams } from "@/models/search-model"
@@ -29,7 +28,6 @@ export default async function UsuariosPage({ searchParams }: Props) {
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <Title>Usuarios</Title>
       <UserFilters search={search ?? ""} />
       <UserTable
         key={search ?? "default"}

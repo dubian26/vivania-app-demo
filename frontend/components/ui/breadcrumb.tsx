@@ -58,7 +58,22 @@ function BreadcrumbLink({
   })
 }
 
-function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+function BreadcrumbPage({
+  asHeading = false,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLElement> & { asHeading?: boolean }) {
+  if (asHeading) {
+    return (
+      <h1
+        data-slot="breadcrumb-page"
+        aria-current="page"
+        className={cn("text-lg font-bold text-primary", className)}
+        {...props}
+      />
+    )
+  }
+
   return (
     <span
       data-slot="breadcrumb-page"
