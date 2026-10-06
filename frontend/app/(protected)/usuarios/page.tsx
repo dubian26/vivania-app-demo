@@ -3,6 +3,7 @@ import { UserTable } from "@/components/usuarios/user-table"
 import type { SearchParams } from "@/models/search-model"
 import { createUserRepo } from "@/repositories/user-repository"
 import { cookies } from "next/headers"
+import { randomUUID } from "node:crypto"
 
 const PAGE_SIZE = 10
 
@@ -30,7 +31,7 @@ export default async function UsuariosPage({ searchParams }: Props) {
     <div className="flex w-full flex-col gap-3">
       <UserFilters search={search ?? ""} />
       <UserTable
-        key={search ?? "default"}
+        key={randomUUID()}
         initialUsers={users.slice(0, PAGE_SIZE)}
         initialHasMore={users.length > PAGE_SIZE}
         search={search}

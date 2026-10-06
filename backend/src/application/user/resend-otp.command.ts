@@ -4,7 +4,7 @@ import { ResendOtpHandler } from './resend-otp.handler'
 
 export interface ResendOtpDTO {
   email: string
-  purpose: 'REGISTRO' | 'RECUPERACION'
+  purpose: 'REGISTRO' | 'RECUPERACION' | 'ALTA_ADMIN'
 }
 
 export class ResendOtpCommand extends Command<{ message: string }> {

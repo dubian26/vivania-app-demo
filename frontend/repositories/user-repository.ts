@@ -1,4 +1,5 @@
 import type {
+  UserCreateRequest,
   UserModel,
   UserRegisterRequest,
   UserResendOtpRequest,
@@ -83,19 +84,21 @@ class UserRepository extends HttpClient {
     return data ?? []
   }
 
-  // Admin-only partial update (PATCH /users/:id). Only `active` and
-  // `roleId` can be changed; at least one field is required.
+  // Admin-only creation (POST /users). The new account remains inactive until
+  // the user verifies the OTP sent to the registered email.
+  async create(params: UserCreateRequest): Promise<IdResult | undefined> {
+    const response = await this.http("POST", "/users", { body: params })
+    return this.getData<IdResult>(response)
+  }
+
+  // Admin-only partial update (PATCH /users/:id). `firstName`, `lastName`,
+  // `active` and `roleId` can be changed; at least one field is required.
   async update(params: UserUpdateRequest): Promise<IdResult | undefined> {
     const url = `/users/${params.id}`
     const response = await this.http("PATCH", url, { body: params })
     return this.getData<IdResult>(response)
   }
 
-  // Admin-only deletion (DELETE /users/:id).
-  async delete(id: string): Promise<IdResult | undefined> {
-    const response = await this.http("DELETE", `/users/${id}`)
-    return this.getData<IdResult>(response)
-  }
 }
 
 export const createUserRepo = (options: HttpClientOptions = {}) =>

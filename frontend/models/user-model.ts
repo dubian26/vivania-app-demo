@@ -21,22 +21,32 @@ export interface UserRegisterRequest {
   lastName: string
 }
 
+export interface UserCreateRequest {
+  email: string
+  firstName: string
+  lastName: string
+  roleId?: string
+}
+
 export interface UserUpdateProfileRequest {
   password: string
 }
 
 export interface UserUpdateRequest {
   id: string
+  firstName?: string
+  lastName?: string
   active?: boolean
   roleId?: string
 }
 
-export type VerifyPurpose = "REGISTRO" | "RECUPERACION"
+export type VerifyPurpose = "REGISTRO" | "RECUPERACION" | "ALTA_ADMIN"
 
 export interface UserVerifyRequest {
   email: string
   code: string
   purpose: VerifyPurpose
+  password?: string
 }
 
 export interface UserVerifyResult {

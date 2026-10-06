@@ -26,6 +26,13 @@ export class UpdateUserHandler implements RequestHandler<UpdateUserCommand, IdRe
     const user = await this.userRepo.findById(request.id)
     if (!user) throw UserError.NotExists()
 
+    if (input.firstName !== undefined || input.lastName !== undefined) {
+      user.rename(
+        input.firstName ?? user.firstName,
+        input.lastName ?? user.lastName,
+      )
+    }
+
     if (input.roleId !== undefined) {
       const role = await this.roleRepo.findById(input.roleId)
       if (!role) throw RoleError.NotExists()
@@ -33,6 +40,7 @@ export class UpdateUserHandler implements RequestHandler<UpdateUserCommand, IdRe
     }
 
     if (input.active !== undefined) {
+      if (input.active && !user.emailVerified) throw UserError.EmailNotVerified()
       user.setActive(input.active)
     }
 

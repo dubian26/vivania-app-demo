@@ -4,6 +4,8 @@ import { LoggingBehavior } from '@/shared/util/logging-behavior'
 import { UpdateUserHandler } from './update-user.handler'
 
 export interface UpdateUserDTO {
+  firstName?: string
+  lastName?: string
   active?: boolean
   roleId?: string
 }

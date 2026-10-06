@@ -1,3 +1,4 @@
+import { CreateUserHandler } from '@/application/user/create-user.handler'
 import { GetUserByEmailHandler } from '@/application/user/get-user-by-email.handler'
 import { GetUserHandler } from '@/application/user/get-user.handler'
 import { GoogleLoginUserHandler } from '@/application/user/google-login-user.handler'
@@ -17,6 +18,7 @@ import { UserController } from './user.controller'
   providers: [
     LoginUserHandler,
     RegisterUserHandler,
+    CreateUserHandler,
     GoogleLoginUserHandler,
     ResendOtpHandler,
     VerifyUserHandler,

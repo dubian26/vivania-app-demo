@@ -47,8 +47,6 @@ export function UserTable({ initialUsers, initialHasMore, search }: Props) {
         search,
       })
 
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
       setUsers((prev) => [...prev, ...next.slice(0, PAGE_SIZE)])
       setHasMore(next.length > PAGE_SIZE)
     } catch (error) {

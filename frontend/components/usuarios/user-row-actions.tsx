@@ -32,21 +32,19 @@ interface Props {
   user: UserModel
 }
 
-// Actions for a roles table row. Serializable props only: the parent table is
-// a Server Component, so handlers/dialogs must live inside this island.
 export function UserRowActions({ user }: Props) {
   const router = useRouter()
   const { run, loading } = useAsync()
   const { showMessage } = useAppContext()
   const { authorizedTo } = useAuth()
   const canEdit = authorizedTo("/usuarios/editar")
-  const canDelete = authorizedTo("/usuarios/inactivar")
+  const canDeactivate = authorizedTo("/usuarios/inactivar")
   const [editOpen, setEditOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
-  const handleDelete = async () => {
+  const handleDeactivate = async () => {
     const repository = createUserRepo()
-    const promise = repository.delete(user.id)
+    const promise = repository.update({ id: user.id, active: false })
     const result = await run(promise)
     if (!result) return
 
@@ -67,6 +65,7 @@ export function UserRowActions({ user }: Props) {
                   variant="ghost"
                   size="icon-sm"
                   aria-label={`Editar ${user.email}`}
+                  className="cursor-pointer"
                   onClick={() => setEditOpen(true)}
                 />
               }
@@ -76,7 +75,7 @@ export function UserRowActions({ user }: Props) {
             <TooltipContent>Editar</TooltipContent>
           </Tooltip>
         )}
-        {canDelete && (
+        {canDeactivate && (
           <Tooltip>
             <TooltipTrigger
               render={
@@ -84,14 +83,16 @@ export function UserRowActions({ user }: Props) {
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Eliminar ${user.email}`}
+                  aria-label={`Inactivar ${user.email}`}
+                  disabled={!user.active}
+                  className="cursor-pointer text-destructive hover:text-destructive disabled:text-muted-foreground"
                   onClick={() => setConfirmOpen(true)}
                 />
               }
             >
               <Trash2 />
             </TooltipTrigger>
-            <TooltipContent>Eliminar</TooltipContent>
+            <TooltipContent>Inactivar</TooltipContent>
           </Tooltip>
         )}
       </div>
@@ -102,23 +103,23 @@ export function UserRowActions({ user }: Props) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Eliminar usuario</AlertDialogTitle>
+            <AlertDialogTitle>Inactivar usuario</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Seguro que deseas eliminar el usuario {user.email}? Esta acción es
-              permanente y no se puede deshacer.
+              ¿Seguro que deseas inactivar al usuario {user.email}? No podrá
+              acceder al sistema hasta que se active nuevamente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
-              onClick={handleDelete}
+              onClick={handleDeactivate}
               disabled={loading}
             >
               {loading && (
                 <Loader2 className="animate-spin" data-icon="inline-start" />
               )}
-              Eliminar
+              Inactivar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
