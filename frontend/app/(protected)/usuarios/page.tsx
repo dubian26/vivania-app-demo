@@ -20,10 +20,9 @@ export default async function UsuariosPage({ searchParams }: Props) {
 
   const userRepository = createUserRepo({ cookie })
 
-  // PAGE_SIZE + 1 detects whether there is a next page without a count query.
-  const users = await userRepository.search({
+  const result = await userRepository.search({
     skip: 0,
-    take: PAGE_SIZE + 1,
+    take: PAGE_SIZE,
     search,
   })
 
@@ -32,8 +31,8 @@ export default async function UsuariosPage({ searchParams }: Props) {
       <UserFilters search={search ?? ""} />
       <UserTable
         key={randomUUID()}
-        initialUsers={users.slice(0, PAGE_SIZE)}
-        initialHasMore={users.length > PAGE_SIZE}
+        initialUsers={result.data}
+        initialTotalRows={result.totalRows}
         search={search}
       />
     </div>

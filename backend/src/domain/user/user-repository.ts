@@ -6,6 +6,7 @@ export abstract class UserRepository {
   abstract findByEmail(email: string): Promise<User | null>
   abstract listAll(): Promise<User[]>
   abstract search(params: SearchModel): Promise<User[]>
+  abstract totalRows(params: Pick<SearchModel, 'search'>): Promise<number>
   abstract insert(user: User): Promise<void>
   abstract update(user: User): Promise<void>
   abstract delete(id: string): Promise<void>

@@ -3,6 +3,7 @@ import { UserRepository } from '@/domain/user/user-repository'
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
 import { SearchModel } from '@/base/models/search-model'
 import { Injectable } from '@/base/util/injectable'
+import type { Prisma } from '@prisma/client'
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -52,15 +53,7 @@ export class PrismaUserRepository implements UserRepository {
     const records = await this.dbContext.client().users.findMany({
       skip,
       take,
-      where: search
-        ? {
-          OR: [
-            { firstName: { contains: search, mode: 'insensitive' } },
-            { lastName: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-        : undefined,
+      where: this.searchFilter(search),
       include: {
         role: {
           select: { name: true },
@@ -73,6 +66,24 @@ export class PrismaUserRepository implements UserRepository {
       const { role, ...data } = record
       return User.fromDB({ ...data, roleName: role?.name })
     })
+  }
+
+  async totalRows(params: Pick<SearchModel, 'search'>): Promise<number> {
+    return this.dbContext.client().users.count({
+      where: this.searchFilter(params.search),
+    })
+  }
+
+  private searchFilter(search?: string): Prisma.UsersWhereInput | undefined {
+    if (!search) return undefined
+
+    return {
+      OR: [
+        { firstName: { contains: search, mode: 'insensitive' } },
+        { lastName: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ],
+    }
   }
 
   async insert(user: User): Promise<void> {

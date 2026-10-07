@@ -13,48 +13,52 @@ import { ScrollPagination } from "@/components/common/scroll-pagination"
 import { Badge } from "@/components/ui/badge"
 import { useAppContext } from "@/contexts/app-context"
 import { formatDate } from "@/lib/date-utility"
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils"
 import type { UserModel } from "@/models/user-model"
 import { createUserRepo } from "@/repositories/user-repository"
 import { CalendarDays, UserRound } from "lucide-react"
-import { useCallback, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { UserRowActions } from "./user-row-actions"
 
 const PAGE_SIZE = 10
 
 interface Props {
   initialUsers: UserModel[]
-  initialHasMore: boolean
+  initialTotalRows: number
   search?: string
 }
 
-export function UserTable({ initialUsers, initialHasMore, search }: Props) {
+export function UserTable({ initialUsers, initialTotalRows, search }: Props) {
   const { showError } = useAppContext()
   const [users, setUsers] = useState<UserModel[]>(initialUsers)
-  const [hasMore, setHasMore] = useState(initialHasMore)
+  const [totalRows, setTotalRows] = useState(initialTotalRows)
   const [loading, setLoading] = useState(false)
+  const loadingRef = useRef(false)
+  const hasMore = users.length < totalRows
 
   const handleLoadMore = useCallback(async () => {
-    if (loading || !hasMore) return
+    if (loadingRef.current || !hasMore) return
 
+    loadingRef.current = true
     setLoading(true)
 
     try {
       const repository = createUserRepo()
       const next = await repository.search({
         skip: users.length,
-        take: PAGE_SIZE + 1,
+        take: PAGE_SIZE,
         search,
       })
 
-      setUsers((prev) => [...prev, ...next.slice(0, PAGE_SIZE)])
-      setHasMore(next.length > PAGE_SIZE)
+      setUsers((prev) => [...prev, ...next.data])
+      setTotalRows(next.totalRows)
     } catch (error) {
       showError(error)
     } finally {
+      loadingRef.current = false
       setLoading(false)
     }
-  }, [loading, hasMore, users.length, search, showError])
+  }, [hasMore, users.length, search, showError])
 
   return (
     <div className="flex w-full flex-col">
@@ -93,11 +97,13 @@ export function UserTable({ initialUsers, initialHasMore, search }: Props) {
           </TableHeader>
           <TableBody className="block divide-y-0 p-2 lg:table-row-group lg:p-0">
             {users.length === 0 ? (
-              <TableRow className={cn(
-                "grid grid-cols-1 rounded-lg border border-border/70",
-                "bg-content lg:table-row lg:rounded-none lg:border-x-0",
-                "lg:border-t-0 lg:border-b lg:bg-transparent"
-              )}>
+              <TableRow
+                className={cn(
+                  "grid grid-cols-1 rounded-lg border border-border/70",
+                  "bg-content lg:table-row lg:rounded-none lg:border-x-0",
+                  "lg:border-t-0 lg:border-b lg:bg-transparent"
+                )}
+              >
                 <TableCell
                   colSpan={6}
                   className={cn(
@@ -185,6 +191,8 @@ export function UserTable({ initialUsers, initialHasMore, search }: Props) {
       <ScrollPagination
         loading={loading}
         hasMore={hasMore}
+        loadedRows={users.length}
+        totalRows={totalRows}
         onLoadMore={handleLoadMore}
       />
     </div>

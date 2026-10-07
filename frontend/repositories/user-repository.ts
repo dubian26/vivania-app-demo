@@ -6,31 +6,41 @@ import type {
   UserUpdateProfileRequest,
   UserUpdateRequest,
   UserVerifyRequest,
-  UserVerifyResult
+  UserVerifyResult,
 } from "@/models/user-model"
 
 import { HttpClient, type HttpClientOptions } from "@/lib/http-client"
 import type { IdResult } from "@/models/id-result"
+import type { Result } from "@/models/result"
 import type { SearchModel } from "@/models/search-model"
 import type { UserInfoModel } from "@/models/user-info-model"
 
 class UserRepository extends HttpClient {
   // Login: public route (POST /auth/login). The backend returns UserInfo
   // in the body and sets accessToken/refreshToken as httpOnly cookies.
-  async authenticate(email: string, password: string): Promise<UserInfoModel | undefined> {
-    const response = await this.http("POST", "/auth/login", { body: { email, password } })
+  async authenticate(
+    email: string,
+    password: string
+  ): Promise<UserInfoModel | undefined> {
+    const response = await this.http("POST", "/auth/login", {
+      body: { email, password },
+    })
     return this.getData<UserInfoModel>(response)
   }
 
   // NOTE: the backend does not implement /auth/google-login yet.
   // Once added, it receives { token } (Google credential) and returns UserInfo.
   async googleAuthenticate(token: string): Promise<UserInfoModel | undefined> {
-    const response = await this.http("POST", "/auth/google-login", { body: { token } })
+    const response = await this.http("POST", "/auth/google-login", {
+      body: { token },
+    })
     return this.getData<UserInfoModel>(response)
   }
 
   async refreshToken(): Promise<UserInfoModel | undefined> {
-    const response = await this.http("GET", "/auth/refresh-token", { cache: "no-store" })
+    const response = await this.http("GET", "/auth/refresh-token", {
+      cache: "no-store",
+    })
     return this.getData<UserInfoModel>(response)
   }
 
@@ -49,28 +59,38 @@ class UserRepository extends HttpClient {
 
   // Verifies the OTP. On success the backend sets session cookies
   // (implicit login) and returns { message, userInfo }.
-  async verifyEmail(params: UserVerifyRequest): Promise<UserVerifyResult | undefined> {
-    const response = await this.http("POST", "/auth/verify-email", { body: params })
+  async verifyEmail(
+    params: UserVerifyRequest
+  ): Promise<UserVerifyResult | undefined> {
+    const response = await this.http("POST", "/auth/verify-email", {
+      body: params,
+    })
     return this.getData<UserVerifyResult>(response)
   }
 
   // Resends the OTP (60s cooldown enforced by the backend).
-  async resendOtp(params: UserResendOtpRequest): Promise<{ message: string } | undefined> {
-    const response = await this.http("POST", "/auth/resend-otp", { body: params })
+  async resendOtp(
+    params: UserResendOtpRequest
+  ): Promise<{ message: string } | undefined> {
+    const response = await this.http("POST", "/auth/resend-otp", {
+      body: params,
+    })
     return this.getData<{ message: string }>(response)
   }
 
   // Updates the authenticated user's profile (PATCH /auth/profile).
   // Requires a valid session cookie. verifyEmail with purpose RECUPERACION
   // sets those cookies (implicit login), so password recovery can reuse this.
-  async updateProfile(params: UserUpdateProfileRequest): Promise<IdResult | undefined> {
+  async updateProfile(
+    params: UserUpdateProfileRequest
+  ): Promise<IdResult | undefined> {
     const response = await this.http("PATCH", "/auth/profile", { body: params })
     return this.getData<IdResult>(response)
   }
 
   // Offset pagination over users (GET /users?skip&take[&search]).
   // Requires a valid session cookie.
-  async search(params: SearchModel): Promise<UserModel[]> {
+  async search(params: SearchModel): Promise<Result<UserModel>> {
     const query = new URLSearchParams({
       skip: String(params.skip),
       take: String(params.take),
@@ -80,8 +100,8 @@ class UserRepository extends HttpClient {
 
     const url = `/users?${query.toString()}`
     const response = await this.http("GET", url, { cache: "no-store" })
-    const data = await this.getData<UserModel[]>(response)
-    return data ?? []
+    const result = await this.getData<Result<UserModel>>(response)
+    return result ?? { totalRows: 0, data: [] }
   }
 
   // Admin-only creation (POST /users). The new account remains inactive until
@@ -98,7 +118,6 @@ class UserRepository extends HttpClient {
     const response = await this.http("PATCH", url, { body: params })
     return this.getData<IdResult>(response)
   }
-
 }
 
 export const createUserRepo = (options: HttpClientOptions = {}) =>
