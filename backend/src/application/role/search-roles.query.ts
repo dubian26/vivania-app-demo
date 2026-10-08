@@ -1,6 +1,8 @@
 import { Query } from '@/base/mediator'
 import { LoggingBehavior } from '@/shared/util/logging-behavior'
 import { SearchRolesHandler } from './search-roles.handler'
+import type { Result } from '@/base/models/result'
+import type { Role } from '@/domain/role/role'
 
 export interface SearchRolesDTO {
   skip: number
@@ -8,7 +10,7 @@ export interface SearchRolesDTO {
   search?: string
 }
 
-export class SearchRolesQuery extends Query<unknown[]> {
+export class SearchRolesQuery extends Query<Result<ReturnType<Role['toResult']>>> {
   readonly handlerType = SearchRolesHandler
   readonly behaviorTypes = [LoggingBehavior]
 

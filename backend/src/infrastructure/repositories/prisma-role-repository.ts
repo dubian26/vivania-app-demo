@@ -3,6 +3,7 @@ import { RoleRepository } from '@/domain/role/role-repository'
 import { PrismaDbContext } from '@/infrastructure/repositories/prisma-db-context'
 import { SearchModel } from '@/base/models/search-model'
 import { Injectable } from '@/base/util/injectable'
+import type { Prisma } from '@prisma/client'
 
 @Injectable()
 export class PrismaRoleRepository implements RoleRepository {
@@ -43,22 +44,30 @@ export class PrismaRoleRepository implements RoleRepository {
     const records = await this.dbContext.client().roles.findMany({
       skip,
       take,
-      where: search
-        ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-
-        : undefined,
-
-      orderBy: { createdAt: 'desc' },
+      where: this.searchFilter(search),
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
     })
 
     return records.map((record) => {
       return Role.fromDB(record)
     })
+  }
+
+  async totalRows(params: Pick<SearchModel, 'search'>): Promise<number> {
+    return this.dbContext.client().roles.count({
+      where: this.searchFilter(params.search),
+    })
+  }
+
+  private searchFilter(search?: string): Prisma.RolesWhereInput | undefined {
+    if (!search) return undefined
+
+    return {
+      OR: [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ],
+    }
   }
 
   async insert(role: Role): Promise<void> {

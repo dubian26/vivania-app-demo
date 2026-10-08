@@ -18,7 +18,7 @@ export function RolesFilters({ search }: Props) {
   const [createOpen, setCreateOpen] = useState(false)
 
   // Server-side search: debounce the input and reflect it in the URL so the
-  // server component refetches. Page resets by dropping the page param.
+  // server component refetches and the loaded rows reset to the first batch.
   useEffect(() => {
     if (term.trim() === search) return
 

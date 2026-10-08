@@ -1,20 +1,20 @@
 "use client"
 
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip"
 
 import { Button } from "@/components/ui/button"
@@ -32,8 +32,6 @@ interface Props {
   role: RoleModel
 }
 
-// Actions for a roles table row. Serializable props only: the parent table is
-// a Server Component, so handlers/dialogs must live inside this island.
 export function RolesRowActions({ role }: Props) {
   const router = useRouter()
   const { run, loading } = useAsync()
@@ -80,6 +78,7 @@ export function RolesRowActions({ role }: Props) {
                   variant="ghost"
                   size="icon-sm"
                   aria-label={`Editar ${role.name}`}
+                  className="cursor-pointer"
                   onClick={() => setEditOpen(true)}
                 />
               }
@@ -98,6 +97,7 @@ export function RolesRowActions({ role }: Props) {
                   variant="ghost"
                   size="icon-sm"
                   aria-label={`Eliminar ${role.name}`}
+                  className="cursor-pointer text-destructive hover:text-destructive"
                   onClick={() => setConfirmOpen(true)}
                 />
               }

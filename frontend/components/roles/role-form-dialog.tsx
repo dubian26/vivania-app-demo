@@ -1,12 +1,12 @@
 "use client"
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 
 import { Button } from "@/components/ui/button"
@@ -60,10 +60,16 @@ function RoleForm({ role, onOpenChange, onSaved }: FormProps) {
   const [description, setDescription] = useState(role?.description ?? "")
 
   const isValid = name.trim().length >= 3
+  const isDirty = role
+    ? name.trim() !== role.name ||
+      description.trim() !== (role.description ?? "")
+    : true
 
   // The backend accepts name and description as optional on update, but on
   // edit both are always sent so clearing the description works.
   const handleSubmit = async () => {
+    if (loading || !isValid || !isDirty) return
+
     const repo = createRoleRepo()
     const result = await run(
       role
@@ -103,6 +109,7 @@ function RoleForm({ role, onOpenChange, onSaved }: FormProps) {
             value={name}
             onChange={(event) => setName(event.target.value)}
             autoComplete="off"
+            disabled={loading}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -112,19 +119,25 @@ function RoleForm({ role, onOpenChange, onSaved }: FormProps) {
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             placeholder="Opcional"
+            disabled={loading}
           />
         </div>
       </div>
 
       <DialogFooter>
         <Button
+          type="button"
           variant="outline"
           onClick={() => onOpenChange(false)}
           disabled={loading}
         >
           Cancelar
         </Button>
-        <Button onClick={handleSubmit} disabled={loading || !isValid}>
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          disabled={loading || !isValid || !isDirty}
+        >
           {loading && (
             <Loader2 className="animate-spin" data-icon="inline-start" />
           )}

@@ -1,6 +1,12 @@
+import type {
+  RoleCreateModel,
+  RoleModel,
+  RoleUpdateModel,
+} from "@/models/role-model"
+
 import { HttpClient, type HttpClientOptions } from "@/lib/http-client"
 import type { IdResult } from "@/models/id-result"
-import type { RoleCreateModel, RoleModel, RoleUpdateModel } from "@/models/role-model"
+import type { Result } from "@/models/result"
 import type { SearchModel } from "@/models/search-model"
 
 class RoleRepository extends HttpClient {
@@ -10,7 +16,7 @@ class RoleRepository extends HttpClient {
     return data ?? []
   }
 
-  async search(params: SearchModel): Promise<RoleModel[]> {
+  async search(params: SearchModel): Promise<Result<RoleModel>> {
     const query = new URLSearchParams({
       skip: String(params.skip),
       take: String(params.take),
@@ -20,8 +26,8 @@ class RoleRepository extends HttpClient {
 
     const url = `/roles/search?${query.toString()}`
     const response = await this.http("GET", url, { cache: "no-store" })
-    const data = await this.getData<RoleModel[]>(response)
-    return data ?? []
+    const result = await this.getData<Result<RoleModel>>(response)
+    return result ?? { totalRows: 0, data: [] }
   }
 
   async create(payload: RoleCreateModel): Promise<IdResult | undefined> {
